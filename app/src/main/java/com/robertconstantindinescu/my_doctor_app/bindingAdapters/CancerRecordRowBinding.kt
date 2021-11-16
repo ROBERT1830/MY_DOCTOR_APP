@@ -29,7 +29,7 @@ class CancerRecordRowBinding {
         @BindingAdapter("applyMalignBenignColor")
         @JvmStatic
         fun applyMalignBenignColor(view: View, text: String ){
-            if (text.equals("malignant", true)){
+            if (text.contains("malignant", true)){
                 when(view){
                     is TextView -> {
                         view.setTextColor(

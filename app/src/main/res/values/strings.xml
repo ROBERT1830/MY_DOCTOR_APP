@@ -9,4 +9,5 @@
     <string name="defaultImage">Result</string>
     <string name="no_cancer_records">No pre-diagnostic records available</string>
     <string name="delete_cancer_record">Delete Cancer Record</string>
+    <string name="button_save">Save pre-diagnostic</string>
 </resources>
