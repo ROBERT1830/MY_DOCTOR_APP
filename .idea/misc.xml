@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/layout/fragment_user_cancer_data.xml" value="0.18357487922705315" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.43425925925925923" />
         <entry key="app/src/main/res/menu/cancer_records_contextual_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/cancer_records_menu.xml" value="0.45723684210526316" />
       </map>
     </option>
   </component>

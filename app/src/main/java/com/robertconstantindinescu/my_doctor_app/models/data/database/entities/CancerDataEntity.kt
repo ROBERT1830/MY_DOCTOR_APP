@@ -9,7 +9,7 @@ import java.sql.Date
 @Entity(tableName = "cancer_data_table")
 data class CancerDataEntity(
     @ColumnInfo(name = "date")
-    var daete: String = "",
+    var date: String = "",
     @ColumnInfo(name = "img")
     var img: Bitmap? = null,
     @ColumnInfo(name = "result")

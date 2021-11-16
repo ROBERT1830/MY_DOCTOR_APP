@@ -69,7 +69,7 @@ class CancerRecordRowBinding {
                 }
             }
         }
-        @BindingAdapter("sesetProbabilityt")
+        @BindingAdapter("setProbabilityt")
         @JvmStatic
         fun setProbability(textView: TextView, probability: String){
             textView.text = probability
@@ -77,7 +77,7 @@ class CancerRecordRowBinding {
         }
         @BindingAdapter("setDate")
         @JvmStatic
-        fun setDate(textView: TextView, date: Date){
+        fun setDate(textView: TextView, date: String){
             textView.text = date.toString()
         }
 
