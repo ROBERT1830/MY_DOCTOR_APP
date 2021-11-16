@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/cancerRecordsFragment"
+        android:title="Records"
+        android:icon="@drawable/ic_records"/>
+
+    <item android:id="@+id/radiationFragment"
+        android:title="Radiation"
+        android:icon="@drawable/ic_sunn"/>
+
+    <item android:id="@+id/mapsFragment"
+        android:title="Search Hospital"
+        android:icon="@drawable/ic_location"/>
+
+    <item android:id="@+id/recipesFragment"
+        android:title="Diet"
+        android:icon="@drawable/ic_recipes"/>
+
+</menu>
