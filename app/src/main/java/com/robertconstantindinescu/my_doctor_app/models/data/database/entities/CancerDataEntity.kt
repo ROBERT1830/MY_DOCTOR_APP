@@ -8,14 +8,16 @@ import java.sql.Date
 
 @Entity(tableName = "cancer_data_table")
 data class CancerDataEntity(
-//    @ColumnInfo(name = "date")
-//    var daete: Date? = null,
-//    @ColumnInfo(name = "img")
-//    var img: Bitmap? = null,
+    @ColumnInfo(name = "date")
+    var daete: Date? = null,
+    @ColumnInfo(name = "img")
+    var img: Bitmap? = null,
     @ColumnInfo(name = "result")
     var result: String = "",
     @ColumnInfo(name = "statistics")
-    var statistics: String = ""
+    var statistics: String = "",
+    @ColumnInfo(name = "probability")
+    var probability: String = ""
 
 
 

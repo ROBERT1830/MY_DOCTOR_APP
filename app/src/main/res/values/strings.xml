@@ -7,4 +7,6 @@
     <string name="descriptionImage">insert image</string>
     <string name="buttonDiagnose">Get diagnostic</string>
     <string name="defaultImage">Result</string>
+    <string name="no_cancer_records">No pre-diagnostic records available</string>
+    <string name="delete_cancer_record">Delete Cancer Record</string>
 </resources>
