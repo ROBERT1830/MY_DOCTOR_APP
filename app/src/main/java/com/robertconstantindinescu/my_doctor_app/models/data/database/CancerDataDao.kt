@@ -1,9 +1,6 @@
 package com.robertconstantindinescu.my_doctor_app.models.data.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.robertconstantindinescu.my_doctor_app.models.data.database.entities.CancerDataEntity
 
 
@@ -13,5 +10,12 @@ interface CancerDataDao {
     fun readCancerData():kotlinx.coroutines.flow.Flow<List<CancerDataEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCancerDiagnostic(cancerDataEntity: CancerDataEntity)
+    suspend fun insertCancerRecord(cancerDataEntity: CancerDataEntity)
+
+    @Delete
+    suspend fun deleteCancerRecord(cancerDataEntity: CancerDataEntity)
+
+    @Query("DELETE FROM cancer_data_table")
+    suspend fun deleteAllCancerRecords()
+
 }
