@@ -1,27 +1,29 @@
 package com.robertconstantindinescu.my_doctor_app.ui.fragments
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationRequest
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentRadiationBinding
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//private const val ARG_PARAM1 = "param1"
-//private const val ARG_PARAM2 = "param2"
+
 
 class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
-//    // TODO: Rename and change types of parameters
-//    private var param1: String? = null
-//    private var param2: String? = null
+
     companion object {
         const val PERMISSION_LOCATION_REQUEST_CODE = 1
     }
@@ -29,32 +31,75 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private var _binding: FragmentRadiationBinding? = null
     private val binding get() = _binding!!
 
+    /******** Get location coordinate ********/
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
+    var countryName: String = ""
+    var localityName: String = ""
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
         }
     }
 
+    /**This annotations is used becase when we use fusedLocationProviderClient.lastLocation
+     * this must have granted permissions. So becauze of that we use that*/
+    @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentRadiationBinding.inflate(inflater, container, false)
-        //return inflater.inflate(R.layout.fragment_radiation, container, false)
 
         /**Every time the fragment is launched we have to check for the permisisons.
          * If we have permissions we want to show the data and if the app doesnt have
          * the permission then we will show up the button.*/
-        setViewVisibility()
-        binding.btnGrantPermission.setOnClickListener {
+//        setViewVisibility()
+//        binding.btnGrantPermission.setOnClickListener {
+//            requestLocationPermission()
+//        }
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireContext())
+
+        //binding.btnGrantPermission.setOnClickListener {
+
+        //if we dont have the permission when we reach the fragment, then we will request one in else
+        if (hasLocationPermission()) {
+            /*lastLocation is like a get, that returns the last locattion currently
+            * available. if has location, return a Location object to work with*/
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                //if we have a location, then the lambda is activated. And with this
+                //location object we can retrive information from him such as latitude and lingitude
+                /*Moreover, with geoCoder, we can get the city name from those coordinates*/
+                val geoCoder = Geocoder(requireContext())
+                /*with that geoCoder object now we are available to get specific data from
+                * those coordinates. */
+                val currentLocation = geoCoder.getFromLocation(
+                    location.latitude,
+                    location.longitude,
+                    1
+                )
+                latitude = location.latitude
+                longitude = location.longitude
+                countryName = currentLocation.first().countryName
+                localityName = currentLocation.first().locality
+
+//                var countryCode = currentLocation.first().countryName
+//                Log.d("RadiationFragment", countryCode)
+//                var subLocality: String = currentLocation.first().locality
+//                Log.d("RadiationFragment", subLocality)
+//                Log.d("RadiationFragment", location.latitude.toString())
+//                Log.d("RadiationFragment", location.longitude.toString())
+            }
+        } else {
             requestLocationPermission()
         }
-
-
         return binding.root
     }
 
@@ -125,7 +170,7 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             "Permission Granted!",
             Toast.LENGTH_SHORT
         ).show()
-        setViewVisibility()
+        //setViewVisibility()
     }
 
     /**
@@ -135,15 +180,15 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
      * On the contrary if the user doesn't grant the permission the button will
      * be available just to allow the user grant the permisison.
      */
-    private fun setViewVisibility() {
-        if (hasLocationPermission()) {
-            binding.txtPermissionGranted.visibility  = View.VISIBLE
-            binding.btnGrantPermission.visibility = View.GONE
-        } else {
-            binding.txtPermissionGranted.visibility  = View.GONE
-            binding.btnGrantPermission.visibility = View.VISIBLE
-        }
-    }
+//    private fun setViewVisibility() {
+//        if (hasLocationPermission()) {
+//            binding.txtPermissionGranted.visibility  = View.VISIBLE
+//            binding.btnGrantPermission.visibility = View.GONE
+//        } else {
+//            binding.txtPermissionGranted.visibility  = View.GONE
+//            binding.btnGrantPermission.visibility = View.VISIBLE
+//        }
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -153,28 +198,3 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 }
 
 
-
-
-
-
-
-
-//    companion object {
-//        /**
-//         * Use this factory method to create a new instance of
-//         * this fragment using the provided parameters.
-//         *
-//         * @param param1 Parameter 1.
-//         * @param param2 Parameter 2.
-//         * @return A new instance of fragment RadiationFragment.
-//         */
-//        // TODO: Rename and change types and number of parameters
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            RadiationFragment().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
-//    }

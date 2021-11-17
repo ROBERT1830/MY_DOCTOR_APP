@@ -12,20 +12,15 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Gravity
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import com.robertconstantindinescu.my_doctor_app.mlmodel.Classifier
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityDetectorBinding
-import com.robertconstantindinescu.my_doctor_app.models.data.database.entities.CancerDataEntity
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
-import java.sql.Date
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 // TODO: 16/11/21 Tenemos que opne rqeu sera un entry point pq el viewmodel está inyectado.
 @AndroidEntryPoint

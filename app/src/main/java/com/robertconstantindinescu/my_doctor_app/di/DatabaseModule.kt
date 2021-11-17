@@ -2,7 +2,7 @@ package com.robertconstantindinescu.my_doctor_app.di
 
 import android.content.Context
 import androidx.room.Room
-import com.robertconstantindinescu.my_doctor_app.models.data.database.UserCancerDatabase
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.UserCancerDatabase
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.DATABSE_NAME
 import dagger.Module
 import dagger.Provides

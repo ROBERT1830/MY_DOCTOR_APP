@@ -1,7 +1,7 @@
-package com.robertconstantindinescu.my_doctor_app.models.data.database
+package com.robertconstantindinescu.my_doctor_app.models.offlineData.database
 
 import androidx.room.*
-import com.robertconstantindinescu.my_doctor_app.models.data.database.entities.CancerDataEntity
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 
 
 @Dao

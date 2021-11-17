@@ -1,8 +1,8 @@
-package com.robertconstantindinescu.my_doctor_app.models.data
+package com.robertconstantindinescu.my_doctor_app.models.offlineData
 
 
-import com.robertconstantindinescu.my_doctor_app.models.data.database.CancerDataDao
-import com.robertconstantindinescu.my_doctor_app.models.data.database.entities.CancerDataEntity
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.CancerDataDao
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
