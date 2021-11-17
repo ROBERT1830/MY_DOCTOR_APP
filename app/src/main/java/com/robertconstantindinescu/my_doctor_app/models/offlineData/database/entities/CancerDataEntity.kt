@@ -1,10 +1,9 @@
-package com.robertconstantindinescu.my_doctor_app.models.data.database.entities
+package com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities
 
 import android.graphics.Bitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.sql.Date
 
 @Entity(tableName = "cancer_data_table")
 data class CancerDataEntity(

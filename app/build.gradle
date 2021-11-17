@@ -136,4 +136,8 @@ dependencies {
 
     //EassyPermissions
     implementation 'com.vmadalin:easypermissions-ktx:1.0.0'
+
+    //FusedLicationProvider
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+
 }

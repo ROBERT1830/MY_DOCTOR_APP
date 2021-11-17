@@ -7,9 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.R
-import com.robertconstantindinescu.my_doctor_app.databinding.FragmentCancerRecordsBinding
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentCancerRecordsRowBinding
-import com.robertconstantindinescu.my_doctor_app.models.data.database.entities.CancerDataEntity
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import com.robertconstantindinescu.my_doctor_app.utils.CancerDiffUtil
 import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_cancer_records_row.view.*

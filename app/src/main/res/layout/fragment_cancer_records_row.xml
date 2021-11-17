@@ -6,7 +6,7 @@
     <data>
         <variable
             name="cancerEntity"
-            type="com.robertconstantindinescu.my_doctor_app.models.data.database.entities.CancerDataEntity" />
+            type="com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity" />
 
     </data>
 

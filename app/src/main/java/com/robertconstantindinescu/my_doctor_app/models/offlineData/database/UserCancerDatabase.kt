@@ -1,10 +1,9 @@
-package com.robertconstantindinescu.my_doctor_app.models.data.database
+package com.robertconstantindinescu.my_doctor_app.models.offlineData.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverter
 import androidx.room.TypeConverters
-import com.robertconstantindinescu.my_doctor_app.models.data.database.entities.CancerDataEntity
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 
 // TODO: 15/11/21 SPECIFY THE DATABASE TYPECONVERTER 
 

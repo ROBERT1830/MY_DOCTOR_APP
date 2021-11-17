@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.models.data.database
+package com.robertconstantindinescu.my_doctor_app.models.offlineData.database
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
