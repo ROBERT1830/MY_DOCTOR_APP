@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.models.offlineData
+package com.robertconstantindinescu.my_doctor_app.models
 
 
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.CancerDataDao

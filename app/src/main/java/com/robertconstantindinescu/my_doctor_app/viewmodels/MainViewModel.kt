@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.robertconstantindinescu.my_doctor_app.models.offlineData.Repository
+import com.robertconstantindinescu.my_doctor_app.models.Repository
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
