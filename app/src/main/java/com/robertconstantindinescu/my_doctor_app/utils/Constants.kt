@@ -11,6 +11,8 @@ class Constants {
 
         //Room DATABSE
         const val DATABSE_NAME = "user_melanoma_database"
+        const val CANCER_DATA_TABLE = "cancer_data_table"
+        const val RADIATION_WEATHER_TABLE = "radiation_weather_table"
 
 
     }

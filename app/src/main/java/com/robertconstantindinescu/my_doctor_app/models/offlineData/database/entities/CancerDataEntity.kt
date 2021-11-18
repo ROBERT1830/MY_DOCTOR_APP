@@ -4,8 +4,9 @@ import android.graphics.Bitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.CANCER_DATA_TABLE
 
-@Entity(tableName = "cancer_data_table")
+@Entity(tableName = CANCER_DATA_TABLE)
 data class CancerDataEntity(
     @ColumnInfo(name = "date")
     var date: String = "",
