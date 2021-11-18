@@ -14,4 +14,26 @@
     <string name="title_advice">Advice</string>
     <string name="index_uv_title">Index Uv -</string>
     <string name="title_location">Location</string>
+
+    <!--INDEX VALUES -->
+    <string name="low_risk">Low Risk</string>
+    <string name="moderate_risk">Moderate Risk</string>
+    <string name="high_risk">Hight Risk</string>
+    <string name="veryHigh_risk">Very High Risk</string>
+    <string name="extreme_risk">Extreme Risk</string>
+
+    <string name="low_risk_body">No protection needed. You can safely stay outside using minimal
+        sun protection.</string>
+    <string name="moderate_risk_body">Protection needed. Seek shade during late morning through mid-afternoon.
+        When outside, generously apply broad-spectrum SPF-15 or higher sunscreen on exposed skin, and
+        wear protective clothing, a wide-brimmed hat, and sunglasses</string>
+    <string name="high_risk_body">Hight Risk</string>
+    <string name="veryHigh_risk_body">Extra protection needed. Be careful outside, especially during
+        late morning through mid-afternoon. If your shadow is shorter than you, seek shade and wear
+        protective clothing, a wide-brimmed hat, and sunglasses, and generously apply a minimum of
+        SPF-15, broad-spectrum sunscreen on exposed skin.</string>
+    <string name="extreme_risk_body">Extra protection needed. Be careful outside, especially during
+        late morning through mid-afternoon. If your shadow is shorter than you, seek shade and wear
+        protective clothing, a wide-brimmed hat, and sunglasses, and generously apply a minimum of
+        SPF-15, broad-spectrum sunscreen on exposed skin.</string>
 </resources>

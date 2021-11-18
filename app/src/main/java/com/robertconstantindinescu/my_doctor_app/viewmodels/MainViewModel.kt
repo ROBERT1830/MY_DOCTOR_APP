@@ -30,8 +30,8 @@ class MainViewModel @Inject constructor(
 
     val readCancerDataEntity: LiveData<List<CancerDataEntity>> =
         repository.local.readCancerData().asLiveData()
-    val readRadiationWaetherData: LiveData<UVEntity> =
-        repository.local.readRadiationWeatherData().asLiveData()
+//    val readRadiationWaetherData: LiveData<UVEntity> =
+//        repository.local.readRadiationWeatherData().asLiveData()
 
     /**RETROFIT LIVEDATA*/
     private val _radiationWeatherDataResponse = MutableLiveData<NetworkResult<UVResponse>>()
@@ -69,10 +69,10 @@ class MainViewModel @Inject constructor(
                 //obtenemos la respuesta del servidor
                 val response = repository.remote.getRadiationWeatherData(queries)
                 _radiationWeatherDataResponse.value = handleRadiationWeatherResponse(response)
-                val radiationWeatherData = radiationWeatherDataResponse.value!!.data
-                if (radiationWeatherData != null) {
-                    offlineCahceRadiationData(radiationWeatherData)
-                }
+                //val radiationWeatherData = radiationWeatherDataResponse.value!!.data
+//                if (radiationWeatherData != null) {
+//                    offlineCahceRadiationData(radiationWeatherData)
+//                }
             } catch (e: Exception) {
                 _radiationWeatherDataResponse.value = NetworkResult.Error(
                     "Radiation and weather data" +
@@ -84,16 +84,16 @@ class MainViewModel @Inject constructor(
 
     }
 
-    private fun offlineCahceRadiationData(radiationWeatherData: UVResponse) {
-        val uvEntity = UVEntity(radiationWeatherData)
-        insertRadiationWeatherData(uvEntity)
-
-    }
-
-    private fun insertRadiationWeatherData(uvEntity: UVEntity) =
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.local.insertRadiationWeatherData(uvEntity)
-        }
+//    private fun offlineCahceRadiationData(radiationWeatherData: UVResponse) {
+//        val uvEntity = UVEntity(radiationWeatherData)
+//        insertRadiationWeatherData(uvEntity)
+//
+//    }
+//
+//    private fun insertRadiationWeatherData(uvEntity: UVEntity) =
+//        viewModelScope.launch(Dispatchers.IO) {
+//            repository.local.insertRadiationWeatherData(uvEntity)
+//        }
 
     private fun handleRadiationWeatherResponse(response: Response<UVResponse>): NetworkResult<UVResponse>? {
 
