@@ -11,4 +11,7 @@
     <string name="delete_cancer_record">Delete Cancer Record</string>
     <string name="button_save">Save pre-diagnostic</string>
     <string name="delete_all">Delete all records</string>
+    <string name="title_advice">Advice</string>
+    <string name="index_uv_title">Index Uv -</string>
+    <string name="title_location">Location</string>
 </resources>
