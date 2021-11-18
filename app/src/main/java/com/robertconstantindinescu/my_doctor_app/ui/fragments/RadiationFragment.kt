@@ -26,6 +26,10 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     companion object {
         const val PERMISSION_LOCATION_REQUEST_CODE = 1
+        var latitude: Double = 0.0
+        var longitude: Double = 0.0
+        var countryName: String = ""
+        var localityName: String = ""
     }
 
     private var _binding: FragmentRadiationBinding? = null
@@ -33,10 +37,7 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     /******** Get location coordinate ********/
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    var latitude: Double = 0.0
-    var longitude: Double = 0.0
-    var countryName: String = ""
-    var localityName: String = ""
+
 
 
 
