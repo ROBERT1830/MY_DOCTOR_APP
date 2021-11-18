@@ -7,7 +7,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_cancer_records.xml" value="0.2803951367781155" />
         <entry key="app/src/main/res/layout/fragment_cancer_records_row.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_radiation.xml" value="0.21240942028985507" />
+        <entry key="app/src/main/res/layout/fragment_radiation.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_recipes.xml" value="0.21240942028985507" />
         <entry key="app/src/main/res/layout/fragment_user_cancer_data.xml" value="0.18357487922705315" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.43425925925925923" />
