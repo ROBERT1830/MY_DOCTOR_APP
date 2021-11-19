@@ -7,6 +7,12 @@ class Constants {
 
         //RETROFIT RADIATION_API
         const val BASE_URL = "https://api.openweathermap.org"
+        const val API_KEY = "b244b85b8c90315f903c2c636faf93de"
+        const val QUERY_LATITUDE = "lat"
+        const val QUERY_LONGITUDE = "lon"
+//        const val QUERY_EXCLUDE = "exclude"
+        const val QUERY_API = "appid"
+
 
 
         //Room DATABSE
