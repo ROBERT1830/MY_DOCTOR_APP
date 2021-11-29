@@ -8,6 +8,9 @@ class Constants {
     companion object{
 
 
+        const val STORAGE_REQUEST_CODE = 1000
+
+
         //RETROFIT RADIATION_API
         const val BASE_URL = "https://api.openweathermap.org"
         const val API_KEY = "b244b85b8c90315f903c2c636faf93de"
