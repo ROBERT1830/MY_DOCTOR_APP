@@ -1,6 +1,6 @@
 package com.robertconstantindinescu.my_doctor_app.models.onlineData.network
 
-import com.robertconstantindinescu.my_doctor_app.models.onlineData.UVResponse
+import com.robertconstantindinescu.my_doctor_app.models.onlineData.radiationIndex.UVResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.QueryMap

@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdk 31
@@ -48,6 +49,7 @@ kapt {
 
 
 dependencies {
+    implementation 'com.google.android.gms:play-services-maps:18.0.0'
     def room_version = "2.3.0"
 
     implementation 'androidx.core:core-ktx:1.7.0'

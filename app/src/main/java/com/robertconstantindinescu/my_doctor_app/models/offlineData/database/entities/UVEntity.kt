@@ -2,7 +2,7 @@ package com.robertconstantindinescu.my_doctor_app.models.offlineData.database.en
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.robertconstantindinescu.my_doctor_app.models.onlineData.UVResponse
+import com.robertconstantindinescu.my_doctor_app.models.onlineData.radiationIndex.UVResponse
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.RADIATION_WEATHER_TABLE
 
 @Entity(tableName = RADIATION_WEATHER_TABLE)

@@ -9,8 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.robertconstantindinescu.my_doctor_app.models.Repository
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
-import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.UVEntity
-import com.robertconstantindinescu.my_doctor_app.models.onlineData.UVResponse
+import com.robertconstantindinescu.my_doctor_app.models.onlineData.radiationIndex.UVResponse
 import com.robertconstantindinescu.my_doctor_app.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -63,24 +62,24 @@ class MainViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.M)
     private suspend fun getdataSafeCall(queries: Map<String, String>) {
 
-        _radiationWeatherDataResponse.value = NetworkResult.Loading()
+        _radiationWeatherDataResponse.postValue(NetworkResult.Loading())
         if (hasInternetConnection()) {
             try {
                 //obtenemos la respuesta del servidor
                 val response = repository.remote.getRadiationWeatherData(queries)
-                _radiationWeatherDataResponse.value = handleRadiationWeatherResponse(response)
+                _radiationWeatherDataResponse.postValue(handleRadiationWeatherResponse(response))
                 //val radiationWeatherData = radiationWeatherDataResponse.value!!.data
 //                if (radiationWeatherData != null) {
 //                    offlineCahceRadiationData(radiationWeatherData)
 //                }
             } catch (e: Exception) {
-                _radiationWeatherDataResponse.value = NetworkResult.Error(
+                _radiationWeatherDataResponse.postValue(NetworkResult.Error(
                     "Radiation and weather data" +
                             "not found"
-                )
+                ))
             }
 
-        } else _radiationWeatherDataResponse.value = NetworkResult.Error("No Internet Connection")
+        } else _radiationWeatherDataResponse.postValue(NetworkResult.Error("No Internet Connection"))
 
     }
 
