@@ -2,24 +2,34 @@ package com.robertconstantindinescu.my_doctor_app.ui.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.location.Geocoder
-import android.location.Location
-import android.location.LocationRequest
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentRadiationBinding
+import com.robertconstantindinescu.my_doctor_app.utils.NetworkResult
+import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
+import com.robertconstantindinescu.my_doctor_app.viewmodels.QueryViewModel
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
-import dagger.hilt.android.AndroidEntryPoint
-
+import kotlinx.android.synthetic.main.fragment_radiation.*
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.*
 
 
 class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
@@ -32,8 +42,12 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         var localityName: String = ""
     }
 
+
     private var _binding: FragmentRadiationBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var queryViewModel: QueryViewModel
 
     /******** Get location coordinate ********/
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -46,10 +60,14 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
+
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        queryViewModel = ViewModelProvider(requireActivity()).get((QueryViewModel::class.java))
     }
 
     /**This annotations is used becase when we use fusedLocationProviderClient.lastLocation
      * this must have granted permissions. So becauze of that we use that*/
+    @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +75,8 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentRadiationBinding.inflate(inflater, container, false)
+
+
 
         /**Every time the fragment is launched we have to check for the permisisons.
          * If we have permissions we want to show the data and if the app doesnt have
@@ -90,6 +110,7 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 longitude = location.longitude
                 countryName = currentLocation.first().countryName
                 localityName = currentLocation.first().locality
+                requestApiData()
 
 //                var countryCode = currentLocation.first().countryName
 //                Log.d("RadiationFragment", countryCode)
@@ -100,7 +121,12 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             }
         } else {
             requestLocationPermission()
+
+
         }
+
+        // TODO: 19/11/21 readback online + networkStatus (NetworkListener) 
+        
         return binding.root
     }
 
@@ -164,6 +190,7 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
      * Becasuse we implmented the EasyPermissions.PermissionCallbacks
      * this funtion wiil be called when the usr accept/grant the permision.
      */
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
         // TODO: 17/11/21  Aqui es donde vamos a mostrar todos los datos de la appi.
         Toast.makeText(
@@ -171,7 +198,149 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             "Permission Granted!",
             Toast.LENGTH_SHORT
         ).show()
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                    //if we have a location, then the lambda is activated. And with this
+                    //location object we can retrive information from him such as latitude and lingitude
+                    /*Moreover, with geoCoder, we can get the city name from those coordinates*/
+                    val geoCoder = Geocoder(requireContext())
+                    /*with that geoCoder object now we are available to get specific data from
+                    * those coordinates. */
+                    val currentLocation = geoCoder.getFromLocation(
+                        location.latitude,
+                        location.longitude,
+                        1
+                    )
+                    latitude = location.latitude
+                    longitude = location.longitude
+                    countryName = currentLocation.first().countryName
+                    localityName = currentLocation.first().locality
+
+//                var countryCode = currentLocation.first().countryName
+//                Log.d("RadiationFragment", countryCode)
+//                var subLocality: String = currentLocation.first().locality
+//                Log.d("RadiationFragment", subLocality)
+//                Log.d("RadiationFragment", location.latitude.toString())
+//                Log.d("RadiationFragment", location.longitude.toString())
+                }
+                return
+            }
+
+
+
+
+        requestApiData()
         //setViewVisibility()
+    }
+
+    @SuppressLint("NewApi")
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun requestApiData() {
+        //hacemos la petición
+        mainViewModel.getRadiationWeatherData(queryViewModel.applyRadiationQuery())
+        //observar la respues
+        mainViewModel.radiationWeatherDataResponse.observe(viewLifecycleOwner, Observer { response ->
+            when(response){
+
+                is NetworkResult.Success -> {
+                    binding.progressBar.visibility = View.GONE
+                    var uvIndex: Double = 0.0
+                    response.data?.let {
+                        uvIndex = it.current.uvi
+                    }
+                    println(uvIndex)
+
+                    setUvHeaderInfo(uvIndex)
+                    setUvImageInfo(uvIndex)
+                    setUvAdviceBody(uvIndex)
+                    setLocationDateInfo()
+                }
+                is NetworkResult.Error -> {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(
+                        requireContext(), response.message.toString(),
+                        Toast.LENGTH_SHORT).show()
+                }
+                is NetworkResult.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+
+            }
+        })
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setLocationDateInfo() {
+        with(_binding){
+            txtView_location_title.visibility = View.VISIBLE
+            linear_layout_date_location_info.visibility = View.VISIBLE
+        }
+
+        _binding!!.txtViewDate.text = getCurrentDateTime()
+        _binding!!.txtViewLocation.text = getCurrentCountryLocality()
+    }
+
+    private fun setUvAdviceBody(uvIndex: Double) {
+        txtView_advice_title.visibility = View.VISIBLE
+        txtView_advice_body.visibility = View.VISIBLE
+        when{
+            uvIndex in 0.0..2.0 -> { _binding!!.txtViewAdviceBody.text = getString(R.string.low_risk_body)}
+            uvIndex in 3.0..5.0 -> { _binding!!.txtViewAdviceBody.text = getString(R.string.moderate_risk_body) }
+            uvIndex in 6.0..7.0 -> { _binding!!.txtViewAdviceBody.text = getString(R.string.high_risk_body) }
+            uvIndex in 8.0..10.0 -> { _binding!!.txtViewAdviceBody.text = getString(R.string.veryHigh_risk_body) }
+            uvIndex >= 11.0 -> { _binding!!.txtViewAdviceBody.text = getString(R.string.extreme_risk_body) }
+        }
+    }
+
+    private fun setUvImageInfo(uvIndex: Double) {
+        imgView_info.visibility = View.VISIBLE
+        when{
+            uvIndex in 0.0..2.0 -> { _binding!!.imgViewInfo.setImageResource(R.drawable.img_riesgo_bajo) }
+            uvIndex in 3.0..5.0 -> { _binding!!.imgViewInfo.setImageResource(R.drawable.img_riesgo_moderado) }
+            uvIndex in 6.0..7.0 -> { _binding!!.imgViewInfo.setImageResource(R.drawable.img_riesgo_alato) }
+            uvIndex in 8.0..10.0 -> { _binding!!.imgViewInfo.setImageResource(R.drawable.img_riesgo_muy_alto) }
+            uvIndex >= 11.0 -> { _binding!!.imgViewInfo.setImageResource(R.drawable.img_extremo) }
+        }
+    }
+
+    private fun setUvHeaderInfo(uvIndex: Double) {
+        linear_layout_uvIndex_info.visibility = View.VISIBLE
+        when{
+            uvIndex in 0.0..2.0 -> { _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.low_risk) }
+            uvIndex in 3.0..5.0 -> { _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.moderate_risk) }
+            uvIndex in 6.0..7.0 -> { _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.high_risk) }
+            uvIndex in 8.0..10.0 -> { _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.veryHigh_risk) }
+            uvIndex >= 11.0 -> { _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.extreme_risk) }
+
+        }
+        _binding!!.txtUvIndexResult.text = uvIndex.toString()
+
+    }
+
+    private fun getCurrentCountryLocality(): String? {
+
+        var countryLocality = "${countryName} | ${localityName}"
+        return countryLocality
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getCurrentDateTime(): String? {
+
+        //val sdf = SimpleDateFormat("yyy/MM/dd HH:mm_ss")
+        val sdf = SimpleDateFormat("EEE, d MMM yyy HH:mm:ss")
+        val cal = Calendar.getInstance()
+        return sdf.format(cal.time).toString()
+
     }
 
     /**

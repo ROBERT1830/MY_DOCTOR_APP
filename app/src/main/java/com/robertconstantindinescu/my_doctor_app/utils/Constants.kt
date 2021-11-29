@@ -1,5 +1,8 @@
 package com.robertconstantindinescu.my_doctor_app.utils
 
+import com.robertconstantindinescu.my_doctor_app.R
+import com.robertconstantindinescu.my_doctor_app.models.placesModel.PlaceModel
+
 class Constants {
 
     companion object{
@@ -19,6 +22,13 @@ class Constants {
         const val DATABSE_NAME = "user_melanoma_database"
         const val CANCER_DATA_TABLE = "cancer_data_table"
         const val RADIATION_WEATHER_TABLE = "radiation_weather_table"
+
+
+        //GoolgeMaps
+        var placesName = listOf<PlaceModel>(
+            PlaceModel(1, R.drawable.ic_pharmacy, "Pharmacies", "pharmacy"),
+            PlaceModel(2, R.drawable.ic_hospital, "Hospitals", "hospital")
+        )
 
 
     }
