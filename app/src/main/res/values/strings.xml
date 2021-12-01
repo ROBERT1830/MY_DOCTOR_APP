@@ -4,6 +4,10 @@
 
     <!-- REGISTRATION -->
     <string name="login_string">Already have an account? <b>Login here</b></string>
+    <string name="login_succes">Login Succesfully</string>
+    <string name="verify_email_first">Verify email first</string>
+    <string name="field_required">Field Is Required</string>
+    
 
     <string name="app_name">my_doctor_app</string>
     <!-- TODO: Remove or change this placeholder text -->

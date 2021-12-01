@@ -22,6 +22,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val repository: Repository,
     application: Application
+//used AndroidViewModelbecause we need application here.
 ) : AndroidViewModel(application) {
 
     //Variable para leer de la base de datos (tabla cancerEntity)
