@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app
+package com.robertconstantindinescu.my_doctor_app.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,7 +7,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.robertconstantindinescu.my_doctor_app.databinding.ActivityMainBinding
+import com.robertconstantindinescu.my_doctor_app.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 
