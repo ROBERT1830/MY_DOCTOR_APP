@@ -27,7 +27,7 @@ class AppPermissions {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ),
-            Constants.STORAGE_REQUEST_CODE
+            Constants.STORAGE_REQUEST_CODE //this code will be returned when the permissions are accepted or denied
         )
     }
 }

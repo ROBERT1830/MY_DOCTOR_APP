@@ -43,7 +43,12 @@
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
+<!--        WE must insert this activity manually so that we can acces image cropper and go for
+gallery-->
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
 
         <meta-data
             android:name="com.google.android.gms.version"

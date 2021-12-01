@@ -108,6 +108,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
         }
+        // TODO: 1/12/21 NEXT STEP SIGN UP 
     }
 
     private fun areFieldsReady(): Boolean {
