@@ -18,6 +18,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.My_doctor_app">
         <activity
+            android:name=".ui.PatientSignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.DoctorSignUpActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.SignUpChooseUsrActivity"
             android:exported="false" />
         <activity

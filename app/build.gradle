@@ -126,6 +126,14 @@ dependencies {
 
     // Image Loading library Coil
     implementation "io.coil-kt:coil:0.13.0"
+    // Image Cropper
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    // Circular ImageView library
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    // Shape library to draw curves
+    implementation 'com.github.florent37:shapeofview:1.4.7'
+    // Circular Indicator library
+    implementation 'com.victor:lib:1.0.4'
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.6'
