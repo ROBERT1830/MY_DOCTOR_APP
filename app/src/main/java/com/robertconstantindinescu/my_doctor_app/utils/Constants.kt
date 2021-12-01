@@ -8,6 +8,7 @@ class Constants {
     companion object{
 
 
+        //Image from gallery
         const val STORAGE_REQUEST_CODE = 1000
 
 
