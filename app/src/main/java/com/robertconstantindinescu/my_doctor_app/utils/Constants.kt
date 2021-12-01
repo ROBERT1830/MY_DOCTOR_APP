@@ -10,6 +10,8 @@ class Constants {
 
         //Image from gallery
         const val STORAGE_REQUEST_CODE = 1000
+        @JvmStatic
+        val PROFILE_PATH="/Profile/image_profile.jpg"
 
 
         //RETROFIT RADIATION_API

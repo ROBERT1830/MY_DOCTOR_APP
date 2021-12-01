@@ -30,6 +30,11 @@ class PatientSignUpActivity : AppCompatActivity() {
         appPermissions = AppPermissions()
         loadingDialog = LoadingDialog(this)
 
+        mBinding.btnBack.setOnClickListener { onBackPressed() }
+
+        mBinding.txtLogin.setOnClickListener { onBackPressed() }
+
+
         mBinding.txtLogin.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             intent.putExtra("isDoctor", false)
