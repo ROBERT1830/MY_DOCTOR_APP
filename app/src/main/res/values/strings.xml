@@ -46,5 +46,6 @@
     <string name="location_permission_message">My Doctor requires location permission
         to acces your location</string>
     <string name="location_update">Location update started</string>
+    <string name="titleLogin">my Doctor App</string>
 
 </resources>
