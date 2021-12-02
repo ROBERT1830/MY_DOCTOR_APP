@@ -87,7 +87,7 @@ class RemoteDataSource @Inject constructor(private val uvRadiationApi: UvRadiati
     }.flowOn(Dispatchers.IO)
 
     private suspend fun createPatient(patientModel: PatientModel, auth: FirebaseAuth) {
-        val firebase = Firebase.database.getReference("Users").child("Doctors")
+        val firebase = Firebase.database.getReference("Users").child("Patients")
         firebase!!.child(auth.uid!!).setValue(patientModel).await()
         val profileChangeRequest = UserProfileChangeRequest.Builder()
             .setDisplayName(patientModel.name)
