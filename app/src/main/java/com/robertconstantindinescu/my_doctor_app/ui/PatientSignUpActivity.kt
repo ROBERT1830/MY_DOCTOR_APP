@@ -52,19 +52,10 @@ class PatientSignUpActivity : AppCompatActivity() {
         mBinding.txtLogin.setOnClickListener { onBackPressed() }
 
 
-//        mBinding.txtLogin.setOnClickListener {
-//            val intent = Intent(this, LoginActivity::class.java)
-//            intent.putExtra("isDoctor", false)
-//            startActivity(intent)
-//        }
-
         mBinding.imgPick.setOnClickListener {
             if (appPermissions.isStorageOk(this)) pickImage()
             else appPermissions.requestStoragePermission(this)
         }
-
-
-
 
 
         mBinding.btnSignUp.setOnClickListener {
