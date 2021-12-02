@@ -21,12 +21,14 @@ class SignUpChooseUsrActivity : AppCompatActivity() {
                     DoctorSignUpActivity::class.java)
                 intent.putExtra("isDoctor", true)
                 startActivity(intent)
+                finish()
             }
             btnPatientSignUp.setOnClickListener {
                 val intent = Intent(this@SignUpChooseUsrActivity,
                     PatientSignUpActivity::class.java)
                 intent.putExtra("isDoctor", false)
                 startActivity(intent)
+                finish()
             }
 
 

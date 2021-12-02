@@ -9,6 +9,8 @@
     <string name="field_required">Field Is Required</string>
     <string name="storage_permission_denied">Storage Permission Denied</string>
     <string name="image_no_select">Image not selected</string>
+    <string name="select_image">Please select image</string>
+
 
 
     <string name="app_name">my_doctor_app</string>
