@@ -1,10 +1,14 @@
 package com.robertconstantindinescu.my_doctor_app.models
 
+import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -13,15 +17,16 @@ import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorMod
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.radiationIndex.UVResponse
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.UvRadiationApi
+import com.robertconstantindinescu.my_doctor_app.ui.DoctorActivity
+import com.robertconstantindinescu.my_doctor_app.ui.LoginActivity
+import com.robertconstantindinescu.my_doctor_app.ui.MainActivity
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PROFILE_PATH
 import com.robertconstantindinescu.my_doctor_app.utils.State
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 import retrofit2.Response
+import java.io.Serializable
 import javax.inject.Inject
 
 
@@ -36,19 +41,62 @@ class RemoteDataSource @Inject constructor(private val uvRadiationApi: UvRadiati
         emit(State.loading(true))
         val auth = Firebase.auth
 
+
         val data = auth.signInWithEmailAndPassword(email, password).await()
         //if the task was performend in backend
         data?.let {
             if (auth.currentUser?.isEmailVerified!!) {
-                emit(State.succes(R.string.login_succes)) //emiting the class directly by using the function
+                emit(State.succes("Login Succesfully")) //emiting the class directly by using the function
+
             } else {
                 auth.currentUser?.sendEmailVerification()?.await()
                 emit(State.failed(R.string.verify_email_first.toString()))
             }
         }
+
     }.catch {
         emit(State.failed(it.message!!))
     }.flowOn(Dispatchers.IO)
+
+
+//    public val isNetworkAvailable = MutableStateFlow(false)
+//    fun  checkForUserAcces(): MutableStateFlow<Boolean> {
+//
+//        val uid = FirebaseAuth.getInstance().currentUser?.uid
+//        val db = FirebaseDatabase.getInstance().reference
+//        val uidRef = db.child("Users").child(uid!!)
+//        val valueEventListener = object : ValueEventListener {
+//            override fun  onDataChange(snapshot: DataSnapshot) {
+//                val doctor = snapshot.child("doctor").getValue() as Boolean
+//                if(doctor) {
+//                    isNetworkAvailable.value = true
+//                } else {
+//                    isNetworkAvailable.value = true
+//                }
+//            }
+//
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                Log.d("TAG", databaseError.getMessage()) //Don't ignore potential errors!
+//            }
+//        }
+//        uidRef.addListenerForSingleValueEvent(valueEventListener)
+//        return  isNetworkAvailable
+//    }
+
+
+
+//    private fun checkUserAccesLevel(uid: String?) {
+//        val firebase = Firebase.database.getReference("Users").child(uid!!)
+//        firebase.get().addOnSuccessListener {
+//            if(it.value. != null){
+//
+//
+//            }
+//        }
+//
+//
+//    }
+
 
     /** -- SIGN UP FIREBASE -- **/
     fun signUp(
@@ -87,7 +135,7 @@ class RemoteDataSource @Inject constructor(private val uvRadiationApi: UvRadiati
     }.flowOn(Dispatchers.IO)
 
     private suspend fun createPatient(patientModel: PatientModel, auth: FirebaseAuth) {
-        val firebase = Firebase.database.getReference("Users").child("Patients")
+        val firebase = Firebase.database.getReference("Users")//.child("Patients")
         firebase!!.child(auth.uid!!).setValue(patientModel).await()
         val profileChangeRequest = UserProfileChangeRequest.Builder()
             .setDisplayName(patientModel.name)
@@ -101,7 +149,7 @@ class RemoteDataSource @Inject constructor(private val uvRadiationApi: UvRadiati
     }
 
     private suspend fun createDoctor(doctorModel: DoctorModel, auth: FirebaseAuth) {
-        val firebase = Firebase.database.getReference("Users").child("Doctors")
+        val firebase = Firebase.database.getReference("Users")//.child("Doctors")
         firebase!!.child(auth.uid!!).setValue(doctorModel).await()
         val profileChangeRequest = UserProfileChangeRequest.Builder()
             .setDisplayName(doctorModel.name)

@@ -17,6 +17,23 @@ import com.robertconstantindinescu.my_doctor_app.viewmodels.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.flow.collect
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuth.AuthStateListener
+import kotlinx.coroutines.tasks.await
+import com.google.firebase.database.DatabaseError
+
+import com.google.firebase.database.DataSnapshot
+
+import com.google.firebase.database.ValueEventListener
+
+import com.google.firebase.database.FirebaseDatabase
+
+import com.google.firebase.auth.FirebaseUser
+
+import com.google.firebase.database.DatabaseReference
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -72,6 +89,7 @@ class LoginActivity : AppCompatActivity() {
                                 if (loginResult.flag == true) loadingDialog.startLoading()
                             }
                             is State.Succes -> {
+
                                 loadingDialog.stopLoading()
                                 Snackbar.make(
                                     mBinding.root,
@@ -79,19 +97,11 @@ class LoginActivity : AppCompatActivity() {
                                     Snackbar.LENGTH_SHORT
                                 ).show()
 
-                                // TODO: 1/12/21 WE MUS DO THE FIREBASE CHECK FOR isDoctorTag to go to the right activity
-                                //this is a simulation that only works if you cames from one activity or other.
-                                /**---> No valid*/
-                                if (isDoctor) {
-                                    val intent =
-                                        Intent(this@LoginActivity, DoctorActivity::class.java)
-                                    startActivity(intent)
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    checkUserAccesLevel()
 
-                                } else {
-                                    val intent =
-                                        Intent(this@LoginActivity, MainActivity::class.java)
-                                    startActivity(intent)
                                 }
+
                             }
                             is State.Failed -> {
                                 loadingDialog.stopLoading()
@@ -103,12 +113,56 @@ class LoginActivity : AppCompatActivity() {
                             }
                         }
                     }
-
                 }
             }
 
         }
-        // TODO: 1/12/21 NEXT STEP SIGN UP 
+    }
+
+    private fun checkUserAccesLevel() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        val db = FirebaseDatabase.getInstance().reference
+        val uidRef = db.child("Users").child(uid!!)
+        val valueEventListener = object : ValueEventListener {
+            //retrieve the data from a field using ValueEventListener.
+            //with onDataChange, we get a snapshot from the database wich is an instance of the database
+            override fun onDataChange(snapshot: DataSnapshot) {
+                //get the value from the doctor field.
+                val doctor = snapshot.child("doctor").getValue() as Boolean
+                //check for its value and start corresponding activity.
+                if (doctor) {
+                    startActivity(
+                        Intent(
+                            this@LoginActivity,
+                            DoctorActivity::class.java
+                        )
+                    )
+                    finish()
+                } else {
+                    startActivity(
+                        Intent(
+                            this@LoginActivity,
+                            MainActivity::class.java
+                        )
+                    )
+                    finish()
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(
+                    "TAG",
+                    databaseError.getMessage()
+                ) //Don't ignore potential errors!
+            }
+        }
+        uidRef.addListenerForSingleValueEvent(valueEventListener)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        lifecycleScope.launch(Dispatchers.IO) {
+            checkUserAccesLevel()
+        }
     }
 
     private fun areFieldsReady(): Boolean {
