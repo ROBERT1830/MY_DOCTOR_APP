@@ -11,6 +11,9 @@
     <string name="image_no_select">Image not selected</string>
     <string name="select_image">Please select image</string>
 
+    <!--    NAVIGATION DRAWER -->
+    <string name="open_navigation_drawer">Open Drawer</string>
+    <string name="close_navigation_drawer">Open Drawer</string>
 
 
     <string name="app_name">my_doctor_app</string>

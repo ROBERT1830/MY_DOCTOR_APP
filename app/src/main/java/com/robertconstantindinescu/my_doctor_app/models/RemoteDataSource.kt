@@ -1,14 +1,9 @@
 package com.robertconstantindinescu.my_doctor_app.models
 
-import android.content.Intent
 import android.net.Uri
-import android.util.Log
-import androidx.core.content.ContextCompat.startActivity
-import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -17,16 +12,12 @@ import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorMod
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.radiationIndex.UVResponse
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.UvRadiationApi
-import com.robertconstantindinescu.my_doctor_app.ui.DoctorActivity
-import com.robertconstantindinescu.my_doctor_app.ui.LoginActivity
-import com.robertconstantindinescu.my_doctor_app.ui.MainActivity
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PROFILE_PATH
 import com.robertconstantindinescu.my_doctor_app.utils.State
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 import retrofit2.Response
-import java.io.Serializable
 import javax.inject.Inject
 
 

@@ -5,11 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
-import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityLoginBinding
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
 import com.robertconstantindinescu.my_doctor_app.utils.State
@@ -18,8 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.flow.collect
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuth.AuthStateListener
-import kotlinx.coroutines.tasks.await
 import com.google.firebase.database.DatabaseError
 
 import com.google.firebase.database.DataSnapshot
@@ -27,10 +23,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
 
 import com.google.firebase.database.FirebaseDatabase
+import com.robertconstantindinescu.my_doctor_app.R
 
-import com.google.firebase.auth.FirebaseUser
-
-import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -49,6 +43,15 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            //val uid = FirebaseAuth.getInstance().currentUser?.uid
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                checkUserAccesLevel()
+            }
+
+
+        }
 
         val isDoctor = false
 
@@ -137,15 +140,15 @@ class LoginActivity : AppCompatActivity() {
                             DoctorActivity::class.java
                         )
                     )
-                    finish()
+
                 } else {
                     startActivity(
                         Intent(
                             this@LoginActivity,
-                            MainActivity::class.java
+                            PatientActivity::class.java
                         )
                     )
-                    finish()
+
                 }
             }
             override fun onCancelled(databaseError: DatabaseError) {
@@ -160,9 +163,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        lifecycleScope.launch(Dispatchers.IO) {
-            checkUserAccesLevel()
-        }
+
     }
 
     private fun areFieldsReady(): Boolean {

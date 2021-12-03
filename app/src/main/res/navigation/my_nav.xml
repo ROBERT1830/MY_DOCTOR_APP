@@ -33,4 +33,14 @@
         android:name="com.robertconstantindinescu.my_doctor_app.ui.DetectorActivity"
         android:label="activity_detector"
         tools:layout="@layout/activity_detector" />
+    <fragment
+        android:id="@+id/btnSettings"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/btnSavedPlaces"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.SavedPlacesFragment"
+        android:label="fragment_saved_places"
+        tools:layout="@layout/fragment_saved_places" />
 </navigation>

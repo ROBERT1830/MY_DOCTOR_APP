@@ -19,19 +19,24 @@
         android:theme="@style/Theme.My_doctor_app">
         <activity
             android:name=".ui.DoctorActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/ActionBarTheme"/>
         <activity
             android:name=".ui.PatientSignUpActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/ActionBarTheme"/>
         <activity
             android:name=".ui.DoctorSignUpActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/ActionBarTheme"/>
         <activity
             android:name=".ui.SignUpChooseUsrActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/ActionBarTheme"/>
         <activity
             android:name=".ui.LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/ActionBarTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,10 +45,11 @@
         </activity>
         <activity
             android:name=".ui.DetectorActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/ActionBarTheme"/>
         <activity
-            android:name=".ui.MainActivity"
-            android:exported="true"/>
+            android:name=".ui.PatientActivity"
+            android:exported="true" />
 <!--        WE must insert this activity manually so that we can acces image cropper and go for
 gallery-->
         <activity
