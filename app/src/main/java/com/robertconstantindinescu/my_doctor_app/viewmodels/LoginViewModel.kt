@@ -15,6 +15,7 @@ class LoginViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
     fun login(email: String, password: String) = repository.remote.login(email, password)
+    //fun checkForUserAcces() = repository.remote.checkForUserAcces()
     fun signUp(
         image: Uri,
         name: String,
@@ -33,5 +34,11 @@ class LoginViewModel @Inject constructor(
             doctorLiscence,
             isDoctor
         )
+
+    fun checkUserAcccesLevel(){
+
+    }
+
+
 
 }
