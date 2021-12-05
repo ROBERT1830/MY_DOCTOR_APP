@@ -13,6 +13,10 @@ class Constants {
         @JvmStatic
         val PROFILE_PATH="/Profile/image_profile.jpg"
 
+        //RETROFIT GOOGLE_API
+        const val GOOGLE_MAP_BASE_URL = "https://maps.googleapis.com/"
+        //google api key we have it in string
+
 
         //RETROFIT RADIATION_API
         const val BASE_URL = "https://api.openweathermap.org"

@@ -1,6 +1,8 @@
 package com.robertconstantindinescu.my_doctor_app.models
 
+import android.app.Application
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -10,6 +12,7 @@ import com.google.firebase.storage.ktx.storage
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
+import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.GoogleMapApi
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.radiationIndex.UVResponse
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.UvRadiationApi
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PROFILE_PATH
@@ -21,7 +24,10 @@ import retrofit2.Response
 import javax.inject.Inject
 
 
-class RemoteDataSource @Inject constructor(private val uvRadiationApi: UvRadiationApi) {
+class RemoteDataSource @Inject constructor(
+  private val uvRadiationApi: UvRadiationApi,
+  private val googleMapApi: GoogleMapApi,
+) {
 
     suspend fun getRadiationWeatherData(queries: Map<String, String>): Response<UVResponse> {
         return uvRadiationApi.getRadiationWeatherData(queries)
@@ -187,7 +193,60 @@ class RemoteDataSource @Inject constructor(private val uvRadiationApi: UvRadiati
         return task.storage.downloadUrl.await()
     }
 
-    // TODO: 1/12/21 CONTINUE WITH THE REPO, LOGINVIEWMODEL AND VIEW.
+    /** --GET PLACES-- using google Api. */
+    fun getPlaces(url: String): Flow<State<Any>> = flow<State<Any>> {
+        emit(State.loading(true))
+
+        val response = googleMapApi.getNearByPlaces(url)
+        Log.d("TAG", "getPlaces:  $response ")
+
+        if(response.body()?.googlePlaceModelList?.size!! > 0){
+            Log.d(
+                "TAG",
+                "getPlaces:  Success called ${response.body()?.googlePlaceModelList?.size}"
+            )
+            emit(State.succes(response.body()!!))
+        }else{
+            Log.d("TAG", "getPlaces:  failed called")
+            emit(State.failed(response.body()!!.error!!))
+        }
+
+    }.catch {
+        emit(State.failed(it.message.toString()))
+    }.flowOn(Dispatchers.IO)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

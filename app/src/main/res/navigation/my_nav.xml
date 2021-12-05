@@ -22,7 +22,7 @@
         android:id="@+id/mapsFragment"
         android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.MapsFragment"
         android:label="Search Hospital"
-        tools:layout="@layout/fragment_maps"/>
+        tools:layout="@layout/fragment_map"/>
     <fragment
         android:id="@+id/recipesFragment"
         android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.RecipesFragment"
