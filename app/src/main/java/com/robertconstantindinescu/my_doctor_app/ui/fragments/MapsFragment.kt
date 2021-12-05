@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -59,6 +60,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var currentLocation: Location
     private var infoWindowAdapter: InfoWindowAdapter? = null
     private var currentMarker:  Marker? = null
+
+    private  var isTrafficEnable: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,7 +128,45 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             chip.isCheckedIconVisible = false
             binding.placesGroup.addView(chip)
 
+
         }
+        /**Enable traffic realtime on the map*/
+        binding.enableTraffic.setOnClickListener {
+            if (isTrafficEnable){
+                mGoogleMap?.apply {
+                    isTrafficEnabled = false
+                    isTrafficEnable = false
+                }
+            }else
+                mGoogleMap?.apply {
+                    isTrafficEnabled = true
+                    isTrafficEnable = true
+                }
+        }
+        binding.currentLocation.setOnClickListener { getCurrentLocation() }
+
+        binding.btnMapType.setOnClickListener {
+            val popUpMenu = PopupMenu(requireContext(), it)
+            popUpMenu.apply {
+                menuInflater.inflate(R.menu.map_type_menu, popUpMenu.menu)
+
+                setOnMenuItemClickListener { item ->
+                    when(item.itemId){
+                        R.id.btnNormal -> mGoogleMap?.mapType = GoogleMap.MAP_TYPE_NORMAL
+                        R.id.btnSatellite -> mGoogleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                        R.id.btnTerrain -> mGoogleMap?.mapType = GoogleMap.MAP_TYPE_TERRAIN
+
+                    }
+                    true
+
+                }
+                show()
+            }
+
+        }
+
+
+
 
 
     }
