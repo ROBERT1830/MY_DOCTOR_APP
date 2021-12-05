@@ -10,11 +10,13 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.robertconstantindinescu.my_doctor_app.R
+import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GooglePlaceModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.GoogleMapApi
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.radiationIndex.UVResponse
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.UvRadiationApi
+import com.robertconstantindinescu.my_doctor_app.models.placesModel.SavedPlaceModel
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PROFILE_PATH
 import com.robertconstantindinescu.my_doctor_app.utils.State
 import kotlinx.coroutines.Dispatchers
@@ -25,8 +27,8 @@ import javax.inject.Inject
 
 
 class RemoteDataSource @Inject constructor(
-  private val uvRadiationApi: UvRadiationApi,
-  private val googleMapApi: GoogleMapApi,
+    private val uvRadiationApi: UvRadiationApi,
+    private val googleMapApi: GoogleMapApi,
 ) {
 
     suspend fun getRadiationWeatherData(queries: Map<String, String>): Response<UVResponse> {
@@ -81,7 +83,6 @@ class RemoteDataSource @Inject constructor(
 //    }
 
 
-
 //    private fun checkUserAccesLevel(uid: String?) {
 //        val firebase = Firebase.database.getReference("Users").child(uid!!)
 //        firebase.get().addOnSuccessListener {
@@ -115,15 +116,15 @@ class RemoteDataSource @Inject constructor(
         //could be a posibility that the user was not created.
         data.user?.let { currentUser ->
             val path = uploadImage(currentUser.uid, image).toString()
-            if (isDoctor){
-                doctorModel = createDoctorModel(path, name,phoneNumber , email, doctorLiscence, isDoctor)
-                createDoctor(doctorModel , auth)
-            }else {
-                patientModel = createPatientModel(path, name,phoneNumber , email, isDoctor)
+            if (isDoctor) {
+                doctorModel =
+                    createDoctorModel(path, name, phoneNumber, email, doctorLiscence, isDoctor)
+                createDoctor(doctorModel, auth)
+            } else {
+                patientModel = createPatientModel(path, name, phoneNumber, email, isDoctor)
                 createPatient(patientModel, auth)
             }
             emit(State.succes("Email verification sent"))
-
 
 
         }
@@ -142,7 +143,7 @@ class RemoteDataSource @Inject constructor(
             updateProfile(profileChangeRequest).await()
             sendEmailVerification().await()
         }
-        
+
     }
 
     private suspend fun createDoctor(doctorModel: DoctorModel, auth: FirebaseAuth) {
@@ -157,7 +158,7 @@ class RemoteDataSource @Inject constructor(
             sendEmailVerification().await()
         }
     }
-    
+
 
     private fun createPatientModel(
         image: String,
@@ -165,9 +166,9 @@ class RemoteDataSource @Inject constructor(
         phoneNumber: String,
         email: String,
         isDoctor: Boolean
-    ):PatientModel {
+    ): PatientModel {
 
-        return PatientModel( image, name,   phoneNumber, email, isDoctor)
+        return PatientModel(image, name, phoneNumber, email, isDoctor)
     }
 
     private fun createDoctorModel(
@@ -177,8 +178,8 @@ class RemoteDataSource @Inject constructor(
         email: String,
         doctorLiscence: String?,
         isDoctor: Boolean
-    ):DoctorModel {
-        return DoctorModel( image, name,   phoneNumber, email, doctorLiscence!!, isDoctor)
+    ): DoctorModel {
+        return DoctorModel(image, name, phoneNumber, email, doctorLiscence!!, isDoctor)
 
 
     }
@@ -188,7 +189,8 @@ class RemoteDataSource @Inject constructor(
         val firebaseStorage = Firebase.storage
         val storageReference = firebaseStorage.reference
         //execute the task, wich is upload an imagge to firebaseStorage
-        val task = storageReference.child(uid + PROFILE_PATH).putFile(image).await() //awais is a suspend function
+        val task = storageReference.child(uid + PROFILE_PATH).putFile(image)
+            .await() //awais is a suspend function
 
         return task.storage.downloadUrl.await()
     }
@@ -200,13 +202,13 @@ class RemoteDataSource @Inject constructor(
         val response = googleMapApi.getNearByPlaces(url)
         Log.d("TAG", "getPlaces:  $response ")
 
-        if(response.body()?.googlePlaceModelList?.size!! > 0){
+        if (response.body()?.googlePlaceModelList?.size!! > 0) {
             Log.d(
                 "TAG",
                 "getPlaces:  Success called ${response.body()?.googlePlaceModelList?.size}"
             )
             emit(State.succes(response.body()!!))
-        }else{
+        } else {
             Log.d("TAG", "getPlaces:  failed called")
             emit(State.failed(response.body()!!.error!!))
         }
@@ -216,37 +218,88 @@ class RemoteDataSource @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
 
+    /**
+     * Method to get the places id saved in firebase from a previous session of the current user.
+     * so we need its id.
+     */
+    suspend fun getUserLocationId(): ArrayList<String> {
+        val userPlaces = ArrayList<String>()
+        val auth = Firebase.auth
+        val database =
+            Firebase.database.getReference("Users").child(auth.uid!!).child("Saved Locations")
+        val data = database.get().await()
+        //if we get data...
+        if (data.exists()) {
+            for (ds in data.children) {
+                val placeId = ds.getValue(String::class.java)
+                userPlaces.add(placeId!!)
+            }
+
+        }
+
+        return userPlaces
+    }
+
+    /** -- REMOVE PLACE -- */
+    fun removePlace(userSavedLocationId: ArrayList<String>) = flow<State<Any>> {
+        emit(State.loading(true))
+        val auth = Firebase.auth
+        val database =
+            Firebase.database.getReference("Users").child(auth.uid!!).child("Saved Locations")
+        //set the database with the remaining data not been removed.
+        database.setValue(userSavedLocationId).await()
+        emit(State.succes("Remove Successfully"))
+
+    }.catch {
+        emit(State.failed(it.message!!))
+    }.flowOn(Dispatchers.IO)
+
+    fun addUserPlace(
+        googlePlaceModel: GooglePlaceModel,
+        userSavedLocationId: java.util.ArrayList<String>
+    ) = flow<State<Any>> {
+        emit(State.loading(true))
+
+        val auth = Firebase.auth
+
+        //get reference to Saved Location from current user
+        val userDatabase =
+            Firebase.database.getReference("Users").child(auth.uid!!).child("Saved Locations")
+
+        val database = Firebase.database.getReference("Places").child(googlePlaceModel.placeId!!).get().await()
+        //if the database Places does not exists, create the model and add it into firebase.
+        if (!database.exists()){
+            val savePlaceModel = SavedPlaceModel(
+                googlePlaceModel.name!!, googlePlaceModel.vicinity!!,
+                googlePlaceModel.placeId, googlePlaceModel.userRatingsTotal!!,
+                googlePlaceModel.rating!!, googlePlaceModel.geometry?.location?.lat!!,
+                googlePlaceModel.geometry.location.lng!!
+            )
+            addPlace(savePlaceModel)
+        }
+
+        //add the place id to the userSavedLocaitonId places
+        userSavedLocationId.add(googlePlaceModel.placeId)
+        //add the place id to the user Saved Places.
+        userDatabase.setValue(userSavedLocationId).await()
+        //create a flow from firebase to app
+        emit(State.succes(googlePlaceModel))
 
 
 
+    }.catch {
+        emit(State.failed(it.message!!))
+    }.flowOn(Dispatchers.IO)
 
+    /**
+     * method to add a place in the Places Database.
+     */
+    private suspend fun addPlace(savePlaceModel: SavedPlaceModel) {
+        val databse = Firebase.database.getReference("Places")
+        //create that child from the database Places
+        databse.child(savePlaceModel.placeId).setValue(savePlaceModel).await()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 }

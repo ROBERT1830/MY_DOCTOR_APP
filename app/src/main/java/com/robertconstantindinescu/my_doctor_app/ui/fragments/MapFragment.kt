@@ -24,6 +24,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -31,11 +35,17 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.robertconstantindinescu.my_doctor_app.R
+import com.robertconstantindinescu.my_doctor_app.adapters.mapsAdapters.GooglePlaceAdapter
 import com.robertconstantindinescu.my_doctor_app.adapters.mapsAdapters.InfoWindowAdapter
 
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentMapBinding
+import com.robertconstantindinescu.my_doctor_app.interfaces.NearLocationInterface
 import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GooglePlaceModel
 import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GoogleResponseModel
 import com.robertconstantindinescu.my_doctor_app.utils.AppPermissions
@@ -52,7 +62,8 @@ import kotlinx.coroutines.flow.collect
 import java.security.Permission
 
 @AndroidEntryPoint
-class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+    NearLocationInterface {
 
 
     private lateinit var binding: FragmentMapBinding
@@ -80,6 +91,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     private val locationViewModel: LocationViewModel by viewModels()
 
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var googleplaceAdapter: GooglePlaceAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,6 +118,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         appPermission = AppPermissions()
         loadingDialog = LoadingDialog(requireActivity())
+        firebaseAuth = Firebase.auth
         googlePlaceList = ArrayList()
 
 
@@ -193,8 +208,21 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             }
         }
 
+        setUpRecyclerView()
+        //get the places that the user have saved in a previous session.
+        /*we will get this saved places from firebase database named Saved Locations*/
+        lifecycleScope.launchWhenStarted {
+            //this one here is super important because due to that when we launch the app,
+            //we get all the places saved in the firebase for a given logged user. So that
+            //we will have them stored in that string arrayList and watch all of them
+            //once we o to a particular chip and press it.
+            userSavedLocationId = locationViewModel.getUserLocationId()
+            Log.d("TAG", "onViewCreated: ${userSavedLocationId.size}")
+        }
+
 
     }
+
 
     private fun getNearByPlaces(placeType: String) {
 
@@ -226,7 +254,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
                             //for each googlePlaceModel check is it is save and add it to the googleplaceList
                             for (i in googleResponseModel.googlePlaceModelList.indices) {
-                                //change the save transient property of googlePlaceModelList
+                                //change the save transient property of googlePlaceModelList(obtained above from firebase)
                                 //to true or false depending on the userSavedLocationId arrayLiast
                                 //if that contains the placeId.
                                 googleResponseModel.googlePlaceModelList[i].saved =
@@ -236,8 +264,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                                 addMarker(googleResponseModel.googlePlaceModelList[i], i)
                             }
                             // TODO: 5/12/21 do the adapter. and the else.  and the failsed state
+                            googleplaceAdapter.setGooglePlaces(googlePlaceList)
 
-                        }else{
+                        } else {
                             mGoogleMap?.clear()
                             googlePlaceList.clear()
 
@@ -257,12 +286,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     private fun addMarker(googlePlaceModel: GooglePlaceModel, position: Int) {
         val markerOptions = MarkerOptions()
-                //get the position according to the model we passed as argument
-            .position(LatLng(
-                googlePlaceModel.geometry?.location?.lat!!,
-                googlePlaceModel.geometry?.location?.lng!!
+            //get the position according to the model we passed as argument
+            .position(
+                LatLng(
+                    googlePlaceModel.geometry?.location?.lat!!,
+                    googlePlaceModel.geometry?.location?.lng!!
+                )
             )
-        )
             .title(googlePlaceModel.name)
             .snippet(googlePlaceModel.vicinity)
 
@@ -524,9 +554,185 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         }
     }
 
+    private fun setUpRecyclerView() {
+        //SnapHelper used to set the recycler to the next position directly.
+        val snapHelper: SnapHelper = PagerSnapHelper()
+        //init the adapter
+        googleplaceAdapter = GooglePlaceAdapter(this) //interface from constructor
 
-    override fun onMarkerClick(p0: Marker): Boolean {
-        return true
+        binding.placesRecyclerView.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(false)
+            //define the recycler adapter.
+            adapter = googleplaceAdapter
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener(){
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    //define the layout of the recycler
+                    val linearManager = recyclerView.layoutManager as LinearLayoutManager
+                    //get the position of the first full visible item from recycler
+                    val position = linearManager.findFirstCompletelyVisibleItemPosition()
+                    //if we have a position, means that we have a full element visible
+                    if (position > -1){
+                        //get the full model from the googlePlaceList (this is filled when we press the
+                        // a chip with all places nearby)
+                        val googlePlaceModel: GooglePlaceModel = googlePlaceList[position]
+                        mGoogleMap?.animateCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                LatLng(
+                                    googlePlaceModel.geometry?.location?.lat!!,
+                                    googlePlaceModel.geometry?.location?.lng!!,
+
+                                ), 20f
+                            )
+                        )
+
+                    }
+                }
+
+            })
+
+        }
+        //attach the snaphelper to the recyclerview
+        snapHelper.attachToRecyclerView(binding.placesRecyclerView)
+
+
+    }
+
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        //cogemos el tag del marker.
+        val markerTag = marker.tag as Int
+        Log.d("TAG", "onMarkerClick: $markerTag")
+        //y hacemos un scroll del recycler view hasta ese marker tag.
+        //con esto vamos a sincronizar el scroll con la posicon del marquer.
+        binding.placesRecyclerView.scrollToPosition(markerTag)
+        return false
+
+    }
+
+    override fun onSaveClick(googlePlaceModel: GooglePlaceModel) {
+        if(userSavedLocationId.contains(googlePlaceModel.placeId)){
+            AlertDialog.Builder(requireContext())
+                .setTitle("Remove Place")
+                .setMessage("Are you sure to remove this place?")
+                .setPositiveButton("Yes") { _, _ ->
+                    removePlace(googlePlaceModel)
+                }
+                .setNegativeButton("No"){_,_ ->}
+                .create().show()
+        }else{
+
+            addPlace(googlePlaceModel)
+        }
+
+
+
+    }
+
+
+
+
+    private fun removePlace(googlePlaceModel: GooglePlaceModel) {
+        //remove from userSavedLocationId
+        userSavedLocationId.remove(googlePlaceModel.placeId)
+        //get the position of that googlePlaceModel clicked on googleplaceList (that has all of the
+        //clicked chip places.)
+        val index = googlePlaceList.indexOf(googlePlaceModel)
+        //set to false "saved" property
+        googlePlaceList[index].saved = false
+        //notify the adapter to get again the data and not show the filled icon of saved place.
+        googleplaceAdapter.notifyDataSetChanged()
+
+        Snackbar.make(binding.root, "Place removed", Snackbar.LENGTH_SHORT)
+            .setAction("Undo"){
+                userSavedLocationId.add(googlePlaceModel.placeId!!)
+                googlePlaceList[index].saved = true
+                googleplaceAdapter.notifyDataSetChanged()
+
+            }
+            //listener for transient snackbar, when this one hides.
+            .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar?>(){
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    super.onDismissed(transientBottomBar, event)
+                    //remove place from firebase of the current user logged.
+                    lifecycleScope.launchWhenStarted {
+                        locationViewModel.removePlace(userSavedLocationId).collect {
+                            when(it){
+                                is State.Loading -> {
+                                    if(it.flag == true){
+                                        loadingDialog.startLoading()
+                                    }
+
+                                }
+                                is State.Succes -> {
+                                    loadingDialog.stopLoading()
+                                    Snackbar.make(
+                                        binding.root,
+                                        it.data.toString(),
+                                        Snackbar.LENGTH_SHORT
+                                    ).show()
+
+                                }
+                                is State.Failed -> {
+                                    loadingDialog.stopLoading()
+                                    Snackbar.make(
+                                        binding.root,
+                                        it.error.toString(),
+                                        Snackbar.LENGTH_SHORT
+                                    ).show()
+
+                                }
+                            }
+                        }
+                    }
+
+                }
+            } )
+            .show()
+
+
+
+
+    }
+
+    private fun addPlace(googlePlaceModel: GooglePlaceModel) {
+        lifecycleScope.launchWhenStarted {
+            locationViewModel.addUserPlace(googlePlaceModel, userSavedLocationId).collect {
+                when(it){
+                    is State.Loading ->{
+                        if(it.flag == true){
+                            loadingDialog.startLoading()
+                        }
+                    }
+                    is State.Succes -> {
+                        loadingDialog.stopLoading()
+                        val placeModel: GooglePlaceModel = it.data as GooglePlaceModel
+                        //userSavedLocationId.add(placeModel.placeId!!)
+                        val index = googlePlaceList.indexOf(placeModel)
+                        googlePlaceList[index].saved = true
+                        googleplaceAdapter.notifyDataSetChanged()
+                        Snackbar.make(binding.root, "Saved Successfully", Snackbar.LENGTH_SHORT)
+                            .show()
+                    }
+                    is State.Failed -> {
+                        loadingDialog.stopLoading()
+                        Snackbar.make(
+                            binding.root, it.error,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    override fun onDirectionClick(googlePlaceModel: GooglePlaceModel) {
+
 
     }
 }
