@@ -3,6 +3,8 @@ package com.robertconstantindinescu.my_doctor_app.ui.fragments
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -18,33 +20,42 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.adapters.mapsAdapters.InfoWindowAdapter
-import com.robertconstantindinescu.my_doctor_app.databinding.FragmentMapsBinding
+
+import com.robertconstantindinescu.my_doctor_app.databinding.FragmentMapBinding
+import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GooglePlaceModel
+import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GoogleResponseModel
 import com.robertconstantindinescu.my_doctor_app.utils.AppPermissions
 import com.robertconstantindinescu.my_doctor_app.utils.Constants
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.placesName
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
-import kotlinx.android.synthetic.main.fragment_maps.*
+import com.robertconstantindinescu.my_doctor_app.utils.State
+import com.robertconstantindinescu.my_doctor_app.viewmodels.LocationViewModel
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_map.*
+import kotlinx.coroutines.flow.collect
 import java.security.Permission
 
-
+@AndroidEntryPoint
 class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
 
-    private lateinit var binding: FragmentMapsBinding
+    private lateinit var binding: FragmentMapBinding
     private var mGoogleMap: GoogleMap? = null
 
     //private lateinit var appPermission: AppPermissions
@@ -59,9 +70,15 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private lateinit var currentLocation: Location
     private var infoWindowAdapter: InfoWindowAdapter? = null
-    private var currentMarker:  Marker? = null
+    private var currentMarker: Marker? = null
 
-    private  var isTrafficEnable: Boolean = false
+    private var isTrafficEnable: Boolean = false
+    private var radius = 4500.00
+
+    private lateinit var googlePlaceList: ArrayList<GooglePlaceModel>
+    private var userSavedLocationId: ArrayList<String> = ArrayList()
+
+    private val locationViewModel: LocationViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +94,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     ): View? {
         // Inflate the layout for this fragment
 
-        binding = FragmentMapsBinding.inflate(inflater, container, false)
+        binding = FragmentMapBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -87,6 +104,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         appPermission = AppPermissions()
         loadingDialog = LoadingDialog(requireActivity())
+        googlePlaceList = ArrayList()
+
 
         /**registerForActivityResult - Take an activityResultContract with the multiple permission
          * which are sent to an other activity from system to check or not the permissions for the
@@ -132,12 +151,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         }
         /**Enable traffic realtime on the map*/
         binding.enableTraffic.setOnClickListener {
-            if (isTrafficEnable){
+            if (isTrafficEnable) {
                 mGoogleMap?.apply {
                     isTrafficEnabled = false
                     isTrafficEnable = false
                 }
-            }else
+            } else
                 mGoogleMap?.apply {
                     isTrafficEnabled = true
                     isTrafficEnable = true
@@ -151,7 +170,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 menuInflater.inflate(R.menu.map_type_menu, popUpMenu.menu)
 
                 setOnMenuItemClickListener { item ->
-                    when(item.itemId){
+                    when (item.itemId) {
                         R.id.btnNormal -> mGoogleMap?.mapType = GoogleMap.MAP_TYPE_NORMAL
                         R.id.btnSatellite -> mGoogleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
                         R.id.btnTerrain -> mGoogleMap?.mapType = GoogleMap.MAP_TYPE_TERRAIN
@@ -165,8 +184,113 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         }
 
+        binding.placesGroup.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId != -1) {
+                val placemodel = placesName[checkedId - 1]
+                binding.edtPlaceName.setText(placemodel.name)
+
+                getNearByPlaces(placemodel.placeType)
+            }
+        }
 
 
+    }
+
+    private fun getNearByPlaces(placeType: String) {
+
+        val url = ("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="
+                + currentLocation.latitude + "," + currentLocation.longitude
+                + "&radius=" + radius + "&type=" + placeType + "&key=" +
+                resources.getString(R.string.API_KEY))
+
+        lifecycleScope.launchWhenStarted {
+            locationViewModel.getNearByPlace(url).collect {
+                when (it) {
+                    is State.Loading -> {
+                        if (it.flag == true) {
+                            loadingDialog.toString()
+                        }
+                    }
+                    is State.Succes -> {
+                        loadingDialog.stopLoading()
+                        val googleResponseModel: GoogleResponseModel =
+                            it.data as GoogleResponseModel
+                        //if the response with the googlePlaceModelList is not null and not empty
+                        //then clear the map and add new markers.
+                        if (googleResponseModel.googlePlaceModelList !== null &&
+                            googleResponseModel.googlePlaceModelList.isNotEmpty()
+                        ) {
+
+                            googlePlaceList.clear()
+                            mGoogleMap?.clear()
+
+                            //for each googlePlaceModel check is it is save and add it to the googleplaceList
+                            for (i in googleResponseModel.googlePlaceModelList.indices) {
+                                //change the save transient property of googlePlaceModelList
+                                //to true or false depending on the userSavedLocationId arrayLiast
+                                //if that contains the placeId.
+                                googleResponseModel.googlePlaceModelList[i].saved =
+                                    userSavedLocationId.contains(googleResponseModel.googlePlaceModelList[i].placeId)
+                                googlePlaceList.add(googleResponseModel.googlePlaceModelList[i])
+                                //add marker for each place that we get the response.
+                                addMarker(googleResponseModel.googlePlaceModelList[i], i)
+                            }
+                            // TODO: 5/12/21 do the adapter. and the else.  and the failsed state
+
+                        }else{
+                            mGoogleMap?.clear()
+                            googlePlaceList.clear()
+
+                        }
+                    }
+                    is State.Failed -> {
+                        loadingDialog.stopLoading()
+                        Snackbar.make(
+                            binding.root, it.error,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addMarker(googlePlaceModel: GooglePlaceModel, position: Int) {
+        val markerOptions = MarkerOptions()
+                //get the position according to the model we passed as argument
+            .position(LatLng(
+                googlePlaceModel.geometry?.location?.lat!!,
+                googlePlaceModel.geometry?.location?.lng!!
+            )
+        )
+            .title(googlePlaceModel.name)
+            .snippet(googlePlaceModel.vicinity)
+
+        markerOptions.icon(getCustomIcon())
+        //add the marker
+        mGoogleMap?.addMarker(markerOptions)?.tag = position
+        // TODO: 5/12/21 add marker to googleMap
+
+    }
+
+    //create the custom icon for the marker
+    private fun getCustomIcon(): BitmapDescriptor? {
+        //define the icon backgroud. ContextCompat ---> helps to accessing features in Context so
+        // that you have to pass the context of the activity.
+        val backGround = ContextCompat.getDrawable(requireContext(), R.drawable.ic_location)
+        //change color
+        backGround?.setTint(resources.getColor(R.color.quantum_googred900, null))
+        backGround?.setBounds(0, 0, backGround.intrinsicWidth, backGround.intrinsicHeight)
+        //create the icon image
+        val bitmap = Bitmap.createBitmap(
+            backGround?.intrinsicWidth!!, backGround.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        //get a canvas object
+        val canvas = Canvas(bitmap)
+        //draw canvas
+        backGround.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
 
 
     }
@@ -369,7 +493,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             MarkerOptions().position(LatLng(currentLocation.latitude, currentLocation.longitude))
                 .title("Current location")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                //.snippet(firebaseAuth.currentUser?.displayName)
+        //.snippet(firebaseAuth.currentUser?.displayName)
 
         currentMarker?.remove()
 
@@ -381,7 +505,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     }
 
-    fun stopLocationUpdates(){
+    fun stopLocationUpdates() {
         fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
 
     }
@@ -393,15 +517,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     override fun onResume() {
         super.onResume()
-        if(fusedLocationProviderClient!= null){
+        if (fusedLocationProviderClient != null) {
             startLocationUpdates()
             //remove the current marker becasue it could have been changed.
             currentMarker?.remove()
         }
     }
-
-
-
 
 
     override fun onMarkerClick(p0: Marker): Boolean {

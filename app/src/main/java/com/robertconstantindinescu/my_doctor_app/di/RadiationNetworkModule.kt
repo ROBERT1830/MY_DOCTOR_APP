@@ -10,6 +10,8 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 
@@ -19,6 +21,8 @@ object RadiationNetworkModule {
 
     @Singleton
     @Provides
+
+    @Named("provideHttpClient_uvIndex")
     fun provideHttpClient(): OkHttpClient{
         return OkHttpClient.Builder()
             .readTimeout(15, TimeUnit.SECONDS) //tiempo de espera de lectura predeterminado para nuevas conexiones
@@ -35,8 +39,9 @@ object RadiationNetworkModule {
 
     @Singleton
     @Provides
+    @Named("provideRetrofit_uvIndex")
     fun provideRetrofitInstance(
-        okHttpClient: OkHttpClient,
+        @Named("provideHttpClient_uvIndex") okHttpClient: OkHttpClient,
         gsonConverterFactory: GsonConverterFactory
     ): Retrofit{
         return Retrofit.Builder()
@@ -49,7 +54,7 @@ object RadiationNetworkModule {
 
     @Singleton
     @Provides
-    fun provideapiService(retrofit: Retrofit): UvRadiationApi{
+    fun provideapiService(@Named("provideRetrofit_uvIndex") retrofit: Retrofit): UvRadiationApi{
         return retrofit.create(UvRadiationApi::class.java)
     }
 
