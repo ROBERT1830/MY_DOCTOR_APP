@@ -1,7 +1,9 @@
 package com.robertconstantindinescu.my_doctor_app.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -14,6 +16,7 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -28,7 +31,9 @@ import com.robertconstantindinescu.my_doctor_app.databinding.ToolbarLayoutBindin
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.activity_login.view.*
 import kotlinx.android.synthetic.main.activity_patient.*
+import kotlinx.android.synthetic.main.navigation_drawer_layout.view.*
 
 @AndroidEntryPoint
 class PatientActivity : AppCompatActivity() {
@@ -46,12 +51,18 @@ class PatientActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         //inflate the navigationDrawerLayoutBinding. This contains the activity_patient
         navigationDrawerLayoutBinding = NavigationDrawerLayoutBinding.inflate(layoutInflater)
         setContentView(navigationDrawerLayoutBinding.root)
 
         patientBinding = navigationDrawerLayoutBinding.patientActivity
         toolbarLayoutBinding = patientBinding.toolbarMain
+
+//        /**Navigation view to perform click*/
+//        val nav_view: NavigationView = findViewById(R.id.navigationView)
+//        nav_view.setNavigationItemSelectedListener(this)
+//        nav_view.bringToFront();
 
         setSupportActionBar(toolbarLayoutBinding.toolbar)
 
@@ -67,7 +78,18 @@ class PatientActivity : AppCompatActivity() {
         )
 
         //drawer listener to capture the clics inside it
+
+
         navigationDrawerLayoutBinding.navDrawer.addDrawerListener(toogle)
+        navigationDrawerLayoutBinding.navigationView.getMenu().findItem(R.id.btnLogOut).setOnMenuItemClickListener {
+            FirebaseAuth.getInstance().signOut()
+                val intent = Intent(this@PatientActivity, LoginActivity::class.java)
+                startActivity(intent)
+            true
+        }
+
+
+
         /*will synchronise the icon’s state and display the hamburger icon or back arrow depending on
         whether the drawer is closed or open. Omitting this line of code won’t change the back arrow
         to the hamburger icon when the drawer is closed.*/
@@ -111,6 +133,10 @@ class PatientActivity : AppCompatActivity() {
 
 
 
+        //get the listener when the log out is cliked and go to loginactivity.
+
+
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
 
             when(destination.id){
@@ -119,7 +145,19 @@ class PatientActivity : AppCompatActivity() {
                 R.id.btnShowAvailableDoctors -> bottomNavigationView.visibility = View.GONE
                 R.id.cancerRecordsFragment -> bottomNavigationView.visibility = View.VISIBLE
 
+
+
+
+                    /*logout.setOnClickListener {
+    mGoogleSignInClient.signOut().addOnCompleteListener {
+        val intent= Intent(this, LoginScreen::class.java)
+        startActivity(intent)
+        finish()
+    }
+}*/
+
             }
+
 
 //            if(destination.id == R.id.btnSettings) {
 //
@@ -129,6 +167,19 @@ class PatientActivity : AppCompatActivity() {
 //                bottomNavigationView.visibility = View.VISIBLE
 //            }
         }
+//        navigationDrawerLayoutBinding.navigationView.setNavigationItemSelectedListener {
+//            when(it.itemId){
+//                R.id.btnLogOut -> {
+//                    FirebaseAuth.getInstance().signOut()
+//                    val intent = Intent(this@PatientActivity, LoginActivity::class.java)
+//                    startActivity(intent)
+//                }
+//            }
+//
+//            return@setNavigationItemSelectedListener false
+//        }
+
+
     }
 
     private fun getUserData() {
@@ -174,4 +225,18 @@ class PatientActivity : AppCompatActivity() {
         else
             super.onBackPressed()
     }
+
+//    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+//        when(item.itemId){
+//            R.id.btnLogOut -> {
+//                FirebaseAuth.getInstance().signOut()
+//                val intent = Intent(this@PatientActivity, LoginActivity::class.java)
+//                startActivity(intent)
+//            }
+//        }
+//
+//        return false
+//
+//
+//    }
 }

@@ -21,6 +21,13 @@
                 android:title="Available Doctors"/>
         </menu>
     </item>
+
+    <item
+        android:id="@+id/btnLogOut"
+        android:title="Log Out"
+        android:icon="@drawable/ic_logout_24">
+
+    </item>
 <!--    <item android:title="">-->
 <!--        <menu>-->
 <!--            <item-->
