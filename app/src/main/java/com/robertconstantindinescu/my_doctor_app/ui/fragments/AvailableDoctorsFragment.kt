@@ -5,28 +5,38 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.R
+import com.robertconstantindinescu.my_doctor_app.adapters.AvailableDoctorsAdapter
+import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAvailableDoctorsBinding
+import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAvailableDoctorsItemBinding
+import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
+import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
+import com.robertconstantindinescu.my_doctor_app.utils.State
+import com.robertconstantindinescu.my_doctor_app.viewmodels.AvailableDoctorsViewModel
+import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import javax.annotation.meta.When
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [AvailableDoctorsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class AvailableDoctorsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var mBinding: FragmentAvailableDoctorsBinding
+    private val availableDoctorsViweModel: AvailableDoctorsViewModel by viewModels<AvailableDoctorsViewModel>()
+    private val mAdapter by lazy { AvailableDoctorsAdapter() }
+
+    private lateinit var availableDoctors: ArrayList<DoctorModel>
+    private lateinit var loadingDialog: LoadingDialog
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
         }
     }
 
@@ -35,26 +45,95 @@ class AvailableDoctorsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_available_doctors, container, false)
+        mBinding = FragmentAvailableDoctorsBinding.inflate(inflater, container, false)
+        loadingDialog = LoadingDialog(requireActivity())
+        availableDoctors = ArrayList<DoctorModel>()
+
+        setUpRecyclerView()
+
+        lifecycleScope.launchWhenStarted {
+            loadingDialog.startLoading()
+            availableDoctors = availableDoctorsViweModel.getAvailableDoctors()
+            if (!availableDoctors.isNullOrEmpty()){
+                loadingDialog.stopLoading()
+                mAdapter.setUpAdapter(availableDoctors)
+            }
+
+
+//            availableDoctorsViweModel.getAvailableDoctors().collect { result ->
+//                when (result) {
+//                    is State.Loading -> {
+//                        if (result.flag == true) loadingDialog.startLoading()
+//                    }
+//                    is State.Succes -> {
+//                        loadingDialog.stopLoading()
+//                        availableDoctors.add(result.data as DoctorModel)
+//                        mAdapter.setUpAdapter(availableDoctors)
+//                    }
+//                    is State.Failed -> {
+//                        loadingDialog.stopLoading()
+//                        Snackbar.make(
+//                            mBinding.root, result.error,
+//                            Snackbar.LENGTH_SHORT
+//                        ).show()
+//
+//                    }
+//                }
+
+
+
+        }
+
+        return mBinding.root
+
+
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AvailableDoctorsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AvailableDoctorsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun setUpRecyclerView() {
+
+        mBinding.recyclerViewAvailableDoctors.apply {
+            adapter = mAdapter
+            setHasFixedSize(true)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+        }
+
+
     }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

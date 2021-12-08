@@ -6,6 +6,9 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -147,6 +150,9 @@ class RemoteDataSource @Inject constructor(
     }
 
     private suspend fun createDoctor(doctorModel: DoctorModel, auth: FirebaseAuth) {
+        //create a database only with the doctors.
+        val firebaseDoctors = Firebase.database.getReference("Doctors")
+        firebaseDoctors!!.child(auth.uid!!).setValue(doctorModel).await()
         val firebase = Firebase.database.getReference("Users")//.child("Doctors")
         firebase!!.child(auth.uid!!).setValue(doctorModel).await()
         val profileChangeRequest = UserProfileChangeRequest.Builder()
@@ -266,9 +272,10 @@ class RemoteDataSource @Inject constructor(
         val userDatabase =
             Firebase.database.getReference("Users").child(auth.uid!!).child("Saved Locations")
 
-        val database = Firebase.database.getReference("Places").child(googlePlaceModel.placeId!!).get().await()
+        val database =
+            Firebase.database.getReference("Places").child(googlePlaceModel.placeId!!).get().await()
         //if the database Places does not exists, create the model and add it into firebase.
-        if (!database.exists()){
+        if (!database.exists()) {
             val savePlaceModel = SavedPlaceModel(
                 googlePlaceModel.name!!, googlePlaceModel.vicinity!!,
                 googlePlaceModel.placeId, googlePlaceModel.userRatingsTotal!!,
@@ -284,7 +291,6 @@ class RemoteDataSource @Inject constructor(
         userDatabase.setValue(userSavedLocationId).await()
         //create a flow from firebase to app
         emit(State.succes(googlePlaceModel))
-
 
 
     }.catch {
@@ -303,12 +309,12 @@ class RemoteDataSource @Inject constructor(
 
     /** -- GET DIRECTIONS -- */
 
-    fun getDirection(url: String) : Flow<State<Any>> = flow<State<Any>> {
+    fun getDirection(url: String): Flow<State<Any>> = flow<State<Any>> {
         emit(State.loading(true))
         val response = googleMapApi.getDirection(url)
-        if(response.body()?.directionRouteModels?.size!! > 0){
+        if (response.body()?.directionRouteModels?.size!! > 0) {
             emit(State.succes(response.body()!!))
-        }else{
+        } else {
             emit(State.failed(response.body()?.error!!))
         }
     }.catch {
@@ -321,4 +327,61 @@ class RemoteDataSource @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
 
+    /** --AVAILABLE DOCTORS-- */
+
+    suspend fun getAvailableDoctors(): ArrayList<DoctorModel> {
+        val availableDoctList = ArrayList<DoctorModel>()
+        //var flag: Boolean? = null
+        //var mError: String? = null
+        //emit(State.loading(true))
+
+        val database = Firebase.database.reference.child("Doctors")
+        val data = database.get().await()
+        if (data.exists()) {
+            for (d in data.children) {
+                var doctorModel: DoctorModel = d.getValue(DoctorModel::class.java)!!
+                availableDoctList.add(doctorModel)
+            }
+        }
+        return availableDoctList
+    }
+
+
+
+//        Firebase.database.getReference().child("Doctors")
+//            .addValueEventListener(object : ValueEventListener {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    availableDoctList.clear()
+//                    for (childsnapshot: DataSnapshot in snapshot.children) {
+//                        //create the model. if dont create not working...tonto
+//                        var doctorModel: DoctorModel =
+//                            childsnapshot.getValue(DoctorModel::class.java)!!
+//                        availableDoctList.add(doctorModel)
+//
+//                    }
+//                    flag = true
+//
+//
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//                    flag = false
+//                    mError = error.message
+//
+//                }
+//            })
+//        if ( flag!!) {
+//            emit(State.succes(availableDoctList))
+//        } else emit(State.failed(mError!!))
+//    }.catch {
+//        emit(State.failed(it.message.toString()!!))
+//    }.flowOn(Dispatchers.IO)
+
+
 }
+
+
+
+
+
+
