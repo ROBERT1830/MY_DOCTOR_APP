@@ -37,5 +37,7 @@ class LocationViewModel @Inject constructor(
     fun addUserPlace(googlePlaceModel: GooglePlaceModel, userSavedLocationId: ArrayList<String>) =
         repository.remote.addUserPlace(googlePlaceModel, userSavedLocationId)
 
+    fun getDirection(url: String) = repository.remote.getDirection(url)
+
 
 }

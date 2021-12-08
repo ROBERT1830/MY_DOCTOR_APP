@@ -1,6 +1,6 @@
 package com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.directionPlaceModel
 
-import com.example.nearmekotlindemo.models.googlePlaceModel.directionPlaceModel.*
+
 import com.squareup.moshi.Json
 
 /**

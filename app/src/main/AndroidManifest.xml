@@ -19,10 +19,8 @@
         android:theme="@style/Theme.My_doctor_app">
         <activity
             android:name=".ui.DirectionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/ActionBarTheme"/>
         <activity
             android:name=".ui.DoctorActivity"
             android:exported="false"

@@ -1,6 +1,7 @@
 package com.robertconstantindinescu.my_doctor_app.models.onlineData.network
 
 import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GoogleResponseModel
+import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.directionPlaceModel.DirectionResponseModel
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import retrofit2.Response
@@ -12,5 +13,7 @@ interface GoogleMapApi {
     @GET  //con el metodo url
     suspend fun getNearByPlaces(@Url url: String): Response<GoogleResponseModel>
 
+    @GET
+    suspend fun getDirection(@Url url: String): Response<DirectionResponseModel>
 
 }

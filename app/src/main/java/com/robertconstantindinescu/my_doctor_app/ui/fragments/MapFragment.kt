@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -61,6 +62,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.coroutines.flow.collect
+import java.lang.Exception
 import java.security.Permission
 
 @AndroidEntryPoint
@@ -735,20 +737,29 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     override fun onDirectionClick(googlePlaceModel: GooglePlaceModel) {
 
-        val placeId = googlePlaceModel.placeId
-        //pasamos la longitud y latitud del sitio en cuestion. Es decir
-        //que cuadno clicamos sobre el boton de direcciones estamos accediendo tambien a los datos de
-        //un objeto. Con lo cual, vamos a obtener la latitud y la longitud de ese objeto para
-        //luego poder operar con esos datos.
-        val lat = googlePlaceModel.geometry?.location?.lat
-        val lng = googlePlaceModel.geometry?.location?.lng
-        //iniciamos un nuevo intent con la activity de direcciones. y pasqmos una serie de datos en ese intent.
-        val intent = Intent(requireContext(), DirectionActivity::class.java)
-        intent.putExtra("placeId", placeId)
-        intent.putExtra("lat", lat)
-        intent.putExtra("lng", lng)
+        try {
+            val action = MapsFragmentDirections.actionMapsFragmentToDirectionActivity(googlePlaceModel)
+            findNavController().navigate(action)
+        }catch (e: Exception){
 
-        startActivity(intent)
+        }
+
+
+
+//        val placeId = googlePlaceModel.placeId
+//        //pasamos la longitud y latitud del sitio en cuestion. Es decir
+//        //que cuadno clicamos sobre el boton de direcciones estamos accediendo tambien a los datos de
+//        //un objeto. Con lo cual, vamos a obtener la latitud y la longitud de ese objeto para
+//        //luego poder operar con esos datos.
+//        val lat = googlePlaceModel.geometry?.location?.lat
+//        val lng = googlePlaceModel.geometry?.location?.lng
+//        //iniciamos un nuevo intent con la activity de direcciones. y pasqmos una serie de datos en ese intent.
+//        val intent = Intent(requireContext(), DirectionActivity::class.java)
+//        intent.putExtra("placeId", placeId)
+//        intent.putExtra("lat", lat)
+//        intent.putExtra("lng", lng)
+//
+//        startActivity(intent)
 
     }
 }
