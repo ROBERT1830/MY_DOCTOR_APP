@@ -100,7 +100,8 @@ class PatientActivity : AppCompatActivity() {
                 R.id.recipesFragment,
                 R.id.btnSettings,
                 R.id.btnSavedPlaces,
-                R.id.mapsFragment
+                R.id.mapsFragment,
+                R.id.btnShowAvailableDoctors
             )
         )
         //set the bottom navigation with the navController.
@@ -115,6 +116,7 @@ class PatientActivity : AppCompatActivity() {
             when(destination.id){
                 R.id.btnSettings -> bottomNavigationView.visibility = View.GONE
                 R.id.btnSavedPlaces -> bottomNavigationView.visibility = View.GONE
+                R.id.btnShowAvailableDoctors -> bottomNavigationView.visibility = View.GONE
                 R.id.cancerRecordsFragment -> bottomNavigationView.visibility = View.VISIBLE
 
             }

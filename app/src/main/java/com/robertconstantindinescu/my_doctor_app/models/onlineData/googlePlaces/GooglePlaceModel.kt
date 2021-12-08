@@ -2,7 +2,12 @@ package com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel
 
 
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
+
+@Parcelize
 
 data class GooglePlaceModel(
     @field:Json(name = "business_status")
@@ -22,7 +27,7 @@ data class GooglePlaceModel(
 
     @field:Json(name = "obfuscated_type")
 
-    val obfuscatedType: List<Any>?,
+    val obfuscatedType: @RawValue List<Any>?,
 
     @field:Json(name = "photos")
 
@@ -55,4 +60,4 @@ data class GooglePlaceModel(
     //esto indica que es un objeto transiente que no va a formar parte del objeto serializado
     @Transient
     var saved: Boolean?
-)
+): Parcelable

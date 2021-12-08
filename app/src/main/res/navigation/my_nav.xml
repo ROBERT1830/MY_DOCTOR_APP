@@ -22,7 +22,11 @@
         android:id="@+id/mapsFragment"
         android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.MapsFragment"
         android:label="Search Hospital"
-        tools:layout="@layout/fragment_map"/>
+        tools:layout="@layout/fragment_map">
+        <action
+            android:id="@+id/action_mapsFragment_to_directionActivity"
+            app:destination="@id/directionActivity" />
+    </fragment>
     <fragment
         android:id="@+id/recipesFragment"
         android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.RecipesFragment"
@@ -43,4 +47,18 @@
         android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.SavedPlacesFragment"
         android:label="fragment_saved_places"
         tools:layout="@layout/fragment_saved_places" />
+    <activity
+        android:id="@+id/directionActivity"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.DirectionActivity"
+        android:label="activity_direction"
+        tools:layout="@layout/activity_direction" >
+        <argument
+            android:name="googlePlaceModel"
+            app:argType="com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GooglePlaceModel" />
+    </activity>
+    <fragment
+        android:id="@+id/btnShowAvailableDoctors"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.AvailableDoctorsFragment"
+        android:label="fragment_available_doctors"
+        tools:layout="@layout/fragment_available_doctors" />
 </navigation>

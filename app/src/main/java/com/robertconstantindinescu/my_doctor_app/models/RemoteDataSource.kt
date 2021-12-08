@@ -301,5 +301,24 @@ class RemoteDataSource @Inject constructor(
 
     }
 
+    /** -- GET DIRECTIONS -- */
+
+    fun getDirection(url: String) : Flow<State<Any>> = flow<State<Any>> {
+        emit(State.loading(true))
+        val response = googleMapApi.getDirection(url)
+        if(response.body()?.directionRouteModels?.size!! > 0){
+            emit(State.succes(response.body()!!))
+        }else{
+            emit(State.failed(response.body()?.error!!))
+        }
+    }.catch {
+        if (it.message.isNullOrEmpty()) {
+            emit(State.failed("No route found"))
+        } else {
+            emit(State.failed(it.message.toString()))
+        }
+
+    }.flowOn(Dispatchers.IO)
+
 
 }

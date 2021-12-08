@@ -1,10 +1,13 @@
 package com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel
 
+import android.os.Parcelable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.squareup.moshi.Json
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class PhotoModel(
     @field:Json(name = "height")
 
@@ -21,7 +24,7 @@ data class PhotoModel(
     @field:Json(name = "width")
 
     val width: Int?
-) {
+): Parcelable {
     companion object {
 
         @JvmStatic
