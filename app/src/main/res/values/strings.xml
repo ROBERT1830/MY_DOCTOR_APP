@@ -65,6 +65,9 @@
     <string name="option_login">Kindly Choose One</string>
     <string name="doctor">Doctor</string>
     <string name="patient">Patient</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="send_request">Sent request</string>
 
 
 </resources>
