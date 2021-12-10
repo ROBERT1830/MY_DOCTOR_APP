@@ -19,7 +19,9 @@
         android:theme="@style/Theme.My_doctor_app">
         <activity
             android:name=".ui.RequestAppointmentActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/ActionBarTheme"/>
         <activity
             android:name=".ui.DirectionActivity"
             android:exported="false"
