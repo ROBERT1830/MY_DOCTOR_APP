@@ -8,8 +8,10 @@
 
     </data>
 
+<!--    Here add function that triggers a click listener.-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/available_doctors_rowLayout"
+        onAvailableDoctorClickListener="@{doctorModel}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

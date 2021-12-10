@@ -1,5 +1,9 @@
 package com.robertconstantindinescu.my_doctor_app.models.loginUsrModels
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class DoctorModel(
     var image: String? = null,
     var name: String? = null,
@@ -7,4 +11,4 @@ data class DoctorModel(
     var email: String? = null,
     var doctorLiscence: String? = null,
     var isDoctor:Boolean? = null
-)
+): Parcelable
