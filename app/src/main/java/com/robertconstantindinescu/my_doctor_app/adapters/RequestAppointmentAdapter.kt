@@ -15,8 +15,14 @@ import kotlinx.android.synthetic.main.fragment_cancer_records_row.view.*
 
 class RequestAppointmentAdapter(
     private val activity: Activity,
-    private val mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel,
+    private val itemClickListener: OnItemClickListener
 ): RecyclerView.Adapter<RequestAppointmentAdapter.MyViewHolder>(), ActionMode.Callback {
+
+    interface OnItemClickListener{
+        fun onItemClickListener(cancerDataEntity: CancerDataEntity)
+    }
+
 
     private var cancerList = emptyList<CancerDataEntity>()
     private lateinit var mActionMode: ActionMode
@@ -49,11 +55,20 @@ class RequestAppointmentAdapter(
             if (!multiSelection){
                 multiSelection = true
                 activity.startActionMode(this)
+                itemClickListener.onItemClickListener(currentRecord)
                 applySelection(holder, currentRecord)
                 true
             }else{
                 multiSelection = false
                 false
+            }
+        }
+
+        holder.itemView.cancerRecordsRowLayout.setOnClickListener {
+            if (multiSelection){
+                applySelection(holder, currentRecord)
+                itemClickListener.onItemClickListener(currentRecord)
+
             }
         }
 
