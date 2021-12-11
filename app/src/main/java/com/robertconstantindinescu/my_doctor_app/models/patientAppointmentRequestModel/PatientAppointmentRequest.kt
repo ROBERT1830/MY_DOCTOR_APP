@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.models.offlineData.database.patientAppointmentRequestModel
+package com.robertconstantindinescu.my_doctor_app.models.patientAppointmentRequestModel
 
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
@@ -10,5 +10,6 @@ data class PatientAppointmentRequest (
     val date: String? = null,
     val time: String? = null,
     val doctorAppointmentKey: String? = null,
-    val patientAppointmentKey: String? = null
+    val patientAppointmentKey: String? = null,
+    val appointmentStatus: String? = null
 )
