@@ -15,6 +15,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.robertconstantindinescu.my_doctor_app.R
+import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingPatientAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GooglePlaceModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
@@ -382,7 +383,7 @@ class RemoteDataSource @Inject constructor(
 
     /** -- CREATE PENDING APPOINTMENTS -- */
 
-     fun createPendingDoctorPatientAppointment(
+    fun createPendingDoctorPatientAppointment(
         doctorModel: DoctorModel,
         cancerList: MutableList<CancerDataEntity>, description: String, date: String, time: String
     ): Flow<State<Any>> =
@@ -392,9 +393,11 @@ class RemoteDataSource @Inject constructor(
             emit(State.loading(true))
 
             val map: MutableMap<String, Any> = HashMap()
-            map["doctorLiscence"] = doctorModel.doctorLiscence.toString()
-            map["image"] = doctorModel.image.toString()
+            map["appointmentDate"] = date
+            map["appointmentTime"] = time
+            map["doctorImage"] = doctorModel.image.toString()
             map["doctorName"] = doctorModel.name.toString()
+            map["appointmentDescription"] = description
             map["appointmentStatus"] = "Pending acceptance by Dr.${doctorModel.name}"
 
             var doctorAppointmentKey =
@@ -440,11 +443,11 @@ class RemoteDataSource @Inject constructor(
 
                 }
 
-                emit(State.succes("Appointment has been requested to Dr.${doctorModel.name} on $date at $time"))
+            emit(State.succes("Appointment has been requested to Dr.${doctorModel.name} on $date at $time"))
 
         }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
 
-    private  fun getPatientModel(doctorModel: DoctorModel, doctorAppointmentKey: String) {
+    private fun getPatientModel(doctorModel: DoctorModel, doctorAppointmentKey: String) {
         val auth = FirebaseAuth.getInstance()
         val database = Firebase.database.getReference("Users").child(auth.uid!!)
         //event listener to listen for the data of an given database instance at a specific moment
@@ -482,8 +485,27 @@ class RemoteDataSource @Inject constructor(
         })
 
 
-
     }
+
+    /**
+     * GET PATIENT PENDING APOINTMENTS
+     */
+
+    suspend fun getPendingPatientAppointments(): ArrayList<PendingPatientAppointmentModel> {
+        val pendingPatientAppointsList = ArrayList<PendingPatientAppointmentModel>()
+
+        val auth = FirebaseAuth.getInstance()
+        val database = Firebase.database.reference.child("PendingPatientAppointments").child(auth.uid!!)
+        val data = database.get().await()
+        if (data.exists()){
+            for (d in data.children){
+                var pendingPatientAppointmentModel: PendingPatientAppointmentModel = d.getValue(PendingPatientAppointmentModel::class.java)!!
+                pendingPatientAppointsList.add(pendingPatientAppointmentModel)
+            }
+        }
+        return pendingPatientAppointsList
+    }
+
 
 
 }

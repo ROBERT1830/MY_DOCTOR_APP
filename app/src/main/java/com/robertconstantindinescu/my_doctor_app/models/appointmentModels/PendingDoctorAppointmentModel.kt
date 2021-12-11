@@ -1,9 +1,9 @@
-package com.robertconstantindinescu.my_doctor_app.models.patientAppointmentRequestModel
+package com.robertconstantindinescu.my_doctor_app.models.appointmentModels
 
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 
-data class PatientAppointmentRequest (
+data class PendingDoctorAppointmentModel (
     val patientModel: PatientModel? = null,
     val cancerDataList: ArrayList<CancerDataEntity>? = null,
     val description: String? = null,

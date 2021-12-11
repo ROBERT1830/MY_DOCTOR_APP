@@ -75,8 +75,8 @@
             app:argType="com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel" />
     </activity>
     <fragment
-        android:id="@+id/pendingPatientAppointment"
-        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.PendingPatientAppointment"
+        android:id="@+id/btnShowPendingAppointments"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.PendingPatientAppointmentFragment"
         android:label="fragment_pending_patient_appointment"
         tools:layout="@layout/fragment_pending_patient_appointment" />
 </navigation>

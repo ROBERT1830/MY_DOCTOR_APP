@@ -8,19 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
-import com.robertconstantindinescu.my_doctor_app.R
-import com.robertconstantindinescu.my_doctor_app.adapters.AvailableDoctorsAdapter
+import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.AvailableDoctorsAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAvailableDoctorsBinding
-import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAvailableDoctorsItemBinding
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
-import com.robertconstantindinescu.my_doctor_app.utils.State
 import com.robertconstantindinescu.my_doctor_app.viewmodels.AvailableDoctorsViewModel
-import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import javax.annotation.meta.When
 
 @AndroidEntryPoint
 class AvailableDoctorsFragment : Fragment() {
