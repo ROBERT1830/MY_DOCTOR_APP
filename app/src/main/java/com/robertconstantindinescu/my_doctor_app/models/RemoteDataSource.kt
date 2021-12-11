@@ -3,11 +3,13 @@ package com.robertconstantindinescu.my_doctor_app.models
 import android.app.Application
 import android.net.Uri
 import android.util.Log
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -16,6 +18,7 @@ import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GooglePlaceModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.GoogleMapApi
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.radiationIndex.UVResponse
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.UvRadiationApi
@@ -27,6 +30,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 import retrofit2.Response
 import javax.inject.Inject
+import kotlin.concurrent.timerTask
 
 
 class RemoteDataSource @Inject constructor(
@@ -347,7 +351,6 @@ class RemoteDataSource @Inject constructor(
     }
 
 
-
 //        Firebase.database.getReference().child("Doctors")
 //            .addValueEventListener(object : ValueEventListener {
 //                override fun onDataChange(snapshot: DataSnapshot) {
@@ -376,6 +379,111 @@ class RemoteDataSource @Inject constructor(
 //    }.catch {
 //        emit(State.failed(it.message.toString()!!))
 //    }.flowOn(Dispatchers.IO)
+
+    /** -- CREATE PENDING APPOINTMENTS -- */
+
+     fun createPendingDoctorPatientAppointment(
+        doctorModel: DoctorModel,
+        cancerList: MutableList<CancerDataEntity>, description: String, date: String, time: String
+    ): Flow<State<Any>> =
+        flow<State<Any>> {
+
+            val auth = FirebaseAuth.getInstance()
+            emit(State.loading(true))
+
+            val map: MutableMap<String, Any> = HashMap()
+            map["doctorLiscence"] = doctorModel.doctorLiscence.toString()
+            map["image"] = doctorModel.image.toString()
+            map["doctorName"] = doctorModel.name.toString()
+            map["appointmentStatus"] = "Pending acceptance by Dr.${doctorModel.name}"
+
+            var doctorAppointmentKey =
+                FirebaseDatabase.getInstance().reference.child("PendingDoctorAppointments")
+                    .child(doctorModel.doctorLiscence.toString()).push().key
+            map["doctorAppointmentKey"] = doctorAppointmentKey.toString()
+
+            var patientAppointmentKey =
+                FirebaseDatabase.getInstance().reference.child("PendingPatientAppointments")
+                    .child(auth.uid!!).push().key
+            map["patientAppointmentKey"] = patientAppointmentKey.toString()
+
+            Firebase.database.reference.child("PendingPatientAppointments").child(auth.uid!!)
+                .child(patientAppointmentKey.toString()).setValue(map)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val cancerDataMap: MutableMap<String, Any> = HashMap()
+                        val generalBranchMap: MutableMap<String, Any> = HashMap()
+
+                        for (c in cancerList) {
+                            cancerDataMap["cancerImg"] = c.img.toString()
+                            cancerDataMap["outcome"] = c.result.toString()
+                            cancerDataMap["date"] = c.date.toString()
+                            Firebase.database.reference.child("PendingDoctorAppointments")
+                                .child(doctorModel.doctorLiscence.toString())
+                                .child(doctorAppointmentKey.toString()).child("Cancer Data")
+                                .child(c.id.toString()).setValue(cancerDataMap)
+                        }
+                        generalBranchMap["description"] = description
+                        generalBranchMap["date"] = date
+                        generalBranchMap["time"] = time
+                        generalBranchMap["appointmentStatus"] = "Pending to accept appointment"
+                        Firebase.database.reference.child("PendingDoctorAppointments")
+                            .child(doctorModel.doctorLiscence.toString())
+                            .child(doctorAppointmentKey.toString()).updateChildren(generalBranchMap)
+
+                        getPatientModel(doctorModel, doctorAppointmentKey!!)
+
+
+                    }
+
+                }.addOnFailureListener {
+
+                }
+
+                emit(State.succes("Appointment has been requested to Dr.${doctorModel.name} on $date at $time"))
+
+        }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
+
+    private  fun getPatientModel(doctorModel: DoctorModel, doctorAppointmentKey: String) {
+        val auth = FirebaseAuth.getInstance()
+        val database = Firebase.database.getReference("Users").child(auth.uid!!)
+        //event listener to listen for the data of an given database instance at a specific moment
+        database.addValueEventListener(object : ValueEventListener {
+            //used to read the database static instance
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    //create a patientModel from the firebase snapshoot.
+                    val patientMap: MutableMap<String, Any> = HashMap()
+                    val patientModel = snapshot.getValue(PatientModel::class.java)
+                    patientMap["img"] = patientModel!!.image.toString()
+                    patientMap["name"] = patientModel!!.name.toString()
+                    patientMap["phoneNumber"] = patientModel!!.phoneNumber.toString()
+                    patientMap["email"] = patientModel!!.email.toString()
+
+                    Firebase.database.reference.child("PendingDoctorAppointments")
+                        .child(doctorModel.doctorLiscence!!)
+                        .child(doctorAppointmentKey.toString()).child(auth.uid!!)
+                        .updateChildren(patientMap).addOnSuccessListener {
+
+                        }.addOnFailureListener {
+
+
+                        }
+
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+
+            }
+
+        })
+
+
+
+    }
 
 
 }

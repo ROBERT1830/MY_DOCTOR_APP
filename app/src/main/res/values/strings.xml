@@ -67,7 +67,7 @@
     <string name="patient">Patient</string>
     <string name="date">Date</string>
     <string name="time">Time</string>
-    <string name="send_request">Sent request</string>
+    <string name="send_request">Send request</string>
 
 
 </resources>
