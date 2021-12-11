@@ -21,4 +21,7 @@ class RequestAppointmentViewModel @Inject constructor(
         repository.remote.createPendingDoctorPatientAppointment(doctorModel, cancerList, description, date, time)
 
 
+    suspend fun getPatientPendingAppointments() = repository.remote.getPendingPatientAppointments()
+
+
 }

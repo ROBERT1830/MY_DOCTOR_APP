@@ -1,7 +1,6 @@
-package com.robertconstantindinescu.my_doctor_app.adapters
+package com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAvailableDoctorsItemBinding

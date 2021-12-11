@@ -49,6 +49,7 @@ class PatientActivity : AppCompatActivity() {
     private lateinit var txtName: TextView
     private lateinit var txtEmail: TextView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -123,7 +124,8 @@ class PatientActivity : AppCompatActivity() {
                 R.id.btnSettings,
                 R.id.btnSavedPlaces,
                 R.id.mapsFragment,
-                R.id.btnShowAvailableDoctors
+                R.id.btnShowAvailableDoctors,
+                R.id.btnShowPendingAppointments
             )
         )
         //set the bottom navigation with the navController.
@@ -143,6 +145,7 @@ class PatientActivity : AppCompatActivity() {
                 R.id.btnSettings -> bottomNavigationView.visibility = View.GONE
                 R.id.btnSavedPlaces -> bottomNavigationView.visibility = View.GONE
                 R.id.btnShowAvailableDoctors -> bottomNavigationView.visibility = View.GONE
+                R.id.btnShowPendingAppointments -> bottomNavigationView.visibility = View.GONE
                 R.id.cancerRecordsFragment -> bottomNavigationView.visibility = View.VISIBLE
 
 

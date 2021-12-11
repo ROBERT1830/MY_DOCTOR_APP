@@ -25,8 +25,8 @@
         <entry key="app/src/main/res/layout/fragment_cancer_records_row.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.37681159420289856" />
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.2874873353596758" />
-        <entry key="app/src/main/res/layout/fragment_pending_patient_appointment.xml" value="0.463768115942029" />
-        <entry key="app/src/main/res/layout/fragment_pending_patient_appointments_row.xml" value="0.5911458333333334" />
+        <entry key="app/src/main/res/layout/fragment_pending_patient_appointment.xml" value="0.314" />
+        <entry key="app/src/main/res/layout/fragment_pending_patient_appointments_row.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_radiation.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_recipes.xml" value="0.21240942028985507" />
         <entry key="app/src/main/res/layout/fragment_saved_places.xml" value="0.35688405797101447" />
