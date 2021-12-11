@@ -19,6 +19,9 @@
             <item android:id="@+id/btnShowAvailableDoctors"
                 android:icon="@drawable/ic_doctor"
                 android:title="Available Doctors"/>
+            <item android:id="@+id/btnShowPendingAppointments"
+                android:title="Pending Appointments"
+                android:icon="@drawable/ic_appointment"/>
         </menu>
     </item>
 

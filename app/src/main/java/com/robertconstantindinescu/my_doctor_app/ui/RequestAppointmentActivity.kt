@@ -106,6 +106,7 @@ class RequestAppointmentActivity : AppCompatActivity(),
                                                 it.data.toString(),
                                                 Snackbar.LENGTH_LONG
                                             ).show()
+                                            // TODO: 11/12/21 here we can use the scroll event in the snackbar so that it finishes go to the fargment by using onbackpress. we have used that when delete a location.  
                                             
 
 
