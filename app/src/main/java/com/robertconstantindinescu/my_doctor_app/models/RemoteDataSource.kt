@@ -399,6 +399,7 @@ class RemoteDataSource @Inject constructor(
             map["doctorName"] = doctorModel.name.toString()
             map["appointmentDescription"] = description
             map["appointmentStatus"] = "Pending acceptance by Dr.${doctorModel.name}"
+            map["doctorId"] = doctorModel.doctorLiscence!!
 
             var doctorAppointmentKey =
                 FirebaseDatabase.getInstance().reference.child("PendingDoctorAppointments")
@@ -495,17 +496,55 @@ class RemoteDataSource @Inject constructor(
         val pendingPatientAppointsList = ArrayList<PendingPatientAppointmentModel>()
 
         val auth = FirebaseAuth.getInstance()
-        val database = Firebase.database.reference.child("PendingPatientAppointments").child(auth.uid!!)
+        val database =
+            Firebase.database.reference.child("PendingPatientAppointments").child(auth.uid!!)
         val data = database.get().await()
-        if (data.exists()){
-            for (d in data.children){
-                var pendingPatientAppointmentModel: PendingPatientAppointmentModel = d.getValue(PendingPatientAppointmentModel::class.java)!!
+        if (data.exists()) {
+            for (d in data.children) {
+                var pendingPatientAppointmentModel: PendingPatientAppointmentModel =
+                    d.getValue(PendingPatientAppointmentModel::class.java)!!
                 pendingPatientAppointsList.add(pendingPatientAppointmentModel)
             }
         }
         return pendingPatientAppointsList
     }
 
+    /**
+     * DELETE PATIENT PENDING APOINTMENT
+     */
+
+    fun deletePendingPattientDoctorAppointment(
+        doctorId: String,
+        doctorAppointmentKey: String,
+        patientAppointmentKey: String,
+    ): Flow<State<Any>> = flow<State<Any>> {
+        emit(State.loading(true))
+
+        var flag = false
+        val auth = FirebaseAuth.getInstance()
+        Firebase.database.reference.child("PendingDoctorAppointments").child(doctorId)
+            .child(doctorAppointmentKey).removeValue().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Firebase.database.reference.child("PendingPatientAppointments")
+                        .child(auth.uid!!).child(patientAppointmentKey).removeValue()
+                        .addOnCompleteListener {
+                            //flag = task.isSuccessful
+
+
+                        }.addOnFailureListener {
+
+                        }
+
+                }
+
+            }.addOnFailureListener {
+
+            }
+
+         emit(State.succes("The appointment has been canceled!"))
+
+
+    }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
 
 
 }

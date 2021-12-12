@@ -68,6 +68,10 @@
     <string name="date">Date</string>
     <string name="time">Time</string>
     <string name="send_request">Send request</string>
+    <string name="cancel_appointment">Cancel</string>
+
+<!--    APPOINTMENT -->
+    <string name="cancel_specific_appointment">Are you sure you want to cancel the appointment</string>
 
 
 </resources>
