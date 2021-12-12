@@ -4,11 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentPendingPatientAppointmentsRowBinding
-import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
+import com.robertconstantindinescu.my_doctor_app.interfaces.PatientAppointmentInterface
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingPatientAppointmentModel
-import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
 
-class PendingPatientAppointmentAdapter :
+class PendingPatientAppointmentAdapter(private val patientAppointmentInterface: PatientAppointmentInterface) :
     RecyclerView.Adapter<PendingPatientAppointmentAdapter.MyViewHolder>() {
     private var pendingPatientAppointmentList = emptyList<PendingPatientAppointmentModel>()
 
@@ -30,17 +29,19 @@ class PendingPatientAppointmentAdapter :
         holder: PendingPatientAppointmentAdapter.MyViewHolder,
         position: Int
     ) {
-        val currenRecord = this.pendingPatientAppointmentList[position]
-        holder.binding(currenRecord)
+
+        val currentRecord = this.pendingPatientAppointmentList[position]
+        holder.binding.listener = patientAppointmentInterface
+        holder.bind(currentRecord)
     }
 
     override fun getItemCount(): Int {
         return this.pendingPatientAppointmentList.size
     }
 
-    class MyViewHolder(private val binding: FragmentPendingPatientAppointmentsRowBinding) :
+    class MyViewHolder( val binding: FragmentPendingPatientAppointmentsRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun binding(pendigPatienAppointmentModel: PendingPatientAppointmentModel) {
+        fun bind(pendigPatienAppointmentModel: PendingPatientAppointmentModel) {
             binding.patientAppointmentModel = pendigPatienAppointmentModel
             binding.executePendingBindings()
         }

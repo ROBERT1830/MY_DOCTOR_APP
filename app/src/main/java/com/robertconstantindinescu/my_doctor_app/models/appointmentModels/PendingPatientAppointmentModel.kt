@@ -14,6 +14,7 @@ data class PendingPatientAppointmentModel(
     val doctorAppointmentKey: String? = null,
     val doctorImage: String? = null,
     val doctorName: String? = null,
-    val patientAppointmentKey: String? = null
+    val patientAppointmentKey: String? = null,
+    val doctorId: String? = null
 
 )
