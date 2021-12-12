@@ -28,8 +28,7 @@
             android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.DoctorActivity"
-            android:exported="false"
-            android:theme="@style/ActionBarTheme" />
+            android:exported="false" />
         <activity
             android:name=".ui.PatientSignUpActivity"
             android:exported="false"

@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.ui.fragments
+package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments
 
 import android.app.AlertDialog
 import android.content.DialogInterface
@@ -72,7 +72,7 @@ class PendingPatientAppointmentFragment : Fragment(), PatientAppointmentInterfac
             loadingDialog.stopLoading()
             mAdapter.setUpAdapter(pendingPatientAppontmentList)
         } else {
-            loadingDialog.startLoading()
+            loadingDialog.stopLoading()
             Toast.makeText(
                 requireContext(),
                 "No appointments requested at the moment",

@@ -38,7 +38,7 @@
 
                 <ImageView
                     android:id="@+id/imgView_cancerPhoto"
-                    loadImage="@{cancerEntity.img}"
+                    loadImage="@{cancerEntity.cancerImg}"
                     android:layout_width="120dp"
                     android:layout_height="150dp"
                     android:scaleType="centerCrop"
@@ -49,7 +49,7 @@
 
                 <ImageView
                     android:id="@+id/imgView_malignBenign_icon"
-                    applyMalignBenignColor="@{cancerEntity.result}"
+                    applyMalignBenignColor="@{cancerEntity.outcome}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_cancer"
@@ -60,8 +60,8 @@
                     />
                 <TextView
                     android:id="@+id/txtView_malignBenign"
-                    applyMalignBenignColor="@{cancerEntity.result}"
-                    setProbabilityt="@{cancerEntity.result}"
+                    applyMalignBenignColor="@{cancerEntity.outcome}"
+                    setProbabilityt="@{cancerEntity.outcome}"
                     android:textAlignment="center"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

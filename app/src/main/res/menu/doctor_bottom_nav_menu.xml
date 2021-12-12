@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/requestedAppointmentsFragment"
+        android:title="Requested "
+        android:icon="@drawable/ic_appointment"/>
+
+    <item android:id="@+id/aceptedAppointmentsFragment"
+        android:title="Acepted "
+        android:icon="@drawable/ic_acept_appointment"/>
+
+    <item android:id="@+id/contactToPatientFragment"
+        android:title="Contact to Patient"
+        android:icon="@drawable/ic_contact_patient"/>
+
+</menu>

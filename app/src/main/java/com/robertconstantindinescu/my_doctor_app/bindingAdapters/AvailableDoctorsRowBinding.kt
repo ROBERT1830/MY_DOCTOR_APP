@@ -5,8 +5,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import androidx.navigation.findNavController
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
-import com.robertconstantindinescu.my_doctor_app.ui.fragments.AvailableDoctorsFragment
-import com.robertconstantindinescu.my_doctor_app.ui.fragments.AvailableDoctorsFragmentDirections
+
+import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.AvailableDoctorsFragmentDirections
 import java.lang.Exception
 
 class AvailableDoctorsRowBinding {

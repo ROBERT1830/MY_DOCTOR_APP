@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.ui.fragments
+package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments
 
 import android.os.Bundle
 import android.view.*
