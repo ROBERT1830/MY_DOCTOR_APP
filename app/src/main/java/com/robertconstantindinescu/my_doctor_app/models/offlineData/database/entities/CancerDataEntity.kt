@@ -11,9 +11,9 @@ data class CancerDataEntity(
     @ColumnInfo(name = "date")
     var date: String = "",
     @ColumnInfo(name = "img")
-    var img: Bitmap? = null,
+    var cancerImg: Bitmap? = null,
     @ColumnInfo(name = "result")
-    var result: String = ""
+    var outcome: String = ""
 
 //
 //    @ColumnInfo(name = "statistics")

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/doctor_nav"
+    app:startDestination="@id/requestedAppointmentsFragment">
+
+    <fragment
+        android:id="@+id/contactToPatientFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments.ContactToPatientFragment"
+        android:label="fragment_contact_to_patient"
+        tools:layout="@layout/fragment_contact_to_patient" />
+    <fragment
+        android:id="@+id/aceptedAppointmentsFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments.AceptedAppointmentsFragment"
+        android:label="fragment_acepted_appointments"
+        tools:layout="@layout/fragment_acepted_appointments" />
+    <fragment
+        android:id="@+id/requestedAppointmentsFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments.AppointmentsRequestsFragment"
+        android:label="fragment_appointments_requests"
+        tools:layout="@layout/fragment_appointments_requests" />
+</navigation>

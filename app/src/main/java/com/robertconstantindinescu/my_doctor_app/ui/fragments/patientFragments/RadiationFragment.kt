@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.ui.fragments
+package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -26,9 +26,6 @@ import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import kotlinx.android.synthetic.main.fragment_radiation.*
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.util.*
 
 
@@ -328,7 +325,7 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun getCurrentCountryLocality(): String? {
 
-        var countryLocality = "${countryName} | ${localityName}"
+        var countryLocality = "$countryName | $localityName"
         return countryLocality
     }
 

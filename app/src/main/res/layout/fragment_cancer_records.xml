@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="20dp"
-        tools:context="ui.fragments.CancerRecordsFragment">
+        tools:context=".ui.fragments.patientFragments.CancerRecordsFragment">
 
 
         <androidx.recyclerview.widget.RecyclerView

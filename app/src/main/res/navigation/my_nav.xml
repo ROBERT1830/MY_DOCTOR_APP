@@ -6,7 +6,7 @@
     app:startDestination="@id/cancerRecordsFragment">
     <fragment
         android:id="@+id/cancerRecordsFragment"
-        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.CancerRecordsFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.CancerRecordsFragment"
         android:label="Records"
         tools:layout="@layout/fragment_cancer_records">
         <action
@@ -15,12 +15,12 @@
     </fragment>
     <fragment
         android:id="@+id/radiationFragment"
-        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.RadiationFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RadiationFragment"
         android:label="Radiation"
         tools:layout="@layout/fragment_radiation"/>
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.MapsFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.MapsFragment"
         android:label="Search Hospital"
         tools:layout="@layout/fragment_map">
         <action
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/recipesFragment"
-        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.RecipesFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RecipesFragment"
         android:label="Diet"
         tools:layout="@layout/fragment_recipes"/>
     <activity
@@ -39,12 +39,12 @@
         tools:layout="@layout/activity_detector" />
     <fragment
         android:id="@+id/btnSettings"
-        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.SettingsFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/btnSavedPlaces"
-        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.SavedPlacesFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.SavedPlacesFragment"
         android:label="fragment_saved_places"
         tools:layout="@layout/fragment_saved_places" />
     <activity
@@ -58,7 +58,7 @@
     </activity>
     <fragment
         android:id="@+id/btnShowAvailableDoctors"
-        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.AvailableDoctorsFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.AvailableDoctorsFragment"
         android:label="fragment_available_doctors"
         tools:layout="@layout/fragment_available_doctors" >
         <action
@@ -76,7 +76,7 @@
     </activity>
     <fragment
         android:id="@+id/btnShowPendingAppointments"
-        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.PendingPatientAppointmentFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.PendingPatientAppointmentFragment"
         android:label="fragment_pending_patient_appointment"
         tools:layout="@layout/fragment_pending_patient_appointment" />
 </navigation>

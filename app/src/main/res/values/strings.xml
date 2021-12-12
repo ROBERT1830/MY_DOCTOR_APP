@@ -70,8 +70,9 @@
     <string name="send_request">Send request</string>
     <string name="cancel_appointment">Cancel</string>
 
-<!--    APPOINTMENT -->
+    <!--    APPOINTMENT -->
     <string name="cancel_specific_appointment">Are you sure you want to cancel the appointment</string>
+    <string name="acept_appointment">ACCEPT</string>
 
 
 </resources>

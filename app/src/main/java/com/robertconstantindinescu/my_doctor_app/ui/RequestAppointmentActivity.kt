@@ -1,14 +1,11 @@
 package com.robertconstantindinescu.my_doctor_app.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
@@ -20,9 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.adapters.RequestAppointmentAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityRequestAppointmentBinding
-import com.robertconstantindinescu.my_doctor_app.databinding.ToolbarLayoutBinding
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
-import com.robertconstantindinescu.my_doctor_app.ui.fragments.AvailableDoctorsFragment
 import com.robertconstantindinescu.my_doctor_app.utils.DatePicker
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
 import com.robertconstantindinescu.my_doctor_app.utils.State

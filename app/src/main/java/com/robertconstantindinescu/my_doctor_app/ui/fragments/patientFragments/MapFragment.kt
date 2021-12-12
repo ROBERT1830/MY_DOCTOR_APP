@@ -1,9 +1,7 @@
-package com.robertconstantindinescu.my_doctor_app.ui.fragments
+package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Location
@@ -50,20 +48,16 @@ import com.robertconstantindinescu.my_doctor_app.databinding.FragmentMapBinding
 import com.robertconstantindinescu.my_doctor_app.interfaces.NearLocationInterface
 import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GooglePlaceModel
 import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GoogleResponseModel
-import com.robertconstantindinescu.my_doctor_app.ui.DirectionActivity
 import com.robertconstantindinescu.my_doctor_app.utils.AppPermissions
 import com.robertconstantindinescu.my_doctor_app.utils.Constants
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.placesName
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
 import com.robertconstantindinescu.my_doctor_app.utils.State
 import com.robertconstantindinescu.my_doctor_app.viewmodels.LocationViewModel
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.coroutines.flow.collect
 import java.lang.Exception
-import java.security.Permission
 
 @AndroidEntryPoint
 class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
