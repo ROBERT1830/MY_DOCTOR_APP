@@ -73,6 +73,8 @@
     <!--    APPOINTMENT -->
     <string name="cancel_specific_appointment">Are you sure you want to cancel the appointment</string>
     <string name="acept_appointment">ACCEPT</string>
+    <string name="viewPager_patientDetails_title">Patient Details</string>
+    <string name="viewPager_doctorNotes_title">Patient Details</string>
 
 
 </resources>

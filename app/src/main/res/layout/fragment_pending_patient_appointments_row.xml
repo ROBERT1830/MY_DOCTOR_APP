@@ -10,7 +10,7 @@
 
         <variable
             name="listener"
-            type="com.robertconstantindinescu.my_doctor_app.interfaces.PatientAppointmentInterface" />
+            type="com.robertconstantindinescu.my_doctor_app.interfaces.PendingPatientAppointmentInterface" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -5,7 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.robertconstantindinescu.my_doctor_app.adapters.RequestAppointmentAdapter
+import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.RequestAppointmentAdapter
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 
 class RequestAppointmentBinding {

@@ -15,7 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.PendingPatientAppointmentAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentPendingPatientAppointmentBinding
-import com.robertconstantindinescu.my_doctor_app.interfaces.PatientAppointmentInterface
+import com.robertconstantindinescu.my_doctor_app.interfaces.PendingPatientAppointmentInterface
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingPatientAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
 import com.robertconstantindinescu.my_doctor_app.utils.State
@@ -24,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class PendingPatientAppointmentFragment : Fragment(), PatientAppointmentInterface {
+class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentInterface {
 
     private lateinit var mBinding: FragmentPendingPatientAppointmentBinding
     private val requestAppointmentViewModel: RequestAppointmentViewModel by viewModels()

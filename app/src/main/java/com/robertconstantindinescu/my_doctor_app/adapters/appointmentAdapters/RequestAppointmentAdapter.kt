@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.adapters
+package com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters
 
 import android.app.Activity
 import android.view.*
@@ -30,7 +30,7 @@ class RequestAppointmentAdapter(
 
     private var multiSelection = false
     private var selectedCancerRecord = arrayListOf<CancerDataEntity>()
-    private var myViewHolders = arrayListOf<RequestAppointmentAdapter.MyViewHolder>()
+    private var myViewHolders = arrayListOf<MyViewHolder>()
 
 
 
@@ -98,7 +98,7 @@ class RequestAppointmentAdapter(
     }
 
     private fun applySelection(
-        holder: RequestAppointmentAdapter.MyViewHolder,
+        holder: MyViewHolder,
         currentRecord: CancerDataEntity
     ) {
         if (selectedCancerRecord.contains(currentRecord)) {
@@ -131,7 +131,7 @@ class RequestAppointmentAdapter(
         }
     }
     private fun changeCancerRecordStyle(
-        holder: RequestAppointmentAdapter.MyViewHolder,
+        holder: MyViewHolder,
         cardBackgroundColor: Int,
         strokeColor: Int
     ) {

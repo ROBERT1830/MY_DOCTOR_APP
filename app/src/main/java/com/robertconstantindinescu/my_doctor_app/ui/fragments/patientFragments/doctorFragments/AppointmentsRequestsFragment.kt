@@ -1,6 +1,7 @@
 package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,25 +9,28 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.AppointmentsRequestedAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAppointmentsRequestsBinding
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAppointmentsRequestsRowBinding
+import com.robertconstantindinescu.my_doctor_app.interfaces.PendingDoctorAppointmentRequestsInterface
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
 import com.robertconstantindinescu.my_doctor_app.viewmodels.RequestAppointmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.Exception
 
 @AndroidEntryPoint
-class AppointmentsRequestsFragment : Fragment() {
+class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequestsInterface {
 
 
     private lateinit var mBinding: FragmentAppointmentsRequestsBinding
     private val requestAppointmentsViewModel: RequestAppointmentViewModel by viewModels()
 
-    private val mAdapter by lazy { AppointmentsRequestedAdapter() }
+    private val mAdapter by lazy { AppointmentsRequestedAdapter(this) }
     private lateinit var requestedDoctorAppointmentsList: ArrayList<PendingDoctorAppointmentModel>
     private lateinit var loadingDialog: LoadingDialog
 
@@ -68,7 +72,7 @@ class AppointmentsRequestsFragment : Fragment() {
 
         swipeRefreshLayout.setOnRefreshListener {
 
-            if (swipeRefreshLayout.isRefreshing){
+            if (swipeRefreshLayout.isRefreshing) {
                 swipeRefreshLayout.isRefreshing = false
             }
             lifecycleScope.launchWhenStarted {
@@ -76,7 +80,6 @@ class AppointmentsRequestsFragment : Fragment() {
                 getRequestedAppointments()
 
             }
-
 
 
         }
@@ -89,10 +92,10 @@ class AppointmentsRequestsFragment : Fragment() {
         requestedDoctorAppointmentsList =
             requestAppointmentsViewModel.getRequestedDoctorAppointments()
 
-        if (!requestedDoctorAppointmentsList.isNullOrEmpty()){
+        if (!requestedDoctorAppointmentsList.isNullOrEmpty()) {
             loadingDialog.stopLoading()
             mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
-        }else{
+        } else {
             loadingDialog.stopLoading()
             Toast.makeText(
                 requireContext(),
@@ -113,6 +116,22 @@ class AppointmentsRequestsFragment : Fragment() {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
+
+    }
+
+    override fun onDoctorPendingAppointmentRequestClick(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel) {
+
+
+        try {
+            val action =
+                AppointmentsRequestsFragmentDirections.actionRequestedAppointmentsFragmentToPatientAppointmentDetailsActivity(
+                    pendingAppointmentDoctorModel
+                )
+            findNavController().navigate(action)
+        } catch (e: Exception) {
+            Log.d("onDoctorPendingAppointmentRequestClick", e.toString())
+        }
+
 
     }
 

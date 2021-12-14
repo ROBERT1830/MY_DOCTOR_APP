@@ -10,7 +10,7 @@
             type="com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel" />
         <variable
             name="mAdapter"
-            type="com.robertconstantindinescu.my_doctor_app.adapters.RequestAppointmentAdapter" />
+            type="com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.RequestAppointmentAdapter" />
 
     </data>
 
