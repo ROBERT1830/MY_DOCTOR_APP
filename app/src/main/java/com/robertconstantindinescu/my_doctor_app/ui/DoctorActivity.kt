@@ -108,12 +108,9 @@ class DoctorActivity : AppCompatActivity() {
                     txtEmail.text = patientModel?.email
                     txtName.text = patientModel?.name
                 }
-
-
             }
 
             override fun onCancelled(error: DatabaseError) {
-
 
             }
 
