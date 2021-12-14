@@ -23,6 +23,7 @@ import com.google.firebase.ktx.Firebase
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.databinding.*
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
+import com.robertconstantindinescu.my_doctor_app.ui.loginSignUp.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_patient.*

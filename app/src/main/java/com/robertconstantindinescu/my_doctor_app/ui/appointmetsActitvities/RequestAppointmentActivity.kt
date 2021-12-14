@@ -1,7 +1,6 @@
-package com.robertconstantindinescu.my_doctor_app.ui
+package com.robertconstantindinescu.my_doctor_app.ui.appointmetsActitvities
 
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,19 +27,6 @@ import com.robertconstantindinescu.my_doctor_app.viewmodels.RequestAppointmentVi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_request_appointment.*
 import kotlinx.coroutines.flow.collect
-import java.io.ByteArrayInputStream
-import android.provider.MediaStore
-
-import android.graphics.Bitmap
-import android.net.Uri
-import android.os.Build
-import android.os.Environment
-import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.CancerDataFirebaseModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.OutputStream
 
 
 @AndroidEntryPoint

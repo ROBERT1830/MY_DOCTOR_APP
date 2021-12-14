@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primaryColor"
-    tools:context=".ui.DoctorSignUpActivity">
+    tools:context=".ui.loginSignUp.DoctorSignUpActivity">
 
     <ImageView
         android:layout_width="match_parent"

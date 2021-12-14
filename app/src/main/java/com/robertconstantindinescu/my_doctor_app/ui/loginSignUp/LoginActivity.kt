@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.ui
+package com.robertconstantindinescu.my_doctor_app.ui.loginSignUp
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +24,8 @@ import com.google.firebase.database.ValueEventListener
 
 import com.google.firebase.database.FirebaseDatabase
 import com.robertconstantindinescu.my_doctor_app.R
+import com.robertconstantindinescu.my_doctor_app.ui.DoctorActivity
+import com.robertconstantindinescu.my_doctor_app.ui.PatientActivity
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

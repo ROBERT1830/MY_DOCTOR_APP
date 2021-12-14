@@ -1,5 +1,6 @@
 package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments.appointmentDetailsFragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,17 +12,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.PatientAppointmentDetailsAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentPatientAppointmentDetailsBinding
+import com.robertconstantindinescu.my_doctor_app.interfaces.DetailsCancerDataInterface
+import com.robertconstantindinescu.my_doctor_app.interfaces.PendingDoctorAppointmentRequestsInterface
+import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.CancerDataFirebaseModel
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
+import com.robertconstantindinescu.my_doctor_app.ui.appointmetsActitvities.DetailCancerImageActivity
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.CANCER_DATA
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PENDING_DOCTOR_APPOINTMENT_MODEL
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
 
 
-class PatientAppointmentDetailsFragment : Fragment() {
+class PatientAppointmentDetailsFragment : Fragment(), DetailsCancerDataInterface {
 
     private lateinit var mBinding: FragmentPatientAppointmentDetailsBinding
 
     private lateinit var pendingDoctorAppointmentModel: PendingDoctorAppointmentModel
-    private val mAdapter by lazy { PatientAppointmentDetailsAdapter() }
+    private val mAdapter by lazy { PatientAppointmentDetailsAdapter(this) }
     private lateinit var loadingDialog: LoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +86,13 @@ class PatientAppointmentDetailsFragment : Fragment() {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
+    }
+
+    override fun onPatientCancerOutcomeClick(cancerDataFirebaseModel: CancerDataFirebaseModel) {
+
+        val intent = Intent(requireContext(), DetailCancerImageActivity::class.java)
+        intent.putExtra(CANCER_DATA, cancerDataFirebaseModel)
+        startActivity(intent)
     }
 
 

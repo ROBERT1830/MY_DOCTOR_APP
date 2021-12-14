@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.ui
+package com.robertconstantindinescu.my_doctor_app.ui.appointmetsActitvities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
