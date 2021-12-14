@@ -1,9 +1,8 @@
 package com.robertconstantindinescu.my_doctor_app.models
 
-import android.app.Application
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -26,14 +25,15 @@ import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.Googl
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.radiationIndex.UVResponse
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.UvRadiationApi
 import com.robertconstantindinescu.my_doctor_app.models.placesModel.SavedPlaceModel
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.CANCER_PATH
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PROFILE_PATH
 import com.robertconstantindinescu.my_doctor_app.utils.State
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 import retrofit2.Response
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
-import kotlin.concurrent.timerTask
 
 
 class RemoteDataSource @Inject constructor(
@@ -107,6 +107,11 @@ class RemoteDataSource @Inject constructor(
 
 
     /** -- SIGN UP FIREBASE -- **/
+
+
+    /**
+     * ----------------------->
+     */
     fun signUp(
         image: Uri,
         name: String,
@@ -144,7 +149,7 @@ class RemoteDataSource @Inject constructor(
 
     private suspend fun createPatient(patientModel: PatientModel, auth: FirebaseAuth) {
         val firebase = Firebase.database.getReference("Users")//.child("Patients")
-        firebase!!.child(auth.uid!!).setValue(patientModel).await()
+        firebase.child(auth.uid!!).setValue(patientModel).await()
         val profileChangeRequest = UserProfileChangeRequest.Builder()
             .setDisplayName(patientModel.name)
             .setPhotoUri(Uri.parse(patientModel.image))
@@ -197,6 +202,9 @@ class RemoteDataSource @Inject constructor(
 
     }
 
+    /**
+     * ----------------->
+     */
     private suspend fun uploadImage(uid: String, image: Uri): Uri {
 
         val firebaseStorage = Firebase.storage
@@ -391,8 +399,24 @@ class RemoteDataSource @Inject constructor(
     ): Flow<State<Any>> =
         flow<State<Any>> {
 
-            val auth = FirebaseAuth.getInstance()
             emit(State.loading(true))
+            val auth = FirebaseAuth.getInstance()
+
+            val cancerDataFirebaseModelList = ArrayList<CancerDataFirebaseModel>()
+            for (c in cancerList) {
+                val bitmap = c.cancerImg!!
+                val bytesArrayOutputStream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytesArrayOutputStream)
+                val data: ByteArray = bytesArrayOutputStream.toByteArray()
+                cancerDataFirebaseModelList.add(
+                    CancerDataFirebaseModel(
+                        uploadCancerImg(
+                            auth.uid!!,
+                            data
+                        ).toString(), c.date, c.outcome
+                    )
+                )
+            }
 
             val map: MutableMap<String, Any> = HashMap()
             map["appointmentDate"] = date
@@ -417,28 +441,15 @@ class RemoteDataSource @Inject constructor(
                 .child(patientAppointmentKey.toString()).setValue(map)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        var cancerL = ArrayList<CancerDataFirebaseModel>()
+                        val cancerL = ArrayList<CancerDataFirebaseModel>()
                         val cancerDataMap: MutableMap<String, Any> =
                             HashMap()
                         val generalBranchMap: MutableMap<String, Any> = HashMap()
                         //cancerDataMap["cancerDataList"] = ArrayList<CancerDataFirebaseModel>()
 
 
-
-                        for (c in cancerList) {
-
-                            val cancerObject =
-                                CancerDataFirebaseModel(c.cancerImg.toString(), c.date, c.outcome)
-
-                            cancerL.add(cancerObject)
-
-//                            cancerDataMap["cancerImg"] = c.cancerImg.toString()
-//                            cancerDataMap["outcome"] = c.outcome.toString()
-//                            cancerDataMap["date"] = c.date.toString()
-//                            Firebase.database.reference.child("PendingDoctorAppointments")
-//                                .child(doctorModel.doctorLiscence.toString())
-//                                .child(doctorAppointmentKey.toString()).child("cancerDataList")
-//                                .child(c.id.toString()).setValue(cancerDataMap)
+                        for (c in cancerDataFirebaseModelList) {
+                            cancerL.add(c)
                         }
                         cancerDataMap["cancerDataList"] = cancerL
                         Firebase.database.reference.child("PendingDoctorAppointments")
@@ -466,6 +477,18 @@ class RemoteDataSource @Inject constructor(
             emit(State.succes("Appointment has been requested to Dr.${doctorModel.name} on $date at $time"))
 
         }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
+
+    private suspend fun uploadCancerImg(uid: String, image: ByteArray): Uri {
+        val firebaseStorage = Firebase.storage
+        val storageReference = firebaseStorage.reference
+
+
+        val task = storageReference.child(uid + CANCER_PATH +  System.currentTimeMillis())
+            .putBytes(image).await()
+
+        return task.storage.downloadUrl.await()
+
+    }
 
     private fun getPatientModel(doctorModel: DoctorModel, doctorAppointmentKey: String) {
         val auth = FirebaseAuth.getInstance()

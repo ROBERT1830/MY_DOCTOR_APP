@@ -12,6 +12,7 @@ class Constants {
         const val STORAGE_REQUEST_CODE = 1000
         @JvmStatic
         val PROFILE_PATH="/Profile/image_profile.jpg"
+        val CANCER_PATH="Cancer/"
 
         //RETROFIT GOOGLE_API
         const val GOOGLE_MAP_BASE_URL = "https://maps.googleapis.com/"

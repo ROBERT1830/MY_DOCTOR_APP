@@ -3,11 +3,13 @@ package com.robertconstantindinescu.my_doctor_app.bindingAdapters
 import android.graphics.Bitmap
 import android.widget.ImageView
 import android.graphics.BitmapFactory
+import android.net.Uri
 
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import coil.load
 import com.robertconstantindinescu.my_doctor_app.R
 import java.lang.Byte.decode
 import java.sql.Date
@@ -25,6 +27,15 @@ class CancerRecordRowBinding {
             imageView.setImageBitmap(bitmap)
 
         }
+
+        @BindingAdapter("loadImageFromFirebase")
+        @JvmStatic
+        fun loadImageFromFirebase(imageView: ImageView, url: String){
+            // TODO: 14/12/21  
+            imageView.load(url)
+        }
+
+
 
         @BindingAdapter("applyMalignBenignColor")
         @JvmStatic

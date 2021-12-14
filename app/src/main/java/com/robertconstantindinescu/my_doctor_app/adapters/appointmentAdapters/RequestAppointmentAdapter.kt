@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.R
-import com.robertconstantindinescu.my_doctor_app.databinding.RequestApointmentRowBinding
+import com.robertconstantindinescu.my_doctor_app.databinding.ActivityRequestApointmentRowBinding
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import com.robertconstantindinescu.my_doctor_app.utils.CancerDiffUtil
 import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
@@ -78,7 +78,7 @@ class RequestAppointmentAdapter(
         return cancerList.size
     }
 
-    class MyViewHolder(private val binding: RequestApointmentRowBinding) :
+    class MyViewHolder(private val binding: ActivityRequestApointmentRowBinding) :
         RecyclerView.ViewHolder(binding.root){
 
         fun bind(cancerDataEntity: CancerDataEntity){
@@ -88,7 +88,7 @@ class RequestAppointmentAdapter(
         companion object{
             fun from(parent: ViewGroup): MyViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RequestApointmentRowBinding.inflate(layoutInflater, parent, false)
+                val binding = ActivityRequestApointmentRowBinding.inflate(layoutInflater, parent, false)
                 return MyViewHolder(binding)
             }
         }
