@@ -40,6 +40,9 @@ class Constants {
             PlaceModel(2, R.drawable.ic_hospital, "Hospitals", "hospital")
         )
 
+        //DETAIL PATIENT APPOINTMENT
+        const val PENDING_DOCTOR_APPOINTMENT_MODEL = "pending_doctor_appointment_model"
+
 
     }
 

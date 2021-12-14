@@ -19,5 +19,18 @@
         android:id="@+id/requestedAppointmentsFragment"
         android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments.AppointmentsRequestsFragment"
         android:label="fragment_appointments_requests"
-        tools:layout="@layout/fragment_appointments_requests" />
+        tools:layout="@layout/fragment_appointments_requests" >
+        <action
+            android:id="@+id/action_requestedAppointmentsFragment_to_patientAppointmentDetailsActivity"
+            app:destination="@id/patientAppointmentDetailsActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/patientAppointmentDetailsActivity"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.PatientAppointmentDetailsActivity"
+        android:label="activity_patient_appointment_details"
+        tools:layout="@layout/activity_patient_appointment_details" >
+        <argument
+            android:name="pendingDoctorModel"
+            app:argType="com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel" />
+    </activity>
 </navigation>

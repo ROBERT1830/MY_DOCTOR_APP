@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentPendingPatientAppointmentsRowBinding
-import com.robertconstantindinescu.my_doctor_app.interfaces.PatientAppointmentInterface
+import com.robertconstantindinescu.my_doctor_app.interfaces.PendingPatientAppointmentInterface
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingPatientAppointmentModel
 
-class PendingPatientAppointmentAdapter(private val patientAppointmentInterface: PatientAppointmentInterface) :
+class PendingPatientAppointmentAdapter(private val patientAppointmentInterface: PendingPatientAppointmentInterface) :
     RecyclerView.Adapter<PendingPatientAppointmentAdapter.MyViewHolder>() {
     private var pendingPatientAppointmentList = emptyList<PendingPatientAppointmentModel>()
 

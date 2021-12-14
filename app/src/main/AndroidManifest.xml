@@ -18,10 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.My_doctor_app">
         <activity
+            android:name=".ui.PatientAppointmentDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.RequestAppointmentActivity"
             android:exported="false"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/ActionBarTheme"/>
+            android:theme="@style/ActionBarTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".ui.DirectionActivity"
             android:exported="false"

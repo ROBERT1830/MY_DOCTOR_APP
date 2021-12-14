@@ -11,7 +11,7 @@
 
         <variable
             name="listener"
-            type="com.robertconstantindinescu.my_doctor_app.interfaces.PatientAppointmentInterface" />
+            type="com.robertconstantindinescu.my_doctor_app.interfaces.PendingDoctorAppointmentRequestsInterface" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,6 +21,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view_pendingAppointment"
+            android:onClick="@{()->listener.onDoctorPendingAppointmentRequestClick(doctorAppointmentModel)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"

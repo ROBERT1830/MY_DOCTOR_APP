@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.R
-import com.robertconstantindinescu.my_doctor_app.adapters.RequestAppointmentAdapter
+import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.RequestAppointmentAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityRequestAppointmentBinding
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import com.robertconstantindinescu.my_doctor_app.utils.DatePicker
@@ -54,6 +54,8 @@ class RequestAppointmentActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         mBinding = ActivityRequestAppointmentBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+
+
 
         loadingDialog = LoadingDialog(this)
         mBinding.lifecycleOwner = this
