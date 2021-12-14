@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/drawable/ic_logout.xml" value="0.625" />
         <entry key="app/src/main/res/drawable/stroke_backgroud_text.xml" value="0.387037037037037" />
         <entry key="app/src/main/res/font/playfair_display.xml" value="0.2740740740740741" />
+        <entry key="app/src/main/res/layout/activity_detail_cancer_image.xml" value="0.2875605815831987" />
         <entry key="app/src/main/res/layout/activity_detector.xml" value="0.17314487632508835" />
         <entry key="app/src/main/res/layout/activity_direction.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_doctor.xml" value="0.37681159420289856" />

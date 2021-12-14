@@ -44,6 +44,9 @@ class Constants {
         //DETAIL PATIENT APPOINTMENT
         const val PENDING_DOCTOR_APPOINTMENT_MODEL = "pending_doctor_appointment_model"
 
+        //Doctor appointment
+        const val CANCER_DATA = "cancerData"
+
 
     }
 

@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MyApplication"
@@ -19,10 +19,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.My_doctor_app">
         <activity
-            android:name=".ui.PatientAppointmentDetailsActivity"
+            android:name=".ui.appointmetsActitvities.DetailCancerImageActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.RequestAppointmentActivity"
+            android:name=".ui.appointmetsActitvities.PatientAppointmentDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.appointmetsActitvities.RequestAppointmentActivity"
             android:exported="false"
             android:theme="@style/ActionBarTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
@@ -34,19 +37,19 @@
             android:name=".ui.DoctorActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.PatientSignUpActivity"
+            android:name=".ui.loginSignUp.PatientSignUpActivity"
             android:exported="false"
             android:theme="@style/ActionBarTheme" />
         <activity
-            android:name=".ui.DoctorSignUpActivity"
+            android:name=".ui.loginSignUp.DoctorSignUpActivity"
             android:exported="false"
             android:theme="@style/ActionBarTheme" />
         <activity
-            android:name=".ui.SignUpChooseUsrActivity"
+            android:name=".ui.loginSignUp.SignUpChooseUsrActivity"
             android:exported="false"
             android:theme="@style/ActionBarTheme" />
         <activity
-            android:name=".ui.LoginActivity"
+            android:name=".ui.loginSignUp.LoginActivity"
             android:exported="true"
             android:theme="@style/ActionBarTheme">
             <intent-filter>

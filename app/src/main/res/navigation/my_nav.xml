@@ -67,7 +67,7 @@
     </fragment>
     <activity
         android:id="@+id/requestAppointmentActivity"
-        android:name="com.robertconstantindinescu.my_doctor_app.ui.RequestAppointmentActivity"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.appointmetsActitvities.RequestAppointmentActivity"
         android:label="activity_request_appointment"
         tools:layout="@layout/activity_request_appointment" >
         <argument

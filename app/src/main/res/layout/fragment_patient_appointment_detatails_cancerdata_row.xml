@@ -8,6 +8,10 @@
             name="cancerDataFirebaseModel"
             type="com.robertconstantindinescu.my_doctor_app.models.appointmentModels.CancerDataFirebaseModel" />
 
+
+        <variable
+            name="listener"
+            type="com.robertconstantindinescu.my_doctor_app.interfaces.DetailsCancerDataInterface" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,6 +24,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cancerRecords_row_cardView"
+            android:onClick="@{()->listener.onPatientCancerOutcomeClick(cancerDataFirebaseModel)}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:cardCornerRadius="10dp"

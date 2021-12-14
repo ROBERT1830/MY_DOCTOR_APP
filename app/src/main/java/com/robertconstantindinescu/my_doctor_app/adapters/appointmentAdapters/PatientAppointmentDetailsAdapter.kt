@@ -4,9 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentPatientAppointmentDetatailsCancerdataRowBinding
+import com.robertconstantindinescu.my_doctor_app.interfaces.DetailsCancerDataInterface
+import com.robertconstantindinescu.my_doctor_app.interfaces.PendingDoctorAppointmentRequestsInterface
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.CancerDataFirebaseModel
 
-class PatientAppointmentDetailsAdapter :
+class PatientAppointmentDetailsAdapter(private val detailsCancerDataInterface: DetailsCancerDataInterface) :
     RecyclerView.Adapter<PatientAppointmentDetailsAdapter.MyViewHolder>() {
 
     private var cancerDataFirebaseModelList = emptyList<CancerDataFirebaseModel>()
@@ -24,6 +26,7 @@ class PatientAppointmentDetailsAdapter :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentRecord = this.cancerDataFirebaseModelList[position]
+        holder.binding.listener = detailsCancerDataInterface
         holder.bind(currentRecord)
     }
 

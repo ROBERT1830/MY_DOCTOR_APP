@@ -1,9 +1,8 @@
-package com.robertconstantindinescu.my_doctor_app.ui
+package com.robertconstantindinescu.my_doctor_app.ui.loginSignUp
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivitySignUpChooseUsrBinding
 
 class SignUpChooseUsrActivity : AppCompatActivity() {

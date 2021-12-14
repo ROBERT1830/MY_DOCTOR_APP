@@ -75,6 +75,7 @@
     <string name="acept_appointment">ACCEPT</string>
     <string name="viewPager_patientDetails_title">Patient Details</string>
     <string name="viewPager_doctorNotes_title">Patient Details</string>
+    <string name="instructions">Zoom In to see details</string>
 
 
 </resources>

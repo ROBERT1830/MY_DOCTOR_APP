@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.ui
+package com.robertconstantindinescu.my_doctor_app.ui.loginSignUp
 
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,36 +11,36 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.R
-import com.robertconstantindinescu.my_doctor_app.databinding.ActivityDoctorSignUpBinding
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityPatientSignUpBinding
 import com.robertconstantindinescu.my_doctor_app.utils.AppPermissions
-import com.robertconstantindinescu.my_doctor_app.utils.Constants
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.STORAGE_REQUEST_CODE
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
 import com.robertconstantindinescu.my_doctor_app.utils.State
 import com.robertconstantindinescu.my_doctor_app.viewmodels.LoginViewModel
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_patient_sign_up.*
 import kotlinx.coroutines.flow.collect
-
 @AndroidEntryPoint
-class DoctorSignUpActivity : AppCompatActivity() {
-    private lateinit var mBinding: ActivityDoctorSignUpBinding
+class PatientSignUpActivity : AppCompatActivity() {
+    private lateinit var mBinding: ActivityPatientSignUpBinding
     private lateinit var appPermissions: AppPermissions
     private lateinit var loadingDialog: LoadingDialog
-
     private var image: Uri? = null
+
     private lateinit var name: String
     private lateinit var phoneNumber: String
     private lateinit var email: String
-    private lateinit var doctorliscence: String
+    //private lateinit var doctorliscence: String
     private lateinit var password: String
+    //private  var isDoctor: Boolean = false
 
     private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityDoctorSignUpBinding.inflate(layoutInflater)
+        mBinding = ActivityPatientSignUpBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
         appPermissions = AppPermissions()
@@ -50,23 +50,14 @@ class DoctorSignUpActivity : AppCompatActivity() {
 
         mBinding.txtLogin.setOnClickListener { onBackPressed() }
 
+
         mBinding.imgPick.setOnClickListener {
             if (appPermissions.isStorageOk(this)) pickImage()
             else appPermissions.requestStoragePermission(this)
         }
 
 
-        mBinding.txtLogin.setOnClickListener {
-            val intent =  Intent(this, LoginActivity::class.java)
-            intent.putExtra("isDoctor", true)
-            startActivity(intent)
-        }
-        //
-        //
-        //
-
         mBinding.btnSignUp.setOnClickListener {
-
             if (areFieldsReady()) {
                 if (image != null) {
                     lifecycleScope.launchWhenStarted {
@@ -76,8 +67,8 @@ class DoctorSignUpActivity : AppCompatActivity() {
                             phoneNumber,
                             email,
                             password,
-                            doctorliscence,
-                            isDoctor = true
+                            null,
+                            isDoctor = false
                         ).collect { result ->
                             when (result) {
                                 is State.Loading -> {
@@ -112,14 +103,10 @@ class DoctorSignUpActivity : AppCompatActivity() {
             }
 
 
-
-
-
-
-
+//            val intent = Intent(this, LoginActivity::class.java)
+//            intent.putExtra("isDoctor", false)
+//            startActivity(intent)
         }
-
-
     }
 
     override fun onRequestPermissionsResult(
@@ -128,7 +115,7 @@ class DoctorSignUpActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == Constants.STORAGE_REQUEST_CODE) {
+        if (requestCode == STORAGE_REQUEST_CODE) {
             //grantResults[0]--> because we want only the read externar storage to be checked
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 pickImage()
@@ -167,13 +154,14 @@ class DoctorSignUpActivity : AppCompatActivity() {
         }
 
     }
+
     private fun areFieldsReady(): Boolean {
         with(mBinding) {
             name = edtUsername.text.trim().toString()
             phoneNumber = edtPhone.text.trim().toString()
             email = edtEmail.text.trim().toString()
             password = edtPassword.text.trim().toString()
-            doctorliscence = edtDoctorLiscenceNumber.text.trim().toString()
+
         }
         var view: View? = null
         var flag = false
@@ -189,13 +177,6 @@ class DoctorSignUpActivity : AppCompatActivity() {
                 with(mBinding) {
                     edtPhone.error = resources.getString(R.string.field_required)
                     flag = true
-                }
-            }
-            doctorliscence.isEmpty() -> {
-                with(mBinding){
-                    edtDoctorLiscenceNumber.error = resources.getString(R.string.field_required)
-                    flag = true
-
                 }
             }
             email.isEmpty() -> {
