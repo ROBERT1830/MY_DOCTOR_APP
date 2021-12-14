@@ -17,6 +17,7 @@
         <entry key="app/src/main/res/layout/activity_patient.xml" value="0.3999094202898551" />
         <entry key="app/src/main/res/layout/activity_patient_appointment_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_patient_sign_up.xml" value="0.37681159420289856" />
+        <entry key="app/src/main/res/layout/activity_request_apointment_row.xml" value="0.28378378378378377" />
         <entry key="app/src/main/res/layout/activity_request_appointment.xml" value="0.27364864864864863" />
         <entry key="app/src/main/res/layout/activity_sign_up_choose_usr.xml" value="0.37681159420289856" />
         <entry key="app/src/main/res/layout/bottom_sheet_layout.xml" value="0.2874873353596758" />
@@ -33,6 +34,7 @@
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.37681159420289856" />
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.2874873353596758" />
         <entry key="app/src/main/res/layout/fragment_patient_appointment_details.xml" value="0.3567708333333333" />
+        <entry key="app/src/main/res/layout/fragment_patient_appointment_detatails_cancerdata_row.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_pending_patient_appointment.xml" value="0.314" />
         <entry key="app/src/main/res/layout/fragment_pending_patient_appointments_row.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_radiation.xml" value="0.375" />

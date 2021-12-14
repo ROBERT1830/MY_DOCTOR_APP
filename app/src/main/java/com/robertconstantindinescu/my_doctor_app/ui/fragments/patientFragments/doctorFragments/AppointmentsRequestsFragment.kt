@@ -73,6 +73,7 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 
         swipeRefreshLayout.setOnRefreshListener {
 
+            requestedDoctorAppointmentsList.clear()
             if (swipeRefreshLayout.isRefreshing) {
                 swipeRefreshLayout.isRefreshing = false
             }
@@ -97,6 +98,7 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
             loadingDialog.stopLoading()
             mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
         } else {
+            mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
             loadingDialog.stopLoading()
             Toast.makeText(
                 requireContext(),

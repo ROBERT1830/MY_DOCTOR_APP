@@ -1,5 +1,6 @@
 package com.robertconstantindinescu.my_doctor_app.models.appointmentModels
 
+import android.net.Uri
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
