@@ -1,32 +1,31 @@
 package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments.appointmentDetailsFragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import coil.load
 import com.robertconstantindinescu.my_doctor_app.R
+import com.robertconstantindinescu.my_doctor_app.databinding.FragmentPatientAppointmentDetailsBinding
+import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PENDING_DOCTOR_APPOINTMENT_MODEL
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PatientAppointmentDetailsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PatientAppointmentDetailsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var mBinding: FragmentPatientAppointmentDetailsBinding
+
+    private lateinit var pendingDoctorAppointmentModel: PendingDoctorAppointmentModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            pendingDoctorAppointmentModel =
+                it.getParcelable<PendingDoctorAppointmentModel>(PENDING_DOCTOR_APPOINTMENT_MODEL)!!
+
+            Log.d("myBundle", pendingDoctorAppointmentModel.toString())
         }
     }
 
@@ -35,26 +34,21 @@ class PatientAppointmentDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_patient_appointment_details, container, false)
+        mBinding = FragmentPatientAppointmentDetailsBinding.inflate(layoutInflater)
+
+
+        with(mBinding) {
+            patientImage.load(pendingDoctorAppointmentModel.patientModel!!.image)
+            txtViewPatientName.text = pendingDoctorAppointmentModel.patientModel!!.name
+            txtViewPatientEmail.text = pendingDoctorAppointmentModel.patientModel!!.email
+            txtViewPatientPhone.text = pendingDoctorAppointmentModel.patientModel!!.phoneNumber
+            txtViewPatientDescription.text = pendingDoctorAppointmentModel.description
+
+        }
+
+
+        return mBinding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PatientAppointmentDetailsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PatientAppointmentDetailsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+
 }

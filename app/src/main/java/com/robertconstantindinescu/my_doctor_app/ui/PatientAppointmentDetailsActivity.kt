@@ -28,9 +28,12 @@ class PatientAppointmentDetailsActivity : AppCompatActivity() {
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        val resultBundle = Bundle()
+        resultBundle.putParcelable(PENDING_DOCTOR_APPOINTMENT_MODEL, args.pendingDoctorModel)
+
         //get acces to viewPager
         val viewPager = mBinding.viewPager
-        val adapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
+        val adapter = ViewPagerAdapter(resultBundle, supportFragmentManager, lifecycle)
 
         adapter.addFragment(
             PatientAppointmentDetailsFragment(),
@@ -47,8 +50,7 @@ class PatientAppointmentDetailsActivity : AppCompatActivity() {
 
         }.attach()
 
-        val resultBundle = Bundle()
-        resultBundle.putParcelable(PENDING_DOCTOR_APPOINTMENT_MODEL, args.pendingDoctorModel)
+
 
     }
 
