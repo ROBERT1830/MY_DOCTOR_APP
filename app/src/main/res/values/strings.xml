@@ -76,6 +76,7 @@
     <string name="viewPager_patientDetails_title">Patient Details</string>
     <string name="viewPager_doctorNotes_title">Patient Details</string>
     <string name="instructions">Zoom In to see details</string>
+    <string name="save_note">Save Notes</string>
 
 
 </resources>
