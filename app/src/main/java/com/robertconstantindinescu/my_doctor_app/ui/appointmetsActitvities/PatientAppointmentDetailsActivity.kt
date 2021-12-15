@@ -12,8 +12,10 @@ import com.robertconstantindinescu.my_doctor_app.databinding.ActivityPatientAppo
 import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments.appointmentDetailsFragments.DoctorAppointmentNotes
 import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments.appointmentDetailsFragments.PatientAppointmentDetailsFragment
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PENDING_DOCTOR_APPOINTMENT_MODEL
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_patient_appointment_details.*
 
+@AndroidEntryPoint
 class PatientAppointmentDetailsActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityPatientAppointmentDetailsBinding

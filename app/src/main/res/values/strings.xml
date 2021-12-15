@@ -77,6 +77,8 @@
     <string name="viewPager_doctorNotes_title">Patient Details</string>
     <string name="instructions">Zoom In to see details</string>
     <string name="save_note">Save Notes</string>
+    <string name="default_text_doctor_note">No worry about this mole</string>
+    <string name="save_doctor_note_warning">Seems that you left some data without description… A default note "No worries about this mole" will be saved.</string>
 
 
 </resources>

@@ -15,6 +15,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.CancerDataFirebaseModel
+import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.DoctorNoteModel
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingPatientAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GooglePlaceModel
@@ -33,7 +34,12 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 import retrofit2.Response
 import java.io.ByteArrayOutputStream
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class RemoteDataSource @Inject constructor(
@@ -437,6 +443,9 @@ class RemoteDataSource @Inject constructor(
                     .child(auth.uid!!).push().key
             map["patientAppointmentKey"] = patientAppointmentKey.toString()
 
+            /**
+             * ------------->
+             */
             Firebase.database.reference.child("PendingPatientAppointments").child(auth.uid!!)
                 .child(patientAppointmentKey.toString()).setValue(map)
                 .addOnCompleteListener { task ->
@@ -461,6 +470,7 @@ class RemoteDataSource @Inject constructor(
                         generalBranchMap["date"] = date
                         generalBranchMap["time"] = time
                         generalBranchMap["appointmentStatus"] = "Pending to accept appointment"
+                        generalBranchMap["patientId"] = auth.uid!!
                         Firebase.database.reference.child("PendingDoctorAppointments")
                             .child(doctorModel.doctorLiscence.toString())
                             .child(doctorAppointmentKey.toString()).updateChildren(generalBranchMap)
@@ -483,7 +493,7 @@ class RemoteDataSource @Inject constructor(
         val storageReference = firebaseStorage.reference
 
 
-        val task = storageReference.child(uid + CANCER_PATH +  System.currentTimeMillis())
+        val task = storageReference.child(uid + CANCER_PATH + System.currentTimeMillis())
             .putBytes(image).await()
 
         return task.storage.downloadUrl.await()
@@ -615,6 +625,71 @@ class RemoteDataSource @Inject constructor(
 
 
     }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
+
+    fun saveDoctorNotes(
+        doctorNotesList: java.util.ArrayList<DoctorNoteModel>,
+        patientId: String,
+        date: String,
+        time: String,
+    ): Flow<State<Any>> =
+        flow<State<Any>> {
+            emit(State.loading(true))
+
+
+
+
+
+
+
+            val auth = Firebase.auth
+            val doctorNotesMap: MutableMap<String, Any> = HashMap()
+            var doctorLicence: String = ""
+            val database = Firebase.database.getReference("Users").child(auth.uid!!)
+            database.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val doctorModel = snapshot.getValue(DoctorModel::class.java)
+                        doctorLicence = doctorModel?.doctorLiscence!!
+                        Log.d("onDataChange", doctorLicence.toString())
+                        doctorNotesMap["doctorNotesList"] = doctorNotesList
+                        Firebase.database.getReference("DoctorNotes").child(doctorLicence)
+                            .child(patientId).child("$date;$time").setValue(doctorNotesMap)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                    Log.d("onCancelled", error.message.toString())
+                }
+            })
+
+            // TODO: 15/12/21 to get the context we have to pass it from the view. but for now no
+
+            emit(State.succes("All notes have been saved successfully!!"))
+
+        }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
+
+//    private fun getDoctorLicence(uid: String): String {
+//
+//        var doctorLicence: String = ""
+//        val database = Firebase.database.getReference("Users").child(uid)
+//        database.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                if (snapshot.exists()) {
+//                    val doctorModel = snapshot.getValue(DoctorModel::class.java)
+//                    doctorLicence = doctorModel?.doctorLiscence!!
+//                    Log.d("onDataChange", doctorLicence.toString())
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//
+//                Log.d("onCancelled", error.message.toString())
+//            }
+//        })
+//
+//        return doctorLicence
+//    }
 
 
 }
