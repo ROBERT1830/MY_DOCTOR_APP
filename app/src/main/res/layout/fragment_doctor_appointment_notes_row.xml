@@ -8,6 +8,10 @@
             name="cancerDataFirebaseModel"
             type="com.robertconstantindinescu.my_doctor_app.models.appointmentModels.CancerDataFirebaseModel" />
 
+        <variable
+            name="position"
+            type="Integer" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:cardCornerRadius="10dp"
+            android:layout_margin="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -40,12 +45,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent">
 
+<!--                    getUriImage="@{cancerDataFirebaseModel.cancerImg}"-->
                     <ImageView
                         android:id="@+id/imgView_cancerPhoto"
 
-                        applyMalignBenignColor="@{cancerDataFirebaseModel.outcome}"
+
+                        app:position="@{position}"
+                        app:uri="@{cancerDataFirebaseModel.cancerImg}"
+                        loadImageFromFirebase="@{cancerDataFirebaseModel.cancerImg}"
                         android:layout_width="130dp"
-                        android:layout_height="130dp"
+                        android:layout_height="match_parent"
                         android:scaleType="centerCrop"
 
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -55,7 +64,8 @@
 
                     <ImageView
                         android:id="@+id/imgView_malignBenign_icon"
-                        loadImageFromFirebase="@{cancerDataFirebaseModel.cancerImg}"
+
+                        applyMalignBenignColor="@{cancerDataFirebaseModel.outcome}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
@@ -77,8 +87,9 @@
                     android:maxLines="7"
                     android:textSize="13sp"
                     tools:text="Por este lunar no te preocupes. No parece que hayan signos de
-                malignidad ya que el color y el controno son regulares. Te recomiendo que repitas el pre-test enfocando mejor el lunar. Si fuera necesario elimina el pelo de esapara un mejor resultado. "
 
+                malignidad ya que el color y el controno son regulares. Te recomiendo que repitas el pre-test enfocando mejor el lunar. Si fuera necesario elimina el pelo de esapara un mejor resultado. "
+                    app:textChangedListener="@{position}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/relative_layout_cancerPhoto" />

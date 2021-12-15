@@ -196,7 +196,7 @@ class RequestAppointmentActivity : AppCompatActivity(),
 
     @SuppressLint("SetTextI18n")
     private fun onDateSelected(day: Int, month: Int, year: Int) {
-        mBinding.editTextDate.setText("$day/$month/$year")
+        mBinding.editTextDate.setText("$day-$month-$year")
 
     }
 
