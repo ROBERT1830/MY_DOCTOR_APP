@@ -1,13 +1,9 @@
 package com.robertconstantindinescu.my_doctor_app.models.appointmentModels
 
-import android.os.Parcelable
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
-import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
-data class PendingDoctorAppointmentModel (
+data class AcceptedDoctorAppointmentModel(
     val appointmentStatus: String? = null,
     val cancerDataList: ArrayList<CancerDataFirebaseModel>? = null,
     val date: String? = null,
@@ -21,4 +17,4 @@ data class PendingDoctorAppointmentModel (
     val patientAppointmentKey: String? = null,
     val doctorFirebaseId: String? = null
 
-):Parcelable
+)

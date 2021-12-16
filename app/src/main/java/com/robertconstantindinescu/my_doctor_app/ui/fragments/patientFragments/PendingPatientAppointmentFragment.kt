@@ -113,7 +113,8 @@ class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentI
                         patientAppointmentModel.doctorId!!,
                         patientAppointmentModel.doctorAppointmentKey!!,
                         patientAppointmentModel.patientAppointmentKey!!,
-                        auth.uid!!
+                        auth.uid!!,
+                        patientAppointmentModel.doctorFirebaseId!!
                     ).collect {
                         when (it) {
                             is State.Loading -> {

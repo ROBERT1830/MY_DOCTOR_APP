@@ -5,10 +5,7 @@ import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.robertconstantindinescu.my_doctor_app.models.Repository
-import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.CancerDataFirebaseModel
-import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.DoctorNoteModel
-import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
-import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingPatientAppointmentModel
+import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.*
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,12 +40,13 @@ class RequestAppointmentViewModel @Inject constructor(
         doctorId: String,
         doctorAppointmentKey: String,
         patientAppointmentKey: String,
-        uid: String
+        uid: String,
+        doctorFirebaseId:String
     ) = repository.remote.deletePendingPattientDoctorAppointment(
         doctorId,
         doctorAppointmentKey,
         patientAppointmentKey,
-        uid
+        uid,doctorFirebaseId
         )
 
     fun saveDoctorNotes(
@@ -61,6 +59,8 @@ class RequestAppointmentViewModel @Inject constructor(
 
     fun saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel) =
         repository.remote.saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel)
+
+    suspend fun getAcceptedDoctorAppointments(): ArrayList<AcceptedDoctorAppointmentModel> = repository.remote.getAcceptedDoctorAppointments()
 
 
 //    fun getDoctorNotes(recyclerView: RecyclerView): ArrayList<String> {

@@ -5,28 +5,33 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.robertconstantindinescu.my_doctor_app.R
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.AcceptedAppointmentsAdapter
+import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.AppointmentsRequestedAdapter
+import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAceptedAppointmentsBinding
+import com.robertconstantindinescu.my_doctor_app.interfaces.PendingDoctorAppointmentRequestsInterface
+import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.AcceptedDoctorAppointmentModel
+import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
+import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
+import com.robertconstantindinescu.my_doctor_app.viewmodels.RequestAppointmentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [AceptedAppointmentsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class AceptedAppointmentsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var mBinding: FragmentAceptedAppointmentsBinding
+    private val mAdapter by lazy { AcceptedAppointmentsAdapter() }
+    private lateinit var acceptedDoctorAppointmentsList: ArrayList<AcceptedDoctorAppointmentModel>
+    private lateinit var loadingDialog: LoadingDialog
+    private val requestAppointmentsViewModel: RequestAppointmentViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
         }
     }
 
@@ -35,26 +40,59 @@ class AceptedAppointmentsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_acepted_appointments, container, false)
+        mBinding = FragmentAceptedAppointmentsBinding.inflate(layoutInflater)
+        loadingDialog = LoadingDialog(requireActivity())
+        acceptedDoctorAppointmentsList = ArrayList()
+
+        setUpRecyclerView()
+
+        lifecycleScope.launchWhenStarted {
+            getAcceptedAppointments()
+        }
+
+
+
+        return mBinding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AceptedAppointmentsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AceptedAppointmentsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+
+    private fun setUpRecyclerView() {
+
+        mBinding.recyclerViewAcceptedAppointments.apply {
+            adapter = mAdapter
+            setHasFixedSize(false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        }
+
     }
+    private suspend fun getAcceptedAppointments() {
+
+
+        loadingDialog.startLoading()
+        acceptedDoctorAppointmentsList =
+            requestAppointmentsViewModel.getAcceptedDoctorAppointments()
+
+        if (!acceptedDoctorAppointmentsList.isNullOrEmpty()) {
+            loadingDialog.stopLoading()
+            mAdapter.setUpAdapter(acceptedDoctorAppointmentsList)
+
+        } else {
+            mAdapter.setUpAdapter(acceptedDoctorAppointmentsList)
+
+            loadingDialog.stopLoading()
+            Toast.makeText(
+                requireContext(),
+                "No appointments requested at the moment",
+                Toast.LENGTH_SHORT
+            ).show()
+
+        }
+
+
+    }
+
+
+
+
 }

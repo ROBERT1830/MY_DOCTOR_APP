@@ -7,7 +7,7 @@
     tools:context=".ui.fragments.patientFragments.doctorFragments.AceptedAppointmentsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_pendingAppointments"
+        android:id="@+id/recycler_view_acceptedAppointments"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
