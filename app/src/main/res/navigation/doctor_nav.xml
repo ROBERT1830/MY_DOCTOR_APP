@@ -23,6 +23,7 @@
         <action
             android:id="@+id/action_requestedAppointmentsFragment_to_patientAppointmentDetailsActivity"
             app:destination="@id/patientAppointmentDetailsActivity" />
+
     </fragment>
     <activity
         android:id="@+id/patientAppointmentDetailsActivity"

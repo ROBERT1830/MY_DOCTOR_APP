@@ -2,6 +2,7 @@ package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,19 +12,25 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.internal.FallbackServiceBroker
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.robertconstantindinescu.my_doctor_app.R
+
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.DoctorAppointmentNotesAdapter
 import com.robertconstantindinescu.my_doctor_app.bindingAdapters.DoctorNotesBinding.Companion.cancerImagesMap
 import com.robertconstantindinescu.my_doctor_app.bindingAdapters.DoctorNotesBinding.Companion.doctorNotesMap
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentDoctorAppointmentNotesBinding
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.DoctorNoteModel
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
+import com.robertconstantindinescu.my_doctor_app.ui.DoctorActivity
+import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments.AppointmentsRequestsFragment
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.FROM_SAVE_DOCTOR_NOTES
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PENDING_DOCTOR_APPOINTMENT_MODEL
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
 import com.robertconstantindinescu.my_doctor_app.utils.State
@@ -32,9 +39,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_doctor_appointment_notes.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import android.R
+
+
+
 
 @AndroidEntryPoint
 class DoctorAppointmentNotes : Fragment() {
+
 
     private lateinit var mBinding: FragmentDoctorAppointmentNotesBinding
     private lateinit var pendingDoctorAppointmentModel: PendingDoctorAppointmentModel
@@ -53,6 +65,7 @@ class DoctorAppointmentNotes : Fragment() {
             pendingDoctorAppointmentModel =
                 it.getParcelable<PendingDoctorAppointmentModel>(PENDING_DOCTOR_APPOINTMENT_MODEL)!!
         }
+
     }
 
     override fun onCreateView(
@@ -87,7 +100,7 @@ class DoctorAppointmentNotes : Fragment() {
 
             var uri: String = cancerImagesMap.getValue(i)
             var note: String = doctorNotes.getValue(i)
-            if (note.contains(this.resources.getString(R.string.default_text_doctor_note))) emptyNote =
+            if (note.contains(this.resources.getString(com.robertconstantindinescu.my_doctor_app.R.string.default_text_doctor_note))) emptyNote =
                 true
             doctorNotesList.add(DoctorNoteModel(uri, note))
         }
@@ -104,7 +117,7 @@ class DoctorAppointmentNotes : Fragment() {
         if (emptyNote) {
             val alertDialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
             alertDialog.setTitle("Information")
-                .setMessage(this.resources.getString(R.string.save_doctor_note_warning))
+                .setMessage(this.resources.getString(com.robertconstantindinescu.my_doctor_app.R.string.save_doctor_note_warning))
             alertDialog.setPositiveButton("Agree", DialogInterface.OnClickListener { _, _ ->
                     saveNotesIntoFirebase(doctorNotesList)
 
@@ -112,7 +125,16 @@ class DoctorAppointmentNotes : Fragment() {
             alertDialog.setNegativeButton("Cancel", null)
             alertDialog.setCancelable(false).show()
         }else{
-            saveNotesIntoFirebase(doctorNotesList)
+            val alertDialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            alertDialog.setTitle("Information")
+                .setMessage(this.resources.getString(com.robertconstantindinescu.my_doctor_app.R.string.save_doctor_note) + " ${pendingDoctorAppointmentModel.patientModel!!.name}")
+            alertDialog.setPositiveButton("Agree", DialogInterface.OnClickListener { _, _ ->
+                saveNotesIntoFirebase(doctorNotesList)
+
+            })
+            alertDialog.setNegativeButton("Cancel", null)
+            alertDialog.setCancelable(false).show()
+
         }
     }
 
@@ -125,8 +147,7 @@ class DoctorAppointmentNotes : Fragment() {
             requestAppointmentViewModel.saveDoctorNotes(
                 doctorNotesList,
                 pendingDoctorAppointmentModel.patientId!!,
-                pendingDoctorAppointmentModel.date!!,
-                pendingDoctorAppointmentModel.time!!,
+                pendingDoctorAppointmentModel.patientAppointmentKey!!
             ).collect{
                 when(it){
                     is State.Loading -> {
@@ -137,13 +158,20 @@ class DoctorAppointmentNotes : Fragment() {
                     is State.Succes -> {
                         loadingDialog.stopLoading()
                         // TODO: 11/12/21 here we can make a toast
+
+                        // TODO: 16/12/21 Here we will perform a scroll snackbar listener so that when it finishses go to the activity in cuestions
                         Snackbar.make(
                             mBinding.root,
                             it.data.toString(),
                             Snackbar.LENGTH_LONG
                         ).show()
-                        // TODO: 11/12/21 here we can use the scroll event in the snackbar so that it finishes go to the fargment by using onbackpress. we have used that when delete a location.
 
+
+//                        val action = DoctorAppointmentNotesDirections.actionDoctorAppointmentNotesToHiltDoctorActivity(true)
+//                        findNavController().navigate(action)
+                        val intent = Intent(requireActivity().baseContext, DoctorActivity::class.java)
+                        intent.putExtra(FROM_SAVE_DOCTOR_NOTES, true)
+                        startActivity(intent)
 
                     }
                     is State.Failed -> {

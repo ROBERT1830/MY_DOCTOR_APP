@@ -471,11 +471,16 @@ class RemoteDataSource @Inject constructor(
                         generalBranchMap["time"] = time
                         generalBranchMap["appointmentStatus"] = "Pending to accept appointment"
                         generalBranchMap["patientId"] = auth.uid!!
+                        generalBranchMap["doctorAppointmentKey"] = doctorAppointmentKey.toString()
+                        generalBranchMap["patientAppointmentKey"] = patientAppointmentKey.toString()
+                        generalBranchMap["doctorLiscence"] = doctorModel.doctorLiscence!!
                         Firebase.database.reference.child("PendingDoctorAppointments")
                             .child(doctorModel.doctorLiscence.toString())
                             .child(doctorAppointmentKey.toString()).updateChildren(generalBranchMap)
 
                         getPatientModel(doctorModel, doctorAppointmentKey!!)
+
+                        getDoctorModel(doctorModel, doctorAppointmentKey)
 
 
                     }
@@ -487,6 +492,24 @@ class RemoteDataSource @Inject constructor(
             emit(State.succes("Appointment has been requested to Dr.${doctorModel.name} on $date at $time"))
 
         }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
+
+    private fun getDoctorModel(doctorModel: DoctorModel, doctorAppointmentKey: String) {
+
+        val doctorModelMap: MutableMap<String, Any> = HashMap()
+        doctorModelMap["doctor"] = doctorModel.isDoctor!!
+        doctorModelMap["doctorLiscence"] = doctorModel.doctorLiscence!!
+        doctorModelMap["email"] = doctorModel.email!!
+        doctorModelMap["image"] = doctorModel.image!!
+        doctorModelMap["doctorName"] = doctorModel.name!!
+        doctorModelMap["phoneNumber"] = doctorModel.phoneNumber!!
+        Firebase.database.reference.child("PendingDoctorAppointments")
+            .child(doctorModel.doctorLiscence!!).child(doctorAppointmentKey).child("doctorModel")
+            .updateChildren(doctorModelMap).addOnSuccessListener {
+
+            }.addOnFailureListener {
+
+            }
+    }
 
     private suspend fun uploadCancerImg(uid: String, image: ByteArray): Uri {
         val firebaseStorage = Firebase.storage
@@ -597,16 +620,17 @@ class RemoteDataSource @Inject constructor(
         doctorId: String,
         doctorAppointmentKey: String,
         patientAppointmentKey: String,
+        uid: String
     ): Flow<State<Any>> = flow<State<Any>> {
         emit(State.loading(true))
 
-        var flag = false
-        val auth = FirebaseAuth.getInstance()
+//        var flag = false
+//        val auth = FirebaseAuth.getInstance()
         Firebase.database.reference.child("PendingDoctorAppointments").child(doctorId)
             .child(doctorAppointmentKey).removeValue().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Firebase.database.reference.child("PendingPatientAppointments")
-                        .child(auth.uid!!).child(patientAppointmentKey).removeValue()
+                        .child(uid).child(patientAppointmentKey).removeValue()
                         .addOnCompleteListener {
                             //flag = task.isSuccessful
 
@@ -629,16 +653,10 @@ class RemoteDataSource @Inject constructor(
     fun saveDoctorNotes(
         doctorNotesList: java.util.ArrayList<DoctorNoteModel>,
         patientId: String,
-        date: String,
-        time: String,
+        patientAppointmentKey: String
     ): Flow<State<Any>> =
         flow<State<Any>> {
             emit(State.loading(true))
-
-
-
-
-
 
 
             val auth = Firebase.auth
@@ -653,7 +671,7 @@ class RemoteDataSource @Inject constructor(
                         Log.d("onDataChange", doctorLicence.toString())
                         doctorNotesMap["doctorNotesList"] = doctorNotesList
                         Firebase.database.getReference("DoctorNotes").child(doctorLicence)
-                            .child(patientId).child("$date;$time").setValue(doctorNotesMap)
+                            .child(patientId).child(patientAppointmentKey).setValue(doctorNotesMap)
                     }
                 }
 
@@ -669,27 +687,134 @@ class RemoteDataSource @Inject constructor(
 
         }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
 
-//    private fun getDoctorLicence(uid: String): String {
-//
-//        var doctorLicence: String = ""
-//        val database = Firebase.database.getReference("Users").child(uid)
-//        database.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                if (snapshot.exists()) {
-//                    val doctorModel = snapshot.getValue(DoctorModel::class.java)
-//                    doctorLicence = doctorModel?.doctorLiscence!!
-//                    Log.d("onDataChange", doctorLicence.toString())
-//                }
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//
-//                Log.d("onCancelled", error.message.toString())
-//            }
-//        })
-//
-//        return doctorLicence
-//    }
+    fun saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel): Flow<State<Any>> =
+        flow<State<Any>> {
+            emit(State.loading(true))
+
+            Firebase.database.reference.child("PendingDoctorAppointments")
+                .child(pendingAppointmentDoctorModel.doctorLiscence!!)
+                .child(pendingAppointmentDoctorModel.doctorAppointmentKey!!).removeValue()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Firebase.database.reference.child("PendingPatientAppointments")
+                            .child(pendingAppointmentDoctorModel.patientId!!)
+                            .child(pendingAppointmentDoctorModel.patientAppointmentKey!!)
+                            .removeValue()
+                            .addOnCompleteListener {
+
+                                val acceptedPatientAppointmentMap: MutableMap<String, Any> =
+                                    HashMap()
+
+                                acceptedPatientAppointmentMap["appointmentDate"] =
+                                    pendingAppointmentDoctorModel.date!!
+                                acceptedPatientAppointmentMap["appointmentTime"] =
+                                    pendingAppointmentDoctorModel.time!!
+                                acceptedPatientAppointmentMap["doctorImage"] =
+                                    pendingAppointmentDoctorModel.doctorModel!!.image.toString()
+                                acceptedPatientAppointmentMap["doctorName"] =
+                                    pendingAppointmentDoctorModel.doctorModel.name.toString()
+                                acceptedPatientAppointmentMap["appointmentDescription"] =
+                                    pendingAppointmentDoctorModel.description!!
+                                acceptedPatientAppointmentMap["appointmentStatus"] =
+                                    "The appointment has been accepted by Dr.${pendingAppointmentDoctorModel.doctorModel.name}"
+                                acceptedPatientAppointmentMap["doctorId"] =
+                                    pendingAppointmentDoctorModel.doctorModel.doctorLiscence!!
+
+                                Firebase.database.reference.child("ConfirmedPatientAppointments")
+                                    .child(pendingAppointmentDoctorModel.patientId)
+                                    .child(pendingAppointmentDoctorModel.patientAppointmentKey)
+                                    .updateChildren(acceptedPatientAppointmentMap)
+                                    .addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            val cancerDataMap: MutableMap<String, Any> = HashMap()
+                                            cancerDataMap["cancerDataList"] =
+                                                pendingAppointmentDoctorModel.cancerDataList!!
+                                            Firebase.database.reference.child("ConfirmedDoctorAppointments")
+                                                .child(pendingAppointmentDoctorModel.doctorModel.doctorLiscence!!)
+                                                .child(pendingAppointmentDoctorModel.doctorAppointmentKey)
+                                                .updateChildren(cancerDataMap)
+                                                .addOnCompleteListener {
+
+                                                }.addOnFailureListener {
+
+                                                }
+
+                                            val patientModelMap: MutableMap<String, Any> = HashMap()
+                                            patientModelMap["patientModel"] =
+                                                pendingAppointmentDoctorModel.patientModel!!
+
+                                            Firebase.database.reference.child("ConfirmedDoctorAppointments")
+                                                .child(pendingAppointmentDoctorModel.doctorModel.doctorLiscence!!)
+                                                .child(pendingAppointmentDoctorModel.doctorAppointmentKey)
+                                                .updateChildren(patientModelMap)
+                                                .addOnCompleteListener {
+
+                                                }.addOnFailureListener {
+
+                                                }
+
+
+                                            val doctorModelMap: MutableMap<String, Any> = HashMap()
+                                            doctorModelMap["doctorModel"] =
+                                                pendingAppointmentDoctorModel.doctorModel
+                                            Firebase.database.reference.child("ConfirmedDoctorAppointments")
+                                                .child(pendingAppointmentDoctorModel.doctorModel.doctorLiscence!!)
+                                                .child(pendingAppointmentDoctorModel.doctorAppointmentKey)
+                                                .updateChildren(doctorModelMap)
+                                                .addOnCompleteListener {
+
+                                                }.addOnFailureListener {
+
+                                                }
+
+
+                                            val generalBranchMap: MutableMap<String, Any> =
+                                                HashMap()
+                                            generalBranchMap["appointmentStatus"] =
+                                                "Appointment with patient ${pendingAppointmentDoctorModel.patientModel.name} accepted!"
+                                            generalBranchMap["date"] =
+                                                pendingAppointmentDoctorModel.date
+                                            generalBranchMap["description"] =
+                                                pendingAppointmentDoctorModel.description
+                                            generalBranchMap["doctorAppointmentKey"] =
+                                                pendingAppointmentDoctorModel.doctorAppointmentKey
+                                            generalBranchMap["patientAppointmentKey"] =
+                                                pendingAppointmentDoctorModel.patientAppointmentKey
+                                            generalBranchMap["patientId"] =
+                                                pendingAppointmentDoctorModel.patientId
+                                            generalBranchMap["time"] =
+                                                pendingAppointmentDoctorModel.time
+
+                                            Firebase.database.reference.child("ConfirmedDoctorAppointments")
+                                                .child(pendingAppointmentDoctorModel.doctorModel.doctorLiscence!!)
+                                                .child(pendingAppointmentDoctorModel.doctorAppointmentKey)
+                                                .updateChildren(generalBranchMap)
+                                                .addOnCompleteListener {
+
+                                                }.addOnFailureListener {
+
+                                                }
+                                        }
+                                    }
+
+
+                            }.addOnFailureListener {
+
+                            }
+
+                    }
+
+                }.addOnFailureListener {
+
+                }
+
+            emit(State.succes("The appointment " +
+                    "with ${pendingAppointmentDoctorModel.patientModel!!.name} has been accepted. " +
+                    "Check it in 'Accepted Appointments'"))
+
+
+        }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
+
 
 
 }

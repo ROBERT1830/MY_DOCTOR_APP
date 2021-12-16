@@ -12,6 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.PendingPatientAppointmentAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentPendingPatientAppointmentBinding
@@ -106,10 +108,12 @@ class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentI
             .setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
                 pendingPatientAppontmentList.remove(patientAppointmentModel)
                 lifecycleScope.launchWhenStarted {
+                    val auth = Firebase.auth
                     requestAppointmentViewModel.deletePendingPattientDoctorAppointment(
                         patientAppointmentModel.doctorId!!,
                         patientAppointmentModel.doctorAppointmentKey!!,
                         patientAppointmentModel.patientAppointmentKey!!,
+                        auth.uid!!
                     ).collect {
                         when (it) {
                             is State.Loading -> {
