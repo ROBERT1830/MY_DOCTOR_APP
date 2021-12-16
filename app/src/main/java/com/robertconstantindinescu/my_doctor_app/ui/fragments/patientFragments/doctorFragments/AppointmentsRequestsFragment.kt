@@ -117,8 +117,10 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
         if (!requestedDoctorAppointmentsList.isNullOrEmpty()) {
             loadingDialog.stopLoading()
             mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
+            mAdapter.notifyDataSetChanged()
         } else {
             mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
+            mAdapter.notifyDataSetChanged()
             loadingDialog.stopLoading()
             Toast.makeText(
                 requireContext(),
@@ -195,6 +197,7 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
                             }
                             is State.Succes -> {
                                 loadingDialog.stopLoading()
+                                mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
                                 mAdapter.notifyDataSetChanged()
                                 //mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
                                 Snackbar.make(
