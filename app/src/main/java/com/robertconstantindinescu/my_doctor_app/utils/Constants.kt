@@ -46,6 +46,7 @@ class Constants {
 
         //Doctor appointment
         const val CANCER_DATA = "cancerData"
+        const val FROM_SAVE_DOCTOR_NOTES = "fromSaveDoctorNotes"
 
 
     }

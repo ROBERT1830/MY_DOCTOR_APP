@@ -177,6 +177,7 @@
 
                 <Button
                     android:id="@+id/button_acceptAppointment"
+                    android:onClick="@{()->listener.onAcceptDoctorPendingAppointmentClick(doctorAppointmentModel)}"
                     android:text="@string/acept_appointment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

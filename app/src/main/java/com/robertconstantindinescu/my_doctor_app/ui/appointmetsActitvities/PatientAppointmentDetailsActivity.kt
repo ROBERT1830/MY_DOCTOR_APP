@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
 import com.robertconstantindinescu.my_doctor_app.R
@@ -20,6 +22,7 @@ class PatientAppointmentDetailsActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityPatientAppointmentDetailsBinding
     private val args by navArgs<PatientAppointmentDetailsActivityArgs>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

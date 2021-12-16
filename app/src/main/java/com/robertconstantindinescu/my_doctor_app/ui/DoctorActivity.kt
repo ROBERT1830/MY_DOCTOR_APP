@@ -3,11 +3,14 @@ package com.robertconstantindinescu.my_doctor_app.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -23,7 +26,9 @@ import com.google.firebase.ktx.Firebase
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.databinding.*
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
+import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments.AppointmentsRequestsFragment
 import com.robertconstantindinescu.my_doctor_app.ui.loginSignUp.LoginActivity
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.FROM_SAVE_DOCTOR_NOTES
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_patient.*
@@ -41,11 +46,31 @@ class DoctorActivity : AppCompatActivity() {
     private lateinit var txtEmail: TextView
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         navigationDrawerLayoutBinding = DoctorNavigationDrawerLayoutBinding.inflate(layoutInflater)
         setContentView(navigationDrawerLayoutBinding.root)
+
+        //receive data from DoctorNotesFragment
+
+        Log.d("onCreate", "CALLED")
+        val intent = intent
+        val fromDoctorSavedNotes: Boolean = intent.getBooleanExtra(FROM_SAVE_DOCTOR_NOTES, false)
+        Log.d("fromDoctorSavedNotes", fromDoctorSavedNotes.toString())
+
+
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        val bundle = Bundle()
+        bundle.putBoolean(FROM_SAVE_DOCTOR_NOTES, fromDoctorSavedNotes)
+        val appointmentsRequestsFragment = AppointmentsRequestsFragment()
+        appointmentsRequestsFragment.arguments = bundle
+        fragmentTransaction.replace(R.id.flFragment, appointmentsRequestsFragment).commit()
+
+
+
+
 
         doctorBinding = navigationDrawerLayoutBinding.doctorActivity
         toolbarLayoutBinding = doctorBinding.toolbarMain
@@ -86,13 +111,17 @@ class DoctorActivity : AppCompatActivity() {
             setOf(
                 R.id.requestedAppointmentsFragment,
                 R.id.aceptedAppointmentsFragment,
-                R.id.contactToPatientFragment
+                R.id.contactToPatientFragment,
+
 
             )
         )
         bottomNavigationView.setupWithNavController(navController)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+
     }
+
 
     private fun getUserData() {
 

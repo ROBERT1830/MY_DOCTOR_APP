@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.robertconstantindinescu.my_doctor_app.models.Repository
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.CancerDataFirebaseModel
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.DoctorNoteModel
+import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingPatientAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
@@ -35,23 +36,31 @@ class RequestAppointmentViewModel @Inject constructor(
 
     suspend fun getPatientPendingAppointments() = repository.remote.getPendingPatientAppointments()
 
-    suspend fun getRequestedDoctorAppointments() = repository.remote.getRequestedDoctorAppointments()
+    suspend fun getRequestedDoctorAppointments() =
+        repository.remote.getRequestedDoctorAppointments()
 
     fun deletePendingPattientDoctorAppointment(
         doctorId: String,
         doctorAppointmentKey: String,
         patientAppointmentKey: String,
+        uid: String
     ) = repository.remote.deletePendingPattientDoctorAppointment(
         doctorId,
         doctorAppointmentKey,
         patientAppointmentKey,
+        uid
+        )
 
-    )
+    fun saveDoctorNotes(
+        doctorNotesList: ArrayList<DoctorNoteModel>,
+        patientId: String,
+        patientAppointmentKey: String
+    ) =
 
-    fun saveDoctorNotes(doctorNotesList: ArrayList<DoctorNoteModel>, patientId:String, date:String, time:String) =
+        repository.remote.saveDoctorNotes(doctorNotesList, patientId, patientAppointmentKey)
 
-        repository.remote.saveDoctorNotes(doctorNotesList, patientId, date, time)
-
+    fun saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel) =
+        repository.remote.saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel)
 
 
 //    fun getDoctorNotes(recyclerView: RecyclerView): ArrayList<String> {

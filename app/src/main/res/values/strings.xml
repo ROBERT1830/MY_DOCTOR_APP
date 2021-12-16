@@ -79,6 +79,9 @@
     <string name="save_note">Save Notes</string>
     <string name="default_text_doctor_note">No worry about this mole</string>
     <string name="save_doctor_note_warning">Seems that you left some data without description… A default note "No worries about this mole" will be saved.</string>
+    <string name="save_doctor_note">Do you want to save the current note and send it to</string>
+    <string name="accept_appointment_no_valid">To accept an appointment, first give some background to your patient by saving some notes</string>
+    <string name="accept_appointment">Are you sure you want to accept this appointment from patient</string>
 
 
 </resources>
