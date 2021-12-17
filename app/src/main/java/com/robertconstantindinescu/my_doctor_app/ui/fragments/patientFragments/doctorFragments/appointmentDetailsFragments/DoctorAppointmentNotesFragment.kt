@@ -1,6 +1,5 @@
 package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments.appointmentDetailsFragments
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -12,15 +11,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.common.internal.FallbackServiceBroker
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.DoctorAppointmentNotesAdapter
 import com.robertconstantindinescu.my_doctor_app.bindingAdapters.DoctorNotesBinding.Companion.cancerImagesMap
@@ -29,7 +21,6 @@ import com.robertconstantindinescu.my_doctor_app.databinding.FragmentDoctorAppoi
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.DoctorNoteModel
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.ui.DoctorActivity
-import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments.AppointmentsRequestsFragment
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.FROM_SAVE_DOCTOR_NOTES
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PENDING_DOCTOR_APPOINTMENT_MODEL
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
@@ -38,10 +29,6 @@ import com.robertconstantindinescu.my_doctor_app.viewmodels.RequestAppointmentVi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_doctor_appointment_notes.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import android.R
-
-
 
 
 @AndroidEntryPoint
@@ -127,7 +114,7 @@ class DoctorAppointmentNotes : Fragment() {
         }else{
             val alertDialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
             alertDialog.setTitle("Information")
-                .setMessage(this.resources.getString(com.robertconstantindinescu.my_doctor_app.R.string.save_doctor_note) + " ${pendingDoctorAppointmentModel.patientModel!!.name}")
+                .setMessage(this.resources.getString(com.robertconstantindinescu.my_doctor_app.R.string.save_doctor_note) + " ${pendingDoctorAppointmentModel.patientModel!!.patientName}")
             alertDialog.setPositiveButton("Agree", DialogInterface.OnClickListener { _, _ ->
                 saveNotesIntoFirebase(doctorNotesList)
 

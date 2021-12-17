@@ -123,7 +123,8 @@ class PatientActivity : AppCompatActivity() {
                 R.id.btnSavedPlaces,
                 R.id.mapsFragment,
                 R.id.btnShowAvailableDoctors,
-                R.id.btnShowPendingAppointments
+                R.id.btnShowPendingAppointments,
+                R.id.btnMyAppointments
             )
         )
         //set the bottom navigation with the navController.
@@ -196,7 +197,7 @@ class PatientActivity : AppCompatActivity() {
                     //set the data from the navigationView header views
                     Glide.with(this@PatientActivity).load(patientModel?.image).into(imgHeader)
                     txtEmail.text = patientModel?.email
-                    txtName.text = patientModel?.name
+                    txtName.text = patientModel?.patientName
                 }
 
 

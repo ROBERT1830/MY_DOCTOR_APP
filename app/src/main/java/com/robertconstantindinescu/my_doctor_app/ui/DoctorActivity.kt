@@ -9,8 +9,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -136,7 +134,7 @@ class DoctorActivity : AppCompatActivity() {
                     //set the data from the navigationView header views
                     Glide.with(this@DoctorActivity).load(patientModel?.image).into(imgHeader)
                     txtEmail.text = patientModel?.email
-                    txtName.text = patientModel?.name
+                    txtName.text = patientModel?.patientName
                 }
             }
 

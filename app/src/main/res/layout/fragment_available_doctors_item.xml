@@ -58,7 +58,7 @@
                             android:id="@+id/txtView_doctorName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{doctorModel.name!=null?String.valueOf(doctorModel.name):`New`, default=`Robert Constantin`}"
+                            android:text="@{doctorModel.doctorName!=null?String.valueOf(doctorModel.doctorName):`New`, default=`Robert Constantin`}"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             app:drawableStartCompat="@drawable/ic_person"

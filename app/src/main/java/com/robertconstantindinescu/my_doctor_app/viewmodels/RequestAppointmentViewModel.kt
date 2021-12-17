@@ -31,7 +31,7 @@ class RequestAppointmentViewModel @Inject constructor(
         )
 
 
-    suspend fun getPatientPendingAppointments() = repository.remote.getPendingPatientAppointments()
+    suspend fun getPatientPendingAppointments(appointmentType:String) = repository.remote.getPendingPatientAppointments(appointmentType)
 
     suspend fun getRequestedDoctorAppointments() =
         repository.remote.getRequestedDoctorAppointments()
@@ -41,12 +41,14 @@ class RequestAppointmentViewModel @Inject constructor(
         doctorAppointmentKey: String,
         patientAppointmentKey: String,
         uid: String,
-        doctorFirebaseId:String
+        doctorFirebaseId:String,
+        doctorAppointmentType: String,
+        patientAppointmentType:String
     ) = repository.remote.deletePendingPattientDoctorAppointment(
         doctorId,
         doctorAppointmentKey,
         patientAppointmentKey,
-        uid,doctorFirebaseId
+        uid,doctorFirebaseId,doctorAppointmentType,patientAppointmentType
         )
 
     fun saveDoctorNotes(

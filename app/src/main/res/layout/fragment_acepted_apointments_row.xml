@@ -90,7 +90,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:maxLines="2"
-                                    android:text="@{acceptedDoctorAppointmentModel.patientModel.name!=null?String.valueOf(acceptedDoctorAppointmentModel.patientModel.name):`New`, default=`Robert Constantin`}"
+                                    android:text="@{acceptedDoctorAppointmentModel.patientModel.patientName!=null?String.valueOf(acceptedDoctorAppointmentModel.patientModel.patientName):`New`, default=`Robert Constantin`}"
                                     android:textAlignment="center"
                                     android:textColor="@color/black"
                                     android:textStyle="bold"

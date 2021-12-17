@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.patientFragments.doctorFragments.AceptedAppointmentsFragment">
+    tools:context=".ui.fragments.patientFragments.PatientAcceptedAppointmentsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_acceptedAppointments"
@@ -14,6 +14,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem="@layout/fragment_acepted_apointments_row"/>
+        tools:listitem="@layout/fragment_patient_accepted_appointments_row"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

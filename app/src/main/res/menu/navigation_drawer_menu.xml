@@ -18,10 +18,13 @@
         <menu>
             <item android:id="@+id/btnShowAvailableDoctors"
                 android:icon="@drawable/ic_doctor"
-                android:title="Available Doctors"/>
+                android:title="@string/available_doctors"/>
             <item android:id="@+id/btnShowPendingAppointments"
-                android:title="Pending Appointments"
+                android:title="@string/pending_appointments"
                 android:icon="@drawable/ic_appointment"/>
+            <item android:id="@+id/btnMyAppointments"
+                android:title="@string/my_appointments"
+                android:icon="@drawable/ic_accepted_appointment"/>
         </menu>
     </item>
 
