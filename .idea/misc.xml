@@ -24,6 +24,7 @@
         <entry key="app/src/main/res/layout/bottom_sheet_layout.xml" value="0.2874873353596758" />
         <entry key="app/src/main/res/layout/dialog_layout.xml" value="0.3641304347826087" />
         <entry key="app/src/main/res/layout/doctor_navigation_drawer_layout.xml" value="0.2874873353596758" />
+        <entry key="app/src/main/res/layout/fragment_accepted_appointments.xml" value="0.5911458333333334" />
         <entry key="app/src/main/res/layout/fragment_acepted_apointments_row.xml" value="0.4" />
         <entry key="app/src/main/res/layout/fragment_acepted_appointments.xml" value="0.3292572463768116" />
         <entry key="app/src/main/res/layout/fragment_appointments_requests.xml" value="0.3291592128801431" />
@@ -36,6 +37,8 @@
         <entry key="app/src/main/res/layout/fragment_doctor_appointment_notes_row.xml" value="0.12133891213389121" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.37681159420289856" />
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.2874873353596758" />
+        <entry key="app/src/main/res/layout/fragment_patient_accepted_appointments.xml" value="0.2884012539184953" />
+        <entry key="app/src/main/res/layout/fragment_patient_accepted_appointments_row.xml" value="0.4375" />
         <entry key="app/src/main/res/layout/fragment_patient_appointment_details.xml" value="0.3567708333333333" />
         <entry key="app/src/main/res/layout/fragment_patient_appointment_detatails_cancerdata_row.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_pending_patient_appointment.xml" value="0.314" />

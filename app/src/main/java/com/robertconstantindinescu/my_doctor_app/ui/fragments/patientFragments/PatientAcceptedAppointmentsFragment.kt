@@ -17,7 +17,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.PendingPatientAppointmentAdapter
-import com.robertconstantindinescu.my_doctor_app.databinding.FragmentPendingPatientAppointmentBinding
+import com.robertconstantindinescu.my_doctor_app.databinding.FragmentPatientAcceptedAppointmentsBinding
 import com.robertconstantindinescu.my_doctor_app.interfaces.PendingPatientAppointmentInterface
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingPatientAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
@@ -27,20 +27,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentInterface {
+class PatientAcceptedAppointmentsFragment : Fragment(), PendingPatientAppointmentInterface {
 
-    private lateinit var mBinding: FragmentPendingPatientAppointmentBinding
+    private lateinit var mBinding: FragmentPatientAcceptedAppointmentsBinding
     private val requestAppointmentViewModel: RequestAppointmentViewModel by viewModels()
-
-
     private val mAdapter by lazy { PendingPatientAppointmentAdapter(this) }
-    private lateinit var pendingPatientAppontmentList: ArrayList<PendingPatientAppointmentModel>
+    private lateinit var acceptedPatientAppointmentList: ArrayList<PendingPatientAppointmentModel>
     private lateinit var loadingDialog: LoadingDialog
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+
         }
     }
 
@@ -48,37 +46,34 @@ class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentI
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
 
-        mBinding = FragmentPendingPatientAppointmentBinding.inflate(layoutInflater)
+        mBinding = FragmentPatientAcceptedAppointmentsBinding.inflate(layoutInflater)
         loadingDialog = LoadingDialog(requireActivity())
-        pendingPatientAppontmentList = ArrayList()
+        acceptedPatientAppointmentList = ArrayList()
         setUpRecyclerView()
 
-
-
         lifecycleScope.launchWhenStarted {
-            getPatientPendingAppointments()
+            getPatientAcceptedAppointments()
         }
 
 
         return mBinding.root
-
-
     }
 
-    private suspend fun getPatientPendingAppointments() {
+    private suspend fun getPatientAcceptedAppointments() {
         loadingDialog.startLoading()
-        pendingPatientAppontmentList =
-            requestAppointmentViewModel.getPatientPendingAppointments("PendingPatientAppointments")
+        acceptedPatientAppointmentList =
+            requestAppointmentViewModel.getPatientPendingAppointments("ConfirmedPatientAppointments")
 
-        if (!pendingPatientAppontmentList.isNullOrEmpty()) {
+        if (!acceptedPatientAppointmentList.isNullOrEmpty()) {
             loadingDialog.stopLoading()
-            mAdapter.setUpAdapter(pendingPatientAppontmentList)
+            mAdapter.setUpAdapter(acceptedPatientAppointmentList)
         } else {
             loadingDialog.stopLoading()
             Toast.makeText(
                 requireContext(),
-                "No appointments requested at the moment",
+                "No accepted appointments at the moment",
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -88,9 +83,9 @@ class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentI
 
     private fun setUpRecyclerView() {
 
-        mBinding.recyclerViewPendingAppointments.apply {
+        mBinding.recyclerViewAcceptedAppointments.apply {
             adapter = mAdapter
-            setHasFixedSize(true)
+            setHasFixedSize(false)
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
@@ -104,13 +99,13 @@ class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentI
 //        doctorAppointmentKey: String,
 //        patientAppointmentKey: String
     ) {
-        Log.d("PendingPatientAppointmentModel", patientAppointmentModel.toString())
-        val pendingDoctorAppointment = "PendingDoctorAppointments"
-        val pendingPatientAppointment = "PendingPatientAppointments"
-        val alertDialog = AlertDialog.Builder(requireContext()).setCancelable(false)
+        Log.d("AcceptedPatientAppointmentModel", patientAppointmentModel.toString())
+        val confirmedDoctorAppointment = "ConfirmedDoctorAppointments"
+        val confirmedPatientAppointment = "ConfirmedPatientAppointments"
+         AlertDialog.Builder(requireContext()).setCancelable(false)
             .setMessage(resources.getString(R.string.cancel_specific_appointment))
             .setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
-                pendingPatientAppontmentList.remove(patientAppointmentModel)
+                acceptedPatientAppointmentList.remove(patientAppointmentModel)
                 lifecycleScope.launchWhenStarted {
                     val auth = Firebase.auth
                     requestAppointmentViewModel.deletePendingPattientDoctorAppointment(
@@ -119,8 +114,10 @@ class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentI
                         patientAppointmentModel.patientAppointmentKey!!,
                         auth.uid!!,
                         patientAppointmentModel.doctorFirebaseId!!,
-                        pendingDoctorAppointment,
-                        pendingPatientAppointment
+                        confirmedDoctorAppointment,
+                        confirmedPatientAppointment
+
+
                     ).collect {
                         when (it) {
                             is State.Loading -> {
@@ -128,13 +125,13 @@ class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentI
                             }
                             is State.Succes -> {
                                 loadingDialog.stopLoading()
+                                mAdapter.setUpAdapter(acceptedPatientAppointmentList)
                                 mAdapter.notifyDataSetChanged()
                                 Snackbar.make(
                                     mBinding.root,
                                     it.data.toString(),
                                     Snackbar.LENGTH_SHORT
                                 ).show()
-
 
                             }
                             is State.Failed -> {
@@ -148,7 +145,7 @@ class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentI
                         }
                     }
                 }
-            }).setNegativeButton("No", null).show();
+            }).setNegativeButton("No", null).setCancelable(false).show();
 
 
     }

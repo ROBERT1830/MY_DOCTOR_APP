@@ -78,7 +78,7 @@ class RequestAppointmentActivity : AppCompatActivity(),
                     val alertDialog = AlertDialog.Builder(this@RequestAppointmentActivity)
                     alertDialog.setTitle("Confirmation")
                         .setMessage(
-                            "Are you sure you want set an appointment with Dr.${args.doctorModel.name} on ${
+                            "Are you sure you want set an appointment with Dr.${args.doctorModel.doctorName} on ${
                                 editTextDate.text.trim()
                             } at ${editTextTime.text.trim()} ?"
                         )
@@ -137,7 +137,7 @@ class RequestAppointmentActivity : AppCompatActivity(),
 
         with(mBinding) {
             img_doctor.load(args.doctorModel.image)
-            txtView_doctorName.text = args.doctorModel.name.toString()
+            txtView_doctorName.text = args.doctorModel.doctorName.toString()
             txtView_doctorEmail.text = args.doctorModel.email.toString()
             txtView_doctorLiscence.text = args.doctorModel.doctorLiscence.toString()
         }

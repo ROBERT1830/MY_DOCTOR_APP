@@ -12,6 +12,11 @@
         <variable
             name="listener"
             type="com.robertconstantindinescu.my_doctor_app.interfaces.PendingDoctorAppointmentRequestsInterface" />
+
+
+        <variable
+            name="position"
+            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -90,7 +95,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:maxLines="2"
-                                    android:text="@{doctorAppointmentModel.patientModel.name!=null?String.valueOf(doctorAppointmentModel.patientModel.name):`New`, default=`Robert Constantin`}"
+                                    android:text="@{doctorAppointmentModel.patientModel.patientName!=null?String.valueOf(doctorAppointmentModel.patientModel.patientName):`New`, default=`Robert Constantin`}"
                                     android:textAlignment="center"
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
@@ -177,7 +182,7 @@
 
                 <Button
                     android:id="@+id/button_acceptAppointment"
-                    android:onClick="@{()->listener.onAcceptDoctorPendingAppointmentClick(doctorAppointmentModel)}"
+                    android:onClick="@{()->listener.onAcceptDoctorPendingAppointmentClick(doctorAppointmentModel, position)}"
                     android:text="@string/acept_appointment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

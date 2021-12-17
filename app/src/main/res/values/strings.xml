@@ -82,6 +82,9 @@
     <string name="save_doctor_note">Do you want to save the current note and send it to</string>
     <string name="accept_appointment_no_valid">To accept an appointment, first give some background to your patient by saving some notes</string>
     <string name="accept_appointment">Are you sure you want to accept this appointment from patient</string>
+    <string name="pending_appointments">Pending Appointments</string>
+    <string name="available_doctors">Available Doctors</string>
+    <string name="my_appointments">My Appointments</string>
 
 
 </resources>

@@ -5,7 +5,7 @@ import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.Pendin
 
 interface PendingDoctorAppointmentRequestsInterface {
     fun onDoctorPendingAppointmentRequestClick(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel)
-    fun onAcceptDoctorPendingAppointmentClick(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel)
+    fun onAcceptDoctorPendingAppointmentClick(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel, position:Int)
 
 
 }

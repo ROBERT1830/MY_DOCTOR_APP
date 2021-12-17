@@ -13,7 +13,6 @@ import coil.load
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.PatientAppointmentDetailsAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentPatientAppointmentDetailsBinding
 import com.robertconstantindinescu.my_doctor_app.interfaces.DetailsCancerDataInterface
-import com.robertconstantindinescu.my_doctor_app.interfaces.PendingDoctorAppointmentRequestsInterface
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.CancerDataFirebaseModel
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.ui.appointmetsActitvities.DetailCancerImageActivity
@@ -51,7 +50,8 @@ class PatientAppointmentDetailsFragment : Fragment(), DetailsCancerDataInterface
 
         with(mBinding) {
             patientImage.load(pendingDoctorAppointmentModel.patientModel!!.image)
-            txtViewPatientName.text = pendingDoctorAppointmentModel.patientModel!!.name
+
+            txtViewPatientName.text = pendingDoctorAppointmentModel.patientModel!!.patientName
             txtViewPatientEmail.text = pendingDoctorAppointmentModel.patientModel!!.email
             txtViewPatientPhone.text = pendingDoctorAppointmentModel.patientModel!!.phoneNumber
             txtViewPatientDescription.text = pendingDoctorAppointmentModel.description
