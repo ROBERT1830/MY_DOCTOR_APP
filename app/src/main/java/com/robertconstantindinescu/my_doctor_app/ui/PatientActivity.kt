@@ -145,42 +145,11 @@ class PatientActivity : AppCompatActivity() {
                 R.id.btnSavedPlaces -> bottomNavigationView.visibility = View.GONE
                 R.id.btnShowAvailableDoctors -> bottomNavigationView.visibility = View.GONE
                 R.id.btnShowPendingAppointments -> bottomNavigationView.visibility = View.GONE
+                R.id.btnMyAppointments -> bottomNavigationView.visibility = View.GONE
                 R.id.cancerRecordsFragment -> bottomNavigationView.visibility = View.VISIBLE
-
-
-
-
-                    /*logout.setOnClickListener {
-    mGoogleSignInClient.signOut().addOnCompleteListener {
-        val intent= Intent(this, LoginScreen::class.java)
-        startActivity(intent)
-        finish()
-    }
-}*/
-
             }
 
-
-//            if(destination.id == R.id.btnSettings) {
-//
-//                bottomNavigationView.visibility = View.GONE
-//            } else {
-//
-//                bottomNavigationView.visibility = View.VISIBLE
-//            }
         }
-//        navigationDrawerLayoutBinding.navigationView.setNavigationItemSelectedListener {
-//            when(it.itemId){
-//                R.id.btnLogOut -> {
-//                    FirebaseAuth.getInstance().signOut()
-//                    val intent = Intent(this@PatientActivity, LoginActivity::class.java)
-//                    startActivity(intent)
-//                }
-//            }
-//
-//            return@setNavigationItemSelectedListener false
-//        }
-
 
     }
 
@@ -228,17 +197,4 @@ class PatientActivity : AppCompatActivity() {
             super.onBackPressed()
     }
 
-//    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-//        when(item.itemId){
-//            R.id.btnLogOut -> {
-//                FirebaseAuth.getInstance().signOut()
-//                val intent = Intent(this@PatientActivity, LoginActivity::class.java)
-//                startActivity(intent)
-//            }
-//        }
-//
-//        return false
-//
-//
-//    }
 }

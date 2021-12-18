@@ -21,6 +21,7 @@ import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAppointment
 import com.robertconstantindinescu.my_doctor_app.interfaces.PendingDoctorAppointmentRequestsInterface
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.FROM_SAVE_DOCTOR_NOTES
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.doctorCancelChoice
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
 import com.robertconstantindinescu.my_doctor_app.utils.State
 import com.robertconstantindinescu.my_doctor_app.viewmodels.RequestAppointmentViewModel
@@ -154,7 +155,10 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 
     }
 
-    override fun onAcceptDoctorPendingAppointmentClick(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel, position:Int) {
+    override fun onAcceptDoctorPendingAppointmentClick(
+        pendingAppointmentDoctorModel: PendingDoctorAppointmentModel,
+        position: Int
+    ) {
 
         if (!fromSavedDoctorNote) {
             val alertDialog = AlertDialog.Builder(requireContext())
@@ -170,7 +174,11 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
             alertDialog.setNegativeButton("Cancel", null)
             alertDialog.setCancelable(false).show()
         } else {
-            // TODO: 16/12/21 What we have to do is first delete the current pendincdoctorappoint. Add a listener on complete and delete the patient pending appointment. Ad listener and then create accepted doctor appointment. Litener and finally create the aacepted patientn apponitment.
+
+            val acceptedAppointmentMessage =
+                resources.getString(R.string.accept_appointment_title) +
+                        "${pendingAppointmentDoctorModel.doctorModel!!.doctorName}"
+
             val alertDialog = AlertDialog.Builder(requireContext())
             alertDialog.setTitle("Information")
                 .setMessage(this.resources.getString(R.string.accept_appointment) + " ${pendingAppointmentDoctorModel.patientModel!!.patientName}")
@@ -181,12 +189,13 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 
                 Log.d("requestedDoctorAppointmentsList", requestedDoctorAppointmentsList.toString())
                 lifecycleScope.launchWhenStarted {
-                    requestAppointmentsViewModel.saveDoctorPatientAcceptedAppointment(
-                        pendingAppointmentDoctorModel
+                    requestAppointmentsViewModel.saveCancelDoctorPatientAcceptedAppointment(
+                        pendingAppointmentDoctorModel,
+                        acceptedAppointmentMessage
                     ).collect {
-                        when(it){
+                        when (it) {
                             is State.Loading -> {
-                                if (it.flag == true){
+                                if (it.flag == true) {
                                     loadingDialog.startLoading()
                                 }
                             }
@@ -222,6 +231,73 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
             alertDialog.setNegativeButton("Cancel", null)
             alertDialog.setCancelable(false).show()
         }
+    }
+
+    override fun onCancelDoctorPendingAppointmentClick(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel) {
+
+        var cancelAppointmentMessage: String = ""
+        val alertDialog = AlertDialog.Builder(requireContext())
+        alertDialog.setTitle(resources.getString(R.string.reasson_appointment_cancelation))
+        alertDialog.setSingleChoiceItems(
+            doctorCancelChoice,
+            0
+        ) { dialogInterface: DialogInterface, position: Int ->
+            cancelAppointmentMessage =
+                " The appointment with ${pendingAppointmentDoctorModel.doctorModel!!.doctorName} " +
+                        "has been cancelled with the next reason: " +
+                        "" + doctorCancelChoice[position]
+            Toast.makeText(requireContext(), "You selected option $position", Toast.LENGTH_LONG)
+                .show()
+        }
+
+        alertDialog.setPositiveButton("Accept", DialogInterface.OnClickListener { _, _ ->
+
+            requestedDoctorAppointmentsList.remove(pendingAppointmentDoctorModel)
+            lifecycleScope.launchWhenStarted {
+                requestAppointmentsViewModel.saveCancelDoctorPatientAcceptedAppointment(
+                    pendingAppointmentDoctorModel,
+                    cancelAppointmentMessage
+                ).collect {
+                    when (it) {
+                        is State.Loading -> {
+                            if (it.flag == true) {
+                                loadingDialog.startLoading()
+                            }
+                        }
+                        is State.Succes -> {
+                            loadingDialog.stopLoading()
+                            mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
+                            mAdapter.notifyDataSetChanged()
+                            //mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
+
+                            //mAdapter.delete(pendingAppointmentDoctorModel)
+                            //mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
+                            Snackbar.make(
+                                mBinding.root,
+                                it.data.toString(),
+                                Snackbar.LENGTH_LONG
+                            ).show()
+
+                        }
+                        is State.Failed -> {
+                            loadingDialog.stopLoading()
+                            Snackbar.make(
+                                mBinding.root,
+                                it.error.toString(),
+                                Snackbar.LENGTH_LONG
+                            ).show()
+
+                        }
+                    }
+                }
+            }
+
+        })
+
+        alertDialog.setNegativeButton("Cancel", null)
+        alertDialog.setCancelable(false).show()
+
+
     }
 
 

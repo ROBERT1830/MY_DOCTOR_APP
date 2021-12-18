@@ -64,45 +64,6 @@ class RemoteDataSource @Inject constructor(
         emit(State.failed(it.message!!))
     }.flowOn(Dispatchers.IO)
 
-
-//    public val isNetworkAvailable = MutableStateFlow(false)
-//    fun  checkForUserAcces(): MutableStateFlow<Boolean> {
-//
-//        val uid = FirebaseAuth.getInstance().currentUser?.uid
-//        val db = FirebaseDatabase.getInstance().reference
-//        val uidRef = db.child("Users").child(uid!!)
-//        val valueEventListener = object : ValueEventListener {
-//            override fun  onDataChange(snapshot: DataSnapshot) {
-//                val doctor = snapshot.child("doctor").getValue() as Boolean
-//                if(doctor) {
-//                    isNetworkAvailable.value = true
-//                } else {
-//                    isNetworkAvailable.value = true
-//                }
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                Log.d("TAG", databaseError.getMessage()) //Don't ignore potential errors!
-//            }
-//        }
-//        uidRef.addListenerForSingleValueEvent(valueEventListener)
-//        return  isNetworkAvailable
-//    }
-
-
-//    private fun checkUserAccesLevel(uid: String?) {
-//        val firebase = Firebase.database.getReference("Users").child(uid!!)
-//        firebase.get().addOnSuccessListener {
-//            if(it.value. != null){
-//
-//
-//            }
-//        }
-//
-//
-//    }
-
-
     /** -- SIGN UP FIREBASE -- **/
 
 
@@ -130,10 +91,19 @@ class RemoteDataSource @Inject constructor(
             val path = uploadImage(currentUser.uid, image).toString()
             if (isDoctor) {
                 doctorModel =
-                    createDoctorModel(path, name, phoneNumber, email, doctorLiscence, isDoctor, auth.uid!!)
+                    createDoctorModel(
+                        path,
+                        name,
+                        phoneNumber,
+                        email,
+                        doctorLiscence,
+                        isDoctor,
+                        auth.uid!!
+                    )
                 createDoctor(doctorModel, auth)
             } else {
-                patientModel = createPatientModel(path, name, phoneNumber, email, isDoctor, auth.uid!!)
+                patientModel =
+                    createPatientModel(path, name, phoneNumber, email, isDoctor, auth.uid!!)
                 createPatient(patientModel, auth)
             }
             emit(State.succes("Email verification sent"))
@@ -194,7 +164,7 @@ class RemoteDataSource @Inject constructor(
         email: String,
         doctorLiscence: String?,
         isDoctor: Boolean,
-        uid:String
+        uid: String
     ): DoctorModel {
         return DoctorModel(image, name, phoneNumber, email, doctorLiscence!!, isDoctor, uid)
 
@@ -457,7 +427,8 @@ class RemoteDataSource @Inject constructor(
                         }
                         cancerDataMap["cancerDataList"] = cancerL
                         Firebase.database.reference.child("PendingDoctorAppointments")
-                            /*.child(doctorModel.doctorLiscence.toString())*/.child(doctorModel.firebaseId!!)
+                            /*.child(doctorModel.doctorLiscence.toString())*/
+                            .child(doctorModel.firebaseId!!)
                             .child(doctorAppointmentKey.toString())
                             .setValue(cancerDataMap)
 
@@ -470,7 +441,8 @@ class RemoteDataSource @Inject constructor(
                         generalBranchMap["patientAppointmentKey"] = patientAppointmentKey.toString()
                         generalBranchMap["doctorLiscence"] = doctorModel.doctorLiscence!!
                         generalBranchMap["doctorFirebaseId"] = doctorModel.firebaseId!!
-                        Firebase.database.reference.child("PendingDoctorAppointments").child(doctorModel.firebaseId!!)
+                        Firebase.database.reference.child("PendingDoctorAppointments")
+                            .child(doctorModel.firebaseId!!)
                             /*.child(doctorModel.doctorLiscence.toString())*/
                             .child(doctorAppointmentKey.toString()).updateChildren(generalBranchMap)
 
@@ -498,8 +470,10 @@ class RemoteDataSource @Inject constructor(
         doctorModelMap["image"] = doctorModel.image!!
         doctorModelMap["doctorName"] = doctorModel.doctorName!!
         doctorModelMap["phoneNumber"] = doctorModel.phoneNumber!!
-        Firebase.database.reference.child("PendingDoctorAppointments").child(doctorModel.firebaseId!!)
-            /*.child(doctorModel.doctorLiscence!!)*/.child(doctorAppointmentKey).child("doctorModel")
+        Firebase.database.reference.child("PendingDoctorAppointments")
+            .child(doctorModel.firebaseId!!)
+            /*.child(doctorModel.doctorLiscence!!)*/.child(doctorAppointmentKey)
+            .child("doctorModel")
             .updateChildren(doctorModelMap).addOnSuccessListener {
 
             }.addOnFailureListener {
@@ -535,7 +509,8 @@ class RemoteDataSource @Inject constructor(
                     patientMap["phoneNumber"] = patientModel!!.phoneNumber.toString()
                     patientMap["email"] = patientModel!!.email.toString()
 
-                    Firebase.database.reference.child("PendingDoctorAppointments").child(doctorModel.firebaseId!!)
+                    Firebase.database.reference.child("PendingDoctorAppointments")
+                        .child(doctorModel.firebaseId!!)
                         /*.child(doctorModel.doctorLiscence!!)*/
                         .child(doctorAppointmentKey.toString()).child("patientModel")
                         .updateChildren(patientMap).addOnSuccessListener {
@@ -563,7 +538,7 @@ class RemoteDataSource @Inject constructor(
      * GET PATIENT PENDING APOINTMENTS
      */
 
-    suspend fun getPendingPatientAppointments(appointmentType:String): ArrayList<PendingPatientAppointmentModel> {
+    suspend fun getPendingPatientAppointments(appointmentType: String): ArrayList<PendingPatientAppointmentModel> {
         val pendingPatientAppointsList = ArrayList<PendingPatientAppointmentModel>()
 
         val auth = Firebase.auth
@@ -591,7 +566,7 @@ class RemoteDataSource @Inject constructor(
         val auth = FirebaseAuth.getInstance()
 
         var database = Firebase.database.reference.child("PendingDoctorAppointments")
-                    .child(auth.uid!!)
+            .child(auth.uid!!)
         val data = database!!.get().await()
         if (data.exists()) {
             for (d in data.children) {
@@ -617,9 +592,9 @@ class RemoteDataSource @Inject constructor(
         doctorAppointmentKey: String,
         patientAppointmentKey: String,
         uid: String,
-        doctorFirebaseId:String,
+        doctorFirebaseId: String,
         doctorAppointmentType: String,
-        patientAppointmentType:String
+        patientAppointmentType: String
     ): Flow<State<Any>> = flow<State<Any>> {
         emit(State.loading(true))
 
@@ -670,7 +645,8 @@ class RemoteDataSource @Inject constructor(
                         //doctorLicence = doctorModel?.doctorLiscence!!
                         Log.d("onDataChange", doctorLicence.toString())
                         doctorNotesMap["doctorNotesList"] = doctorNotesList
-                        Firebase.database.getReference("DoctorNotes").child(doctorModel!!.firebaseId!!)
+                        Firebase.database.getReference("DoctorNotes")
+                            .child(doctorModel!!.firebaseId!!)
                             .child(patientId).child(patientAppointmentKey).setValue(doctorNotesMap)
                     }
                 }
@@ -687,7 +663,10 @@ class RemoteDataSource @Inject constructor(
 
         }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
 
-    fun saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel): Flow<State<Any>> =
+    fun saveDoctorPatientAcceptedAppointment(
+        pendingAppointmentDoctorModel: PendingDoctorAppointmentModel,
+        acceptedAppointmentMessage: String
+    ): Flow<State<Any>> =
         flow<State<Any>> {
             emit(State.loading(true))
 
@@ -715,25 +694,27 @@ class RemoteDataSource @Inject constructor(
                                     pendingAppointmentDoctorModel.doctorModel.doctorName.toString()
                                 acceptedPatientAppointmentMap["appointmentDescription"] =
                                     pendingAppointmentDoctorModel.description!!
-                                acceptedPatientAppointmentMap["appointmentStatus"] =
-                                    "The appointment has been accepted by Dr.${pendingAppointmentDoctorModel.doctorModel.doctorName}"
+                                acceptedPatientAppointmentMap["appointmentStatus"] = acceptedAppointmentMessage
                                 acceptedPatientAppointmentMap["doctorId"] =
                                     pendingAppointmentDoctorModel.doctorModel.doctorLiscence!!
-                                acceptedPatientAppointmentMap["doctorAppointmentKey"] = pendingAppointmentDoctorModel.doctorAppointmentKey!!
-                                acceptedPatientAppointmentMap["doctorFirebaseId"] = pendingAppointmentDoctorModel.doctorFirebaseId!!
-                                acceptedPatientAppointmentMap["patientAppointmentKey"]=pendingAppointmentDoctorModel.patientAppointmentKey!!
+                                acceptedPatientAppointmentMap["doctorAppointmentKey"] =
+                                    pendingAppointmentDoctorModel.doctorAppointmentKey!!
+                                acceptedPatientAppointmentMap["doctorFirebaseId"] =
+                                    pendingAppointmentDoctorModel.doctorFirebaseId!!
+                                acceptedPatientAppointmentMap["patientAppointmentKey"] =
+                                    pendingAppointmentDoctorModel.patientAppointmentKey!!
 
 
-                                Firebase.database.reference.child("ConfirmedPatientAppointments")
+                                Firebase.database.reference.child("CancelledConfirmedPatientAppointments")
                                     .child(pendingAppointmentDoctorModel.patientId)
                                     .child(pendingAppointmentDoctorModel.patientAppointmentKey)
                                     .updateChildren(acceptedPatientAppointmentMap)
                                     .addOnCompleteListener { task ->
-                                        if (task.isSuccessful) {
+                                        if (task.isSuccessful && acceptedAppointmentMessage.contains("accepted")) {
                                             val cancerDataMap: MutableMap<String, Any> = HashMap()
                                             cancerDataMap["cancerDataList"] =
                                                 pendingAppointmentDoctorModel.cancerDataList!!
-                                            Firebase.database.reference.child("ConfirmedDoctorAppointments")
+                                            Firebase.database.reference.child("CancelledConfirmedDoctorAppointments")
                                                 .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
                                                 .child(pendingAppointmentDoctorModel.doctorAppointmentKey)
                                                 .updateChildren(cancerDataMap)
@@ -747,7 +728,7 @@ class RemoteDataSource @Inject constructor(
                                             patientModelMap["patientModel"] =
                                                 pendingAppointmentDoctorModel.patientModel!!
 
-                                            Firebase.database.reference.child("ConfirmedDoctorAppointments")
+                                            Firebase.database.reference.child("CancelledConfirmedDoctorAppointments")
                                                 .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
                                                 .child(pendingAppointmentDoctorModel.doctorAppointmentKey)
                                                 .updateChildren(patientModelMap)
@@ -761,7 +742,7 @@ class RemoteDataSource @Inject constructor(
                                             val doctorModelMap: MutableMap<String, Any> = HashMap()
                                             doctorModelMap["doctorModel"] =
                                                 pendingAppointmentDoctorModel.doctorModel
-                                            Firebase.database.reference.child("ConfirmedDoctorAppointments")
+                                            Firebase.database.reference.child("CancelledConfirmedDoctorAppointments")
                                                 .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
                                                 .child(pendingAppointmentDoctorModel.doctorAppointmentKey)
                                                 .updateChildren(doctorModelMap)
@@ -789,7 +770,7 @@ class RemoteDataSource @Inject constructor(
                                             generalBranchMap["time"] =
                                                 pendingAppointmentDoctorModel.time
 
-                                            Firebase.database.reference.child("ConfirmedDoctorAppointments")
+                                            Firebase.database.reference.child("CancelledConfirmedDoctorAppointments")
                                                 .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
                                                 .child(pendingAppointmentDoctorModel.doctorAppointmentKey)
                                                 .updateChildren(generalBranchMap)
@@ -812,9 +793,23 @@ class RemoteDataSource @Inject constructor(
 
                 }
 
-            emit(State.succes("The appointment " +
-                    "with ${pendingAppointmentDoctorModel.patientModel!!.patientName} has been accepted. " +
-                    "Check it in 'Accepted Appointments'"))
+            if(acceptedAppointmentMessage.contains("accepted")){
+                emit(
+                    State.succes(
+                        "The appointment " +
+                                "with ${pendingAppointmentDoctorModel.patientModel!!.patientName} has been accepted. " +
+                                "Check it in 'Accepted Appointments'"
+                    )
+                )
+            }else{
+                emit(
+                    State.succes(
+                        "The appointment " +
+                                "with ${pendingAppointmentDoctorModel.patientModel!!.patientName} has been cancelled."
+                    )
+                )
+            }
+
 
 
         }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
@@ -824,18 +819,9 @@ class RemoteDataSource @Inject constructor(
         val acceptedDoctorAppointmentsList = ArrayList<AcceptedDoctorAppointmentModel>()
 
         val auth = Firebase.auth
-        //var doctorId = auth.uid!![2].toString()
-//        var doctorLiscence: String? = null
-//        //var doctorId = auth.uid!![2].toString()
-//        val doctorDataBase = Firebase.database.getReference("Users").child(auth.uid!!)
-//        val doctorData = doctorDataBase.get().await()
-//        if (doctorData.exists()){
-//            for (d in doctorData.children) {
-//                doctorLiscence = d.child("doctorLiscence").getValue(String::class.java)
-//            }
-//        }
 
-        val database = Firebase.database.reference.child("ConfirmedDoctorAppointments")
+
+        val database = Firebase.database.reference.child("CancelledConfirmedDoctorAppointments")
             .child(auth.uid!!)
         val data = database.get().await()
         if (data.exists()) {
