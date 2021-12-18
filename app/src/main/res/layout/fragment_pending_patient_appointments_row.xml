@@ -51,7 +51,8 @@
                 <Button
                     android:id="@+id/button_cancelAppointment"
                     android:onClick="@{()->listener.onCancelButtonClick(patientAppointmentModel)}"
-                    android:text="@string/cancel_appointment"
+                    setButtonText="@{patientAppointmentModel.appointmentStatus}"
+                    tools:text="Cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"

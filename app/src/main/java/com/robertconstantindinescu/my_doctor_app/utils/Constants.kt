@@ -48,6 +48,12 @@ class Constants {
         const val CANCER_DATA = "cancerData"
         const val FROM_SAVE_DOCTOR_NOTES = "fromSaveDoctorNotes"
 
+        const val OPTION_1 = "\n" +
+                "No need to worry. We will follow the evolution of the mole in future appointments"
+
+        const val OPTION_2 ="I have got an unexpected situation"
+        var doctorCancelChoice = arrayOf(OPTION_1, OPTION_2)
+
 
     }
 

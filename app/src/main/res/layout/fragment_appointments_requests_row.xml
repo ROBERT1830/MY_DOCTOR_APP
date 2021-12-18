@@ -196,6 +196,7 @@
                 <Button
                     android:id="@+id/button_cancelAppointment"
                     android:text="@string/cancel_appointment"
+                    android:onClick="@{()->listener.onCancelDoctorPendingAppointmentClick(doctorAppointmentModel)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="15dp"

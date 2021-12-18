@@ -64,7 +64,7 @@ class PatientAcceptedAppointmentsFragment : Fragment(), PendingPatientAppointmen
     private suspend fun getPatientAcceptedAppointments() {
         loadingDialog.startLoading()
         acceptedPatientAppointmentList =
-            requestAppointmentViewModel.getPatientPendingAppointments("ConfirmedPatientAppointments")
+            requestAppointmentViewModel.getPatientPendingAppointments("CancelledConfirmedPatientAppointments")
 
         if (!acceptedPatientAppointmentList.isNullOrEmpty()) {
             loadingDialog.stopLoading()
@@ -100,8 +100,8 @@ class PatientAcceptedAppointmentsFragment : Fragment(), PendingPatientAppointmen
 //        patientAppointmentKey: String
     ) {
         Log.d("AcceptedPatientAppointmentModel", patientAppointmentModel.toString())
-        val confirmedDoctorAppointment = "ConfirmedDoctorAppointments"
-        val confirmedPatientAppointment = "ConfirmedPatientAppointments"
+        val confirmedDoctorAppointment = "CancelledConfirmedDoctorAppointments"
+        val confirmedPatientAppointment = "CancelledConfirmedPatientAppointments"
          AlertDialog.Builder(requireContext()).setCancelable(false)
             .setMessage(resources.getString(R.string.cancel_specific_appointment))
             .setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->

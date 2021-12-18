@@ -31,7 +31,8 @@ class RequestAppointmentViewModel @Inject constructor(
         )
 
 
-    suspend fun getPatientPendingAppointments(appointmentType:String) = repository.remote.getPendingPatientAppointments(appointmentType)
+    suspend fun getPatientPendingAppointments(appointmentType: String) =
+        repository.remote.getPendingPatientAppointments(appointmentType)
 
     suspend fun getRequestedDoctorAppointments() =
         repository.remote.getRequestedDoctorAppointments()
@@ -41,15 +42,15 @@ class RequestAppointmentViewModel @Inject constructor(
         doctorAppointmentKey: String,
         patientAppointmentKey: String,
         uid: String,
-        doctorFirebaseId:String,
+        doctorFirebaseId: String,
         doctorAppointmentType: String,
-        patientAppointmentType:String
+        patientAppointmentType: String
     ) = repository.remote.deletePendingPattientDoctorAppointment(
         doctorId,
         doctorAppointmentKey,
         patientAppointmentKey,
-        uid,doctorFirebaseId,doctorAppointmentType,patientAppointmentType
-        )
+        uid, doctorFirebaseId, doctorAppointmentType, patientAppointmentType
+    )
 
     fun saveDoctorNotes(
         doctorNotesList: ArrayList<DoctorNoteModel>,
@@ -59,10 +60,14 @@ class RequestAppointmentViewModel @Inject constructor(
 
         repository.remote.saveDoctorNotes(doctorNotesList, patientId, patientAppointmentKey)
 
-    fun saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel) =
-        repository.remote.saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel)
+    fun saveCancelDoctorPatientAcceptedAppointment(
+        pendingAppointmentDoctorModel: PendingDoctorAppointmentModel,
+        acceptedAppointmentMessage: String
+    ) =
+        repository.remote.saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel, acceptedAppointmentMessage)
 
-    suspend fun getAcceptedDoctorAppointments(): ArrayList<AcceptedDoctorAppointmentModel> = repository.remote.getAcceptedDoctorAppointments()
+    suspend fun getAcceptedDoctorAppointments(): ArrayList<AcceptedDoctorAppointmentModel> =
+        repository.remote.getAcceptedDoctorAppointments()
 
 
 //    fun getDoctorNotes(recyclerView: RecyclerView): ArrayList<String> {

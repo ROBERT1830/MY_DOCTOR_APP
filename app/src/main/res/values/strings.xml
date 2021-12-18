@@ -73,6 +73,7 @@
     <!--    APPOINTMENT -->
     <string name="cancel_specific_appointment">Are you sure you want to cancel the appointment</string>
     <string name="acept_appointment">ACCEPT</string>
+    <string name="accept_appointment_title">The appointment is accepted by </string>
     <string name="viewPager_patientDetails_title">Patient Details</string>
     <string name="viewPager_doctorNotes_title">Patient Details</string>
     <string name="instructions">Zoom In to see details</string>
@@ -85,6 +86,7 @@
     <string name="pending_appointments">Pending Appointments</string>
     <string name="available_doctors">Available Doctors</string>
     <string name="my_appointments">My Appointments</string>
+    <string name="reasson_appointment_cancelation">Choose the reason of appointment cancellation</string>
 
 
 </resources>
