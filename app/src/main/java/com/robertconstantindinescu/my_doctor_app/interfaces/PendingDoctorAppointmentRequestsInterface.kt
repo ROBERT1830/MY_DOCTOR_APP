@@ -9,4 +9,5 @@ interface PendingDoctorAppointmentRequestsInterface {
     fun onCancelDoctorPendingAppointmentClick(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel)
 
 
+
 }
