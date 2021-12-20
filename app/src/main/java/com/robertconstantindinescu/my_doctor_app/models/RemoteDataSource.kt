@@ -738,6 +738,23 @@ class RemoteDataSource @Inject constructor(
 
                                                 }
 
+                                            //Accepted patient appointments JSON
+
+                                            val patientsToCall: MutableMap<String, Any> = HashMap()
+                                            patientsToCall["patientName"] = pendingAppointmentDoctorModel.patientModel.patientName!!
+                                            patientsToCall["phoneNumber"] = pendingAppointmentDoctorModel.patientModel.phoneNumber!!
+                                            patientsToCall["email"] = pendingAppointmentDoctorModel.patientModel.email!!
+                                            patientsToCall["image"] = pendingAppointmentDoctorModel.patientModel.image!!
+                                            Firebase.database.reference.child("PatientsToCall")
+                                                .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
+                                                .child(pendingAppointmentDoctorModel.doctorAppointmentKey)
+                                                .updateChildren(patientsToCall)
+                                                .addOnCompleteListener {
+
+                                                }.addOnFailureListener {
+
+                                                }
+
 
                                             val doctorModelMap: MutableMap<String, Any> = HashMap()
                                             doctorModelMap["doctorModel"] =
@@ -836,7 +853,23 @@ class RemoteDataSource @Inject constructor(
         return acceptedDoctorAppointmentsList
     }
 
+   suspend fun getPatientsToCall(): ArrayList<PatientModel> {
 
+        val patientsToCall = ArrayList<PatientModel>()
+        val auth = Firebase.auth
+
+
+        val database = Firebase.database.reference.child("PatientsToCall").child(auth.uid!!)
+        val data = database.get().await()
+        if (data.exists()) {
+            for (d in data.children) {
+                var patientModel: PatientModel = d.getValue(PatientModel::class.java)!!
+                patientsToCall.add(patientModel)
+            }
+        }
+        return patientsToCall
+
+    }
 }
 
 

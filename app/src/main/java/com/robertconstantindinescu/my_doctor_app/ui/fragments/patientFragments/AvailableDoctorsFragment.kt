@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,6 +51,13 @@ class AvailableDoctorsFragment : Fragment() {
             if (!availableDoctors.isNullOrEmpty()){
                 loadingDialog.stopLoading()
                 mAdapter.setUpAdapter(availableDoctors)
+            }else {
+                loadingDialog.stopLoading()
+                Toast.makeText(
+                    requireContext(),
+                    "No available doctors at the moment",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
 
