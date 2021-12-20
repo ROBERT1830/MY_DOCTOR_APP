@@ -82,11 +82,11 @@
     <string name="save_doctor_note_warning">Seems that you left some data without description… A default note "No worries about this mole" will be saved.</string>
     <string name="save_doctor_note">Do you want to save the current note and send it to</string>
     <string name="accept_appointment_no_valid">To accept an appointment, first give some background to your patient by saving some notes</string>
-    <string name="accept_appointment">Are you sure you want to accept this appointment from patient</string>
+    <string name="accept_appointment">Notify your patient about the appointment status by Email</string>
     <string name="pending_appointments">Pending Appointments</string>
     <string name="available_doctors">Available Doctors</string>
     <string name="my_appointments">My Appointments</string>
-    <string name="reasson_appointment_cancelation">Choose the reason of appointment cancellation</string>
+    <string name="reasson_appointment_cancelation">Choose the reason of appointment cancellation and notify it by email</string>
 
 
 </resources>
