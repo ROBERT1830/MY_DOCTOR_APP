@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.databinding.*
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
@@ -30,6 +31,9 @@ import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.FROM_
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_patient.*
+
+
+private const val TOPIC = "/topics/appointmentMyDoctorApp"
 @AndroidEntryPoint
 class DoctorActivity : AppCompatActivity() {
 
@@ -51,6 +55,8 @@ class DoctorActivity : AppCompatActivity() {
         navigationDrawerLayoutBinding = DoctorNavigationDrawerLayoutBinding.inflate(layoutInflater)
         setContentView(navigationDrawerLayoutBinding.root)
 
+
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
         //receive data from DoctorNotesFragment
 
         Log.d("onCreate", "CALLED")

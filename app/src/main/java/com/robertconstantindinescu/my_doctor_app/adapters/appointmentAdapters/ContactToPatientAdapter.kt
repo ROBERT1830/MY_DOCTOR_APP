@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAvailableDoctorsItemBinding
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentContactToPatientRowBinding
+import com.robertconstantindinescu.my_doctor_app.interfaces.ContactPatientInterface
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
 
-class ContactToPatientAdapter: RecyclerView.Adapter<ContactToPatientAdapter.MyViewHolder>() {
+class ContactToPatientAdapter(private val contactPatientInterface: ContactPatientInterface): RecyclerView.Adapter<ContactToPatientAdapter.MyViewHolder>() {
     private var patientsToCallList = emptyList<PatientModel>()
 
 
@@ -25,6 +26,7 @@ class ContactToPatientAdapter: RecyclerView.Adapter<ContactToPatientAdapter.MyVi
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
         val currentRecord = this.patientsToCallList[position]
+        holder.binding.listener = contactPatientInterface
         holder.bind(currentRecord)
     }
 
@@ -32,10 +34,11 @@ class ContactToPatientAdapter: RecyclerView.Adapter<ContactToPatientAdapter.MyVi
         return this.patientsToCallList.size
     }
 
-    class MyViewHolder(private val binding: FragmentContactToPatientRowBinding) :
+    class MyViewHolder( val binding: FragmentContactToPatientRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(patientModel: PatientModel) {
             binding.patientModel = patientModel
+
             binding.executePendingBindings()
         }
 

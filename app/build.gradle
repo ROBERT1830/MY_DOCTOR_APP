@@ -191,6 +191,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
 
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+
     //Email Send
     implementation 'com.sun.mail:android-mail:1.6.0'
     implementation 'com.sun.mail:android-activation:1.6.0'
