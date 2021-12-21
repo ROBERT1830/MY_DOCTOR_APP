@@ -54,6 +54,11 @@ class Constants {
         const val OPTION_2 ="I have got an unexpected situation"
         var doctorCancelChoice = arrayOf(OPTION_1, OPTION_2)
 
+        //Notification
+        const val NOTIFICATION_BASE_URL = "https://fcm.googleapis.com"
+        const val SERVER_KEY= "AAAA_lthKLk:APA91bHN3aFgxXEHCnyT_bGDNUYF0Z8VUNacO3LxY3WU9MlydBleOm2oTCSgukqF70KB72EingFfh7qkWMCNRXnGo1QJUDxd4LvYZCjjdVQKIToqNdSSXOO4-qFtUqrm8AD_NSeYPJnW"
+        const val CONTENT_TYPE = "application/json"
+
 
     }
 

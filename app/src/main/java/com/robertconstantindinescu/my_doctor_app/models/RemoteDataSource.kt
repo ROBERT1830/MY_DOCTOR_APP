@@ -1,5 +1,6 @@
 package com.robertconstantindinescu.my_doctor_app.models
 
+import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
@@ -9,14 +10,19 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.ktx.storage
+import com.google.gson.Gson
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.*
 import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GooglePlaceModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
+import com.robertconstantindinescu.my_doctor_app.models.notificationModels.NotificationDataModel
+import com.robertconstantindinescu.my_doctor_app.models.notificationModels.PushNotificationModel
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.GoogleMapApi
+import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.NotificationApi
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.radiationIndex.UVResponse
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.UvRadiationApi
 import com.robertconstantindinescu.my_doctor_app.models.placesModel.SavedPlaceModel
@@ -26,6 +32,7 @@ import com.robertconstantindinescu.my_doctor_app.utils.State
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
+import okhttp3.ResponseBody
 import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
@@ -36,6 +43,7 @@ import kotlin.collections.HashMap
 class RemoteDataSource @Inject constructor(
     private val uvRadiationApi: UvRadiationApi,
     private val googleMapApi: GoogleMapApi,
+    private val notificationApi: NotificationApi
 ) {
 
     suspend fun getRadiationWeatherData(queries: Map<String, String>): Response<UVResponse> {
@@ -86,8 +94,9 @@ class RemoteDataSource @Inject constructor(
 
         val auth = Firebase.auth
         val data = auth.createUserWithEmailAndPassword(email, password).await()
-        //could be a posibility that the user was not created.
+
         data.user?.let { currentUser ->
+            //val appToken = createAppToken()
             val path = uploadImage(currentUser.uid, image).toString()
             if (isDoctor) {
                 doctorModel =
@@ -98,12 +107,13 @@ class RemoteDataSource @Inject constructor(
                         email,
                         doctorLiscence,
                         isDoctor,
-                        auth.uid!!
+                        auth.uid!!,
+                        //appToken
                     )
                 createDoctor(doctorModel, auth)
             } else {
                 patientModel =
-                    createPatientModel(path, name, phoneNumber, email, isDoctor, auth.uid!!)
+                    createPatientModel(path, name, phoneNumber, email, isDoctor, auth.uid!!, /*appToken*/)
                 createPatient(patientModel, auth)
             }
             emit(State.succes("Email verification sent"))
@@ -113,6 +123,24 @@ class RemoteDataSource @Inject constructor(
     }.catch {
         emit(State.failed(it.message!!))
     }.flowOn(Dispatchers.IO)
+
+    // TODO: 20/12/21 ---------->
+    private fun createAppToken(): String {
+
+
+        var token = ""
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful){
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@addOnCompleteListener
+            }
+            token = task.result
+            Log.d("token", token.toString())
+
+        }
+        return token
+
+    }
 
     private suspend fun createPatient(patientModel: PatientModel, auth: FirebaseAuth) {
         val firebase = Firebase.database.getReference("Users")//.child("Patients")
@@ -151,10 +179,11 @@ class RemoteDataSource @Inject constructor(
         phoneNumber: String,
         email: String,
         isDoctor: Boolean,
-        uid: String
+        uid: String,
+        //appToken: String
     ): PatientModel {
 
-        return PatientModel(image, name, phoneNumber, email, isDoctor, uid)
+        return PatientModel(image, name, phoneNumber, email, isDoctor, uid, /*appToken*/)
     }
 
     private fun createDoctorModel(
@@ -164,7 +193,8 @@ class RemoteDataSource @Inject constructor(
         email: String,
         doctorLiscence: String?,
         isDoctor: Boolean,
-        uid: String
+        uid: String,
+        //appToken:String
     ): DoctorModel {
         return DoctorModel(image, name, phoneNumber, email, doctorLiscence!!, isDoctor, uid)
 
@@ -508,6 +538,7 @@ class RemoteDataSource @Inject constructor(
                     patientMap["patientName"] = patientModel!!.patientName.toString()
                     patientMap["phoneNumber"] = patientModel!!.phoneNumber.toString()
                     patientMap["email"] = patientModel!!.email.toString()
+                    patientMap["appToken"] = patientModel.appToken!!
 
                     Firebase.database.reference.child("PendingDoctorAppointments")
                         .child(doctorModel.firebaseId!!)
@@ -745,6 +776,7 @@ class RemoteDataSource @Inject constructor(
                                             patientsToCall["phoneNumber"] = pendingAppointmentDoctorModel.patientModel.phoneNumber!!
                                             patientsToCall["email"] = pendingAppointmentDoctorModel.patientModel.email!!
                                             patientsToCall["image"] = pendingAppointmentDoctorModel.patientModel.image!!
+                                            patientsToCall["appToken"] = pendingAppointmentDoctorModel.patientModel.appToken!!
                                             Firebase.database.reference.child("PatientsToCall")
                                                 .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
                                                 .child(pendingAppointmentDoctorModel.doctorAppointmentKey)
@@ -870,6 +902,30 @@ class RemoteDataSource @Inject constructor(
         return patientsToCall
 
     }
+
+
+//    fun sendNotificationToPatient(notification: PushNotificationModel): Flow<State<Any>> = flow<State<Any>>{
+//        emit(State.loading(true))
+//
+//        var flag = false
+//        val response = notificationApi.postNotification(notification)
+//        if (response.isSuccessful){
+//            flag = true
+//            Log.d(TAG, "Response: ${Gson().toJson(response)}")
+//
+//        }
+//        if (flag)  emit(State.succes("Notification sent successfully!"))
+//    }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
+
+
+    suspend fun sendNotificationToPatient(notification: PushNotificationModel): Response<ResponseBody> {
+        return notificationApi.postNotification(notification)
+    }
+
+
+
+
+
 }
 
 

@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityPatientBinding
 import com.robertconstantindinescu.my_doctor_app.databinding.NavigationDrawerLayoutBinding
@@ -32,6 +33,9 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_login.view.*
 import kotlinx.android.synthetic.main.activity_patient.*
 import kotlinx.android.synthetic.main.navigation_drawer_layout.view.*
+
+
+private const val TOPIC = "/topics/appointmentMyDoctorApp"
 
 @AndroidEntryPoint
 class PatientActivity : AppCompatActivity() {
@@ -54,6 +58,9 @@ class PatientActivity : AppCompatActivity() {
         //inflate the navigationDrawerLayoutBinding. This contains the activity_patient
         navigationDrawerLayoutBinding = NavigationDrawerLayoutBinding.inflate(layoutInflater)
         setContentView(navigationDrawerLayoutBinding.root)
+
+        //Subscribe to a specific topic to be able to send and receive notifications
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
 
         patientBinding = navigationDrawerLayoutBinding.patientActivity
         toolbarLayoutBinding = patientBinding.toolbarMain

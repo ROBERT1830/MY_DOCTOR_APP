@@ -1,19 +1,27 @@
 package com.robertconstantindinescu.my_doctor_app.ui.loginSignUp
 
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityPatientSignUpBinding
 import com.robertconstantindinescu.my_doctor_app.utils.AppPermissions
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.STORAGE_REQUEST_CODE
+import com.robertconstantindinescu.my_doctor_app.utils.FirebaseService
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
 import com.robertconstantindinescu.my_doctor_app.utils.State
 import com.robertconstantindinescu.my_doctor_app.viewmodels.LoginViewModel
@@ -21,7 +29,12 @@ import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_patient_sign_up.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+
 @AndroidEntryPoint
 class PatientSignUpActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityPatientSignUpBinding
@@ -32,6 +45,7 @@ class PatientSignUpActivity : AppCompatActivity() {
     private lateinit var name: String
     private lateinit var phoneNumber: String
     private lateinit var email: String
+
     //private lateinit var doctorliscence: String
     private lateinit var password: String
     //private  var isDoctor: Boolean = false
@@ -81,6 +95,26 @@ class PatientSignUpActivity : AppCompatActivity() {
                                         Snackbar.LENGTH_SHORT
                                     ).show()
                                     onBackPressed()
+
+                                    FirebaseService.sharedPref =
+                                        getSharedPreferences("sharedPref", Context.MODE_PRIVATE)
+
+                                    var token = ""
+                                    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                                        if (!task.isSuccessful){
+                                            Log.w(ContentValues.TAG, "Fetching FCM registration token failed", task.exception)
+                                            return@addOnCompleteListener
+                                        }
+                                        token = task.result
+
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            saveTokenApp(token!!)
+                                        }
+
+                                        Log.d("token", token.toString())
+
+                                    }
+
                                 }
                                 is State.Failed -> {
                                     loadingDialog.stopLoading()
@@ -93,7 +127,7 @@ class PatientSignUpActivity : AppCompatActivity() {
 
                         }
                     }
-                }else{
+                } else {
                     Snackbar.make(
                         mBinding.root,
                         resources.getString(R.string.select_image),
@@ -109,6 +143,16 @@ class PatientSignUpActivity : AppCompatActivity() {
         }
     }
 
+    private suspend fun saveTokenApp(token: String) {
+
+        val auth = Firebase.auth
+        val map: MutableMap<String, Any> = HashMap()
+        map["appToken"] = token
+
+        Firebase.database.getReference("Users")//.child("Patients")
+            .child(auth.uid!!).updateChildren(map).await()
+
+    }
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
