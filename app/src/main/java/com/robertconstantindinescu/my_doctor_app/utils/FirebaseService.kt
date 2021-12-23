@@ -3,7 +3,6 @@ package com.robertconstantindinescu.my_doctor_app.utils
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,18 +11,12 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.robertconstantindinescu.my_doctor_app.R
-import com.robertconstantindinescu.my_doctor_app.ui.VideoCallActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
+import com.robertconstantindinescu.my_doctor_app.ui.DoctorVideoCallActivity
+import com.robertconstantindinescu.my_doctor_app.ui.PatientVideoCallActivity
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.ROOM_CODE
 import kotlin.random.Random
 
 private const val CHANNEL_ID = "my_channel"
@@ -66,7 +59,19 @@ class FirebaseService:FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val intent = Intent(this, VideoCallActivity::class.java)
+        var notificationMessage: String? = null
+        var roomCode = ""
+
+        //get data from the notification message
+        if (message.data.isNotEmpty()){
+            notificationMessage = message.data["message"]
+            roomCode = notificationMessage!!.takeLast(10)
+
+        }
+
+
+        val intent = Intent(this, PatientVideoCallActivity::class.java)
+        intent.putExtra(ROOM_CODE, roomCode)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
 

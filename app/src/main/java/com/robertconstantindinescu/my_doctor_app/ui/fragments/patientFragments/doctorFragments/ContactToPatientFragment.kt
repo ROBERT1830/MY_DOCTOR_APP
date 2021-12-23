@@ -1,7 +1,7 @@
 package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.doctorFragments
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,11 +18,13 @@ import com.robertconstantindinescu.my_doctor_app.interfaces.ContactPatientInterf
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
 import com.robertconstantindinescu.my_doctor_app.models.notificationModels.NotificationDataModel
 import com.robertconstantindinescu.my_doctor_app.models.notificationModels.PushNotificationModel
+import com.robertconstantindinescu.my_doctor_app.ui.DoctorVideoCallActivity
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.ROOM_CODE
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
 import com.robertconstantindinescu.my_doctor_app.utils.State
 import com.robertconstantindinescu.my_doctor_app.viewmodels.PatientToCallViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
+import kotlin.streams.asSequence
 
 @AndroidEntryPoint
 class ContactToPatientFragment : Fragment(), ContactPatientInterface {
@@ -83,15 +85,29 @@ class ContactToPatientFragment : Fragment(), ContactPatientInterface {
 
     override fun onVideoCallClick(patientModel: PatientModel) {
 
-        //create pushNotification Object
+
+        //generate the random room string
+        val source = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        val roomCode = java.util.Random().ints(10, 0, source.length)
+            .asSequence()
+            .map(source::get)
+            .joinToString("")
+
         PushNotificationModel(
             NotificationDataModel(
                 "Hi ${patientModel.patientName}",
-                "You have a video call appointment with Dr..."
+                "You have a video call appointment with the next code $roomCode"
             ), patientModel.appToken!!
         ).also {
             sendNotificationToPatient(it)
         }
+
+        val intent = Intent(requireContext(), DoctorVideoCallActivity::class.java)
+        intent.putExtra(ROOM_CODE, roomCode)
+        startActivity(intent)
+
+
+
 
 
     }

@@ -152,6 +152,7 @@ class LoginActivity : AppCompatActivity() {
                     )
 
                 }
+                // TODO: 23/12/21 here qe can make a when and a default option that returnand do nothing.
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.d(
