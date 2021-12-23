@@ -59,6 +59,10 @@ class Constants {
         const val SERVER_KEY= "AAAA_lthKLk:APA91bHN3aFgxXEHCnyT_bGDNUYF0Z8VUNacO3LxY3WU9MlydBleOm2oTCSgukqF70KB72EingFfh7qkWMCNRXnGo1QJUDxd4LvYZCjjdVQKIToqNdSSXOO4-qFtUqrm8AD_NSeYPJnW"
         const val CONTENT_TYPE = "application/json"
 
+        //video call
+        const val ROOM_CODE = "room_code"
+        const val APP_ID = "4f093c6ebdcc4f8fafe489d9060c151c"
+
 
     }
 
