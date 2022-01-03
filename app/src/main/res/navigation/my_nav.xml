@@ -31,7 +31,15 @@
         android:id="@+id/recipesFragment"
         android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RecipesFragment"
         android:label="Diet"
-        tools:layout="@layout/fragment_recipes"/>
+        tools:layout="@layout/fragment_recipes">
+        <action
+            android:id="@+id/action_recipesFragment_to_recipesBottomSheet"
+            app:destination="@id/recipesBottomSheet" />
+        <argument
+            android:name="backFromBottomSheet"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
     <activity
         android:id="@+id/detectorActivity"
         android:name="com.robertconstantindinescu.my_doctor_app.ui.DetectorActivity"
@@ -84,4 +92,13 @@
         android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.PatientAcceptedAppointmentsFragment"
         android:label="fragment_patient_accepted_appointments"
         tools:layout="@layout/fragment_patient_accepted_appointments" />
+    <fragment
+        android:id="@+id/recipesBottomSheet"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RecipesBottomSheet"
+        android:label="fragment_recipes_bottom_sheet"
+        tools:layout="@layout/fragment_recipes_bottom_sheet" >
+        <action
+            android:id="@+id/action_recipesBottomSheet_to_recipesFragment"
+            app:destination="@id/recipesFragment" />
+    </fragment>
 </navigation>

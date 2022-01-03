@@ -68,6 +68,23 @@ class Constants {
         const val APP_ID = "4f093c6ebdcc4f8fafe489d9060c151c"
 
 
+
+
+        //RECIPES QUERY KEYS
+        const val RECIPE_BASE_URL = "https://api.spoonacular.com"
+        const val BASE_IMAGE_URL ="https://spoonacular.com/cdn/ingredients_100x100/"
+        const val RECIPE_API_KEY = "fc9a88b126ac432786da2b6181c073d5"
+
+
+
+        const val QUERY_NUMBER = "number"
+        const val QUERY_API_KEY = "apiKey"
+        const val QUERY_TYPE = "type"
+        const val QUERY_DIET = "diet"
+        const val QUERY_ADD_RECIPE_INFORMATION = "addRecipeInformation"
+        const val QUERY_FILL_INGREDIENTS = "fillIngredients"
+
+
         //BootomSheet for ingredients
         const val DEFAULT_RECIPES_NUMBER = "50"
         const val DEFAULT_MEAL_TYPE = "main course"

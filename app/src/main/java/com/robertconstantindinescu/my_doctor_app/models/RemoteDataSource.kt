@@ -21,10 +21,12 @@ import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientMo
 import com.robertconstantindinescu.my_doctor_app.models.notificationModels.NotificationDataModel
 import com.robertconstantindinescu.my_doctor_app.models.notificationModels.PushNotificationModel
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
+import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.FoodRecipeApi
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.GoogleMapApi
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.NotificationApi
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.radiationIndex.UVResponse
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.UvRadiationApi
+import com.robertconstantindinescu.my_doctor_app.models.onlineData.recipesModels.FoodRecipeResponse
 import com.robertconstantindinescu.my_doctor_app.models.placesModel.SavedPlaceModel
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.CANCER_PATH
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PROFILE_PATH
@@ -43,7 +45,8 @@ import kotlin.collections.HashMap
 class RemoteDataSource @Inject constructor(
     private val uvRadiationApi: UvRadiationApi,
     private val googleMapApi: GoogleMapApi,
-    private val notificationApi: NotificationApi
+    private val notificationApi: NotificationApi,
+    private val foodRecipeApi: FoodRecipeApi
 ) {
 
     suspend fun getRadiationWeatherData(queries: Map<String, String>): Response<UVResponse> {
@@ -920,6 +923,15 @@ class RemoteDataSource @Inject constructor(
 
     suspend fun sendNotificationToPatient(notification: PushNotificationModel): Response<ResponseBody> {
         return notificationApi.postNotification(notification)
+    }
+
+
+    /**
+     * RECIPES
+     */
+
+    suspend fun getRecipes(queries: Map<String, String>): Response<FoodRecipeResponse>{
+        return foodRecipeApi.getRecipes(queries)
     }
 
 
