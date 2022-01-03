@@ -30,9 +30,13 @@ class Constants {
 
 
         //Room DATABSE
+        //-->cancerDb
         const val DATABSE_NAME = "user_melanoma_database"
         const val CANCER_DATA_TABLE = "cancer_data_table"
         const val RADIATION_WEATHER_TABLE = "radiation_weather_table"
+        //-->RecipesDb
+        const val RECIPES_TABLE = "recipes_table"
+
 
 
         //GoolgeMaps
@@ -62,6 +66,21 @@ class Constants {
         //video call
         const val ROOM_CODE = "room_code"
         const val APP_ID = "4f093c6ebdcc4f8fafe489d9060c151c"
+
+
+        //BootomSheet for ingredients
+        const val DEFAULT_RECIPES_NUMBER = "50"
+        const val DEFAULT_MEAL_TYPE = "main course"
+        const val DEFAULT_DIET_TYPE = "gluten free"
+
+        const val PREFERENCES_NAME = "foody_preferences" //this is hte namem of the datastore prefernece and under that name all other values will be store
+        const val PREFERENCES_MEAL_TYPE = "mealType"
+        const val PREFERENCES_MEAL_TYPE_ID = "mealTypeId"
+        const val PREFERENCES_DIET_TYPE = "dietType"
+        const val PREFERENCES_DIET_TYPE_ID = "dietTypeId"
+
+        //Preferences Internet
+        const val PREFERENCES_BACK_ONLINE = "backOnline"
 
 
     }
