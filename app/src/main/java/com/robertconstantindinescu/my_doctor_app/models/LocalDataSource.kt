@@ -3,6 +3,7 @@ package com.robertconstantindinescu.my_doctor_app.models
 
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.DataDao
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.RecipesEntity
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.UVEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -36,6 +37,15 @@ class LocalDataSource @Inject constructor(
 
     fun readRadiationWeatherData(): Flow<UVEntity>{
         return dataDao.readRadiationWeatherData()
+    }
+
+    /****** RRECIPE DATA*/
+    fun readRecipes(): Flow<List<RecipesEntity>>{ //te devulve los datos envueltos en un flow. Entonces tu cuadno te hagas el flow builder es cuadno los vas a ir sacando y emitiendo.
+        return dataDao.readRecipes()
+    }
+
+    suspend fun insertRecipes(recipesEntity: RecipesEntity){
+        dataDao.insertRecipes(recipesEntity)
     }
 
 }

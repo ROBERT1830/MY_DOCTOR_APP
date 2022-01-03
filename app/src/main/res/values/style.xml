@@ -13,5 +13,13 @@
     </style>
 
 
+    <style name="CustomChipStyle" parent="Widget.MaterialComponents.Chip.Filter">
+
+        <item name="chipBackgroundColor">@color/chip_background_color</item> //le metes como estilo el xml que te has definido.
+        <item name="android:textColor">@color/chip_text_color</item>
+        <item name="checkedIconTint">@color/chip_text_color</item>
+    </style>
+
+
 
 </resources>

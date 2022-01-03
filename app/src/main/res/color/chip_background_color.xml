@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--the roor element is a selector
+we define two items the background, for checked state and for the uncheked-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:color="@color/checkedChipBackgroundColor" android:state_checked="true"/>
+    <item android:color="@color/chipBackgroundColor" android:state_checked="false"/>
+
+</selector>

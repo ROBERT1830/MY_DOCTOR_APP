@@ -2,6 +2,7 @@ package com.robertconstantindinescu.my_doctor_app.models.offlineData.database
 
 import androidx.room.*
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.RecipesEntity
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.UVEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -28,4 +29,11 @@ interface DataDao {
     @Query("SELECT * FROM RADIATION_WEATHER_TABLE")
     fun readRadiationWeatherData(): Flow<UVEntity>
 
+    /****** RECIPE DATA **********/
+
+    @Query("SELECT * FROM recipes_table ORDER BY id ASC")
+    fun readRecipes(): Flow<List<RecipesEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRecipes(recipesEntity: RecipesEntity)
 }
