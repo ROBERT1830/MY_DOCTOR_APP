@@ -4,14 +4,29 @@ import android.content.Context
 import android.util.Log
 import androidx.datastore.DataStore
 import androidx.datastore.preferences.*
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.DEFAULT_CUISINE_TYPE
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.DEFAULT_DIET_TYPE
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.DEFAULT_MEAL_TYPE
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.DEFAULT_VITAMIN_A
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.DEFAULT_VITAMIN_C
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.DEFAULT_VITAMIN_D
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.DEFAULT_VITAMIN_E
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_BACK_ONLINE
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_CUISINE_TYPE
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_CUISINE_TYPE_ID
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_DIET_TYPE
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_DIET_TYPE_ID
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_MEAL_TYPE
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_MEAL_TYPE_ID
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_NAME
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_VITAMIN_A
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_VITAMIN_A_ID
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_VITAMIN_C
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_VITAMIN_C_ID
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_VITAMIN_D
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_VITAMIN_D_ID
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_VITAMIN_E
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PREFERENCES_VITAMIN_E_ID
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
@@ -37,15 +52,26 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
      *
      * Store the values inside the constant class*/
     private object PreferenceKeys {
-        val selectedMealType = preferencesKey<String>(PREFERENCES_MEAL_TYPE) //indicas el nomrbe de la key y que tipo de valor va a almacenar.
-        val selectedMealTypeId = preferencesKey<Int>(PREFERENCES_MEAL_TYPE_ID) //indica el tipo de dato que tendra el valor de esta llave, no que la llave es un int.
+        val selectedMealType =
+            preferencesKey<String>(PREFERENCES_MEAL_TYPE) //indicas el nomrbe de la key y que tipo de valor va a almacenar.
+        val selectedMealTypeId =
+            preferencesKey<Int>(PREFERENCES_MEAL_TYPE_ID) //indica el tipo de dato que tendra el valor de esta llave, no que la llave es un int.
 
         val selectedDietType = preferencesKey<String>(PREFERENCES_DIET_TYPE)
         val selectedDietTypeId = preferencesKey<Int>(PREFERENCES_DIET_TYPE_ID)
+
+        val selectedCuisineType = preferencesKey<String>(PREFERENCES_CUISINE_TYPE)
+        val selectedCuisineTypeId = preferencesKey<Int>(PREFERENCES_CUISINE_TYPE_ID)
+
+        val selectedVitaminA = preferencesKey<String>(PREFERENCES_VITAMIN_A)
+        val selectedVitaminAId = preferencesKey<Int>(PREFERENCES_VITAMIN_A_ID)
+        val selectedVitaminE = preferencesKey<String>(PREFERENCES_VITAMIN_E)
+        val selectedVitaminEId = preferencesKey<Int>(PREFERENCES_VITAMIN_E_ID)
+        val selectedVitaminC = preferencesKey<String>(PREFERENCES_VITAMIN_C)
+        val selectedVitaminCId = preferencesKey<Int>(PREFERENCES_VITAMIN_C_ID)
+        val selectedVitaminD = preferencesKey<String>(PREFERENCES_VITAMIN_D)
+        val selectedVitaminDId = preferencesKey<Int>(PREFERENCES_VITAMIN_D_ID)
         /**Variables para almacenar los tipos de ingredientes*/
-
-
-
 
 
         /**
@@ -70,18 +96,47 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
      *
      * Again this funciton will take the values (of the chips )from the parameters and we are going to store
      * this values in store preferences using the keys. */
-    suspend fun saveMealAndDietType(mealType: String, mealTypeId: Int, dietType: String, dietTypeId: Int){
+    suspend fun saveMealAndDietType(
+        mealType: String,
+        mealTypeId: Int,
+        dietType: String,
+        dietTypeId: Int,
+        cuisineType: String,
+        cuisineTypeId: Int,
+        vitaminA:String,
+        vitaminAId:Int,
+        vitaminE:String,
+        vitaminEId:Int,
+        vitaminC:String,
+        vitaminCId:Int,
+        vitaminD:String,
+        vitaminDId:Int
+    ) {
         dataStore.edit { preferences -> //this is a mutablePreference Object. Usas el objeto MutablePreferences que es como un HashMap generico para almacenar en la datasotre las claves y su valor
-            preferences[PreferenceKeys.selectedMealType] = mealType //here we specify the preference key one by one. and its value which is passed as arguments. The key will be asociated with its value
+            preferences[PreferenceKeys.selectedMealType] =
+                mealType //here we specify the preference key one by one. and its value which is passed as arguments. The key will be asociated with its value
             preferences[PreferenceKeys.selectedMealTypeId] = mealTypeId
             preferences[PreferenceKeys.selectedDietType] = dietType
             preferences[PreferenceKeys.selectedDietTypeId] = dietTypeId
+            preferences[PreferenceKeys.selectedCuisineType] = cuisineType
+            preferences[PreferenceKeys.selectedCuisineTypeId] = cuisineTypeId
+
+            preferences[PreferenceKeys.selectedVitaminA] = vitaminA
+            preferences[PreferenceKeys.selectedVitaminAId] = vitaminAId
+            preferences[PreferenceKeys.selectedVitaminE] = vitaminE
+            preferences[PreferenceKeys.selectedVitaminEId] = vitaminEId
+            preferences[PreferenceKeys.selectedVitaminC] = vitaminC
+            preferences[PreferenceKeys.selectedVitaminCId] = vitaminCId
+            preferences[PreferenceKeys.selectedVitaminD] = vitaminD
+            preferences[PreferenceKeys.selectedVitaminDId] = vitaminDId
+
+
 
         }
     }
 
 
-    suspend fun saveBackOnline(backOnline: Boolean){
+    suspend fun saveBackOnline(backOnline: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferenceKeys.backOnline] = backOnline
         }
@@ -94,42 +149,70 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
      * Flow to pass this class MealAndDietType WHICH CONTIANTNS the differente field we need to read
      *
      * RECUERDA QUE FLOW ES ALGO ASI COMO UN LIVE DATA EL VA EMITIENDO VALORES DE LA BASE DE DATOS A TIEMPO REAL, ES DINAMICO*/
-    val readMealAndDietType: Flow<MealAndDietType> = dataStore.data //Provides efficient, cached (when possible) access to the latest durably persisted state. The flow will always either emit a value or throw an exception encountered when attempting to read from disk.
-        .catch { exeption ->
-            if(exeption is IOException){
-                emit(emptyPreferences())
-            }else{
-                throw exeption
+    val readMealAndDietType: Flow<MealAndDietType> =
+        dataStore.data //Provides efficient, cached (when possible) access to the latest durably persisted state. The flow will always either emit a value or throw an exception encountered when attempting to read from disk.
+            .catch { exeption ->
+                if (exeption is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exeption
+                }
+
             }
+            //here we retrieve the values from the data store using specific keys. map retunrs a flow
+            .map { preferences -> //usando ese objeto preferences qeu es como un hashmap
+                //here we create 4 variable lfor the different values. for those values saved in the data store and then create a MealAndDietType pbject and emit that object using flow. Because the type of the flow is that data class we need to emit the same object
+                //this line basically store a value in that variable. So using preferences[] we select the value of that specific
+                //key and if there is no value saved for that specific key already then we emit or return  main course
+                val selectedMealType =
+                    preferences[PreferenceKeys.selectedMealType] ?: DEFAULT_MEAL_TYPE
+                val selectedMealTypeId = preferences[PreferenceKeys.selectedMealTypeId] ?: 0
+                val selectedDietType =
+                    preferences[PreferenceKeys.selectedDietType] ?: DEFAULT_DIET_TYPE
+                val selectedDietTypeId = preferences[PreferenceKeys.selectedDietTypeId] ?: 0
+                val selectedCuisineType =
+                    preferences[PreferenceKeys.selectedCuisineType] ?: DEFAULT_CUISINE_TYPE
+                val selectedCuisineTypeId = preferences[PreferenceKeys.selectedCuisineTypeId] ?: 0
 
-        }
-        //here we retrieve the values from the data store using specific keys. map retunrs a flow
-        .map { preferences -> //usando ese objeto preferences qeu es como un hashmap
-            //here we create 4 variable lfor the different values. for those values saved in the data store and then create a MealAndDietType pbject and emit that object using flow. Because the type of the flow is that data class we need to emit the same object
-            //this line basically store a value in that variable. So using preferences[] we select the value of that specific
-            //key and if there is no value saved for that specific key already then we emit or return  main course
-            val selectedMealType = preferences[PreferenceKeys.selectedMealType] ?: DEFAULT_MEAL_TYPE
-            val selectedMealTypeId = preferences[PreferenceKeys.selectedMealTypeId] ?: 0
-            val selectedDietType = preferences[PreferenceKeys.selectedDietType] ?: DEFAULT_DIET_TYPE
-            val selectedDietTypeId = preferences[PreferenceKeys.selectedDietTypeId] ?: 0
-            //finally after we grabbed that data from our datasotre, we create MealAndDietType object out of this values obtained above
+                val selectedVitaminA = preferences[PreferenceKeys.selectedVitaminA]?: DEFAULT_VITAMIN_A
+                val slectedVitaminAId = preferences[PreferenceKeys.selectedVitaminAId]  ?: null
+                val selectedVitaminE = preferences[PreferenceKeys.selectedVitaminE]?: DEFAULT_VITAMIN_E
+                val slectedVitaminEId = preferences[PreferenceKeys.selectedVitaminEId] ?: null
+                val selectedVitaminC = preferences[PreferenceKeys.selectedVitaminC]?: DEFAULT_VITAMIN_C
+                val slectedVitaminCId = preferences[PreferenceKeys.selectedVitaminCId] ?: null
+                val selectedVitaminD = preferences[PreferenceKeys.selectedVitaminD]?: DEFAULT_VITAMIN_D
+                val slectedVitaminDId = preferences[PreferenceKeys.selectedVitaminDId] ?: null
 
-            //este es el objeto que creamos y deviovemos. no hace falta return, lo hace solo
-            MealAndDietType(
-                selectedMealType,
-                selectedMealTypeId,
-                selectedDietType,
-                selectedDietTypeId
-            )
 
-        }
+
+                //finally after we grabbed that data from our datasotre, we create MealAndDietType object out of this values obtained above
+
+                //este es el objeto que creamos y deviovemos. no hace falta return, lo hace solo
+                MealAndDietType(
+                    selectedMealType,
+                    selectedMealTypeId,
+                    selectedDietType,
+                    selectedDietTypeId,
+                    selectedCuisineType,
+                    selectedCuisineTypeId,
+                     selectedVitaminA,
+                     slectedVitaminAId,
+                     selectedVitaminE,
+                     slectedVitaminEId,
+                     selectedVitaminC,
+                     slectedVitaminCId,
+                     selectedVitaminD,
+                     slectedVitaminDId
+                )
+
+            }
 
     val readBackOnline: Flow<Boolean> = dataStore.data
 
         .catch { exeption ->
-            if(exeption is IOException){
+            if (exeption is IOException) {
                 emit(emptyPreferences())
-            }else{
+            } else {
                 throw exeption
             }
 
@@ -149,5 +232,16 @@ data class MealAndDietType(
     val selectedMealType: String, //chip text
     val selectedMealTypeId: Int, // chip id
     val selectedDietType: String,
-    val selectedDietTypeId: Int
+    val selectedDietTypeId: Int,
+    val selectedCuisineType: String,
+    val selectedCuisineTypeId: Int,
+    val selectedVitaminA:String,
+    val slectedVitaminAId:Int?,
+    val selectedVitaminE:String,
+    val slectedVitaminEId:Int?,
+    val selectedVitaminC:String,
+    val slectedVitaminCId:Int?,
+    val selectedVitaminD:String,
+    val slectedVitaminDId:Int?
+
 )

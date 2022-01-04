@@ -6,16 +6,27 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.robertconstantindinescu.my_doctor_app.models.DataStoreRepository
-import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.API_KEY
+import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RecipesBottomSheet.Companion.vitaminAChecked
+import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RecipesBottomSheet.Companion.vitaminCChecked
+import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RecipesBottomSheet.Companion.vitaminDChecked
+import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RecipesBottomSheet.Companion.vitaminEChecked
+
+import com.robertconstantindinescu.my_doctor_app.utils.Constants
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.DEFAULT_CUISINE_TYPE
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.DEFAULT_DIET_TYPE
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.DEFAULT_MEAL_TYPE
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.DEFAULT_RECIPES_NUMBER
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_ADD_RECIPE_INFORMATION
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_API_KEY
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_CUISINE
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_DIET
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_FILL_INGREDIENTS
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_NUMBER
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_TYPE
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_VITAMIN_A
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_VITAMIN_C
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_VITAMIN_D
+import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_VITAMIN_E
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.RECIPE_API_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +43,12 @@ class RecipesQueryUtilsViewModel @Inject constructor(
 
     private var mealType = DEFAULT_MEAL_TYPE
     private var dietType = DEFAULT_DIET_TYPE
+    private var cuisineType = DEFAULT_CUISINE_TYPE
+    private var vitaminA = Constants.DEFAULT_VITAMIN_A
+    private var vitaminE = Constants.DEFAULT_VITAMIN_E
+    private var vitaminC = Constants.DEFAULT_VITAMIN_C
+    private var vitaminD = Constants.DEFAULT_VITAMIN_D
+
 
     val readBackOnline =
         dataStoreRepository.readBackOnline.asLiveData()
@@ -41,17 +58,46 @@ class RecipesQueryUtilsViewModel @Inject constructor(
 
     val readMealAndDietType = dataStoreRepository.readMealAndDietType
 
-    fun saveMealAndDietType(mealType: String, mealTypeId: Int, dietType: String, dietTypeId: Int) =
+    fun saveMealAndDietType(
+        mealType: String,
+        mealTypeId: Int,
+        dietType: String,
+        dietTypeId: Int,
+        cuisineType: String,
+        cuisineTypeId: Int,
+        vitaminA:String,
+        vitaminAId:Int,
+        vitaminE:String,
+        vitaminEId:Int,
+        vitaminC:String,
+        vitaminCId:Int,
+        vitaminD:String,
+        vitaminDId:Int
+    ) =
         //Dispatchers.IO pq vamos a hacer operaciones en base de datos auque sea mas pequeña como la datastore preference
         viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.saveMealAndDietType(mealType, mealTypeId, dietType, dietTypeId)
+            dataStoreRepository.saveMealAndDietType(
+                mealType,
+                mealTypeId,
+                dietType,
+                dietTypeId,
+                cuisineType,
+                cuisineTypeId,
+                vitaminA,
+                vitaminAId,
+                vitaminE,
+                vitaminEId,
+                vitaminC,
+                vitaminCId,
+                vitaminD,
+                vitaminDId
+            )
         }
 
     fun saveBackOnline(backOnline: Boolean) =
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.saveBackOnline(backOnline)
         }
-
 
 
     fun showNetworkStatus() {
@@ -81,6 +127,11 @@ class RecipesQueryUtilsViewModel @Inject constructor(
                 //y ahora vamos a coger y usar esas variables en el hasmap del query
                 mealType = value.selectedMealType
                 dietType = value.selectedDietType
+                cuisineType = value.selectedCuisineType
+                vitaminA = value.selectedVitaminA
+                vitaminE = value.selectedVitaminE
+                vitaminC = value.selectedVitaminC
+                vitaminD = value.selectedVitaminD
 
             }
 
@@ -88,11 +139,22 @@ class RecipesQueryUtilsViewModel @Inject constructor(
 
 
         //asociate the [key] with its value // all of them are in the query string http...
-        queries["cuisine"] = "italian"
-        queries["maxVitaminA"] = "50"
-        queries["maxVitaminC"] = "50"
-        queries["maxVitaminD"] = "50"
-        queries["maxVitaminE"] = "50"
+        queries[QUERY_CUISINE] = cuisineType
+
+        if(vitaminAChecked) {
+            queries[QUERY_VITAMIN_A] = vitaminA
+        }
+        if(vitaminEChecked){
+            queries[QUERY_VITAMIN_E] = vitaminE
+        }
+        if(vitaminCChecked){
+            queries[QUERY_VITAMIN_C] = vitaminC
+        }
+        if(vitaminDChecked){
+            queries[QUERY_VITAMIN_D] = vitaminD
+        }
+
+
 
         queries[QUERY_NUMBER] =
             DEFAULT_RECIPES_NUMBER  //this is the number of recipes we will get from the request
