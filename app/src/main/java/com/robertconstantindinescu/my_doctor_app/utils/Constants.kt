@@ -1,6 +1,7 @@
 package com.robertconstantindinescu.my_doctor_app.utils
 
 import com.robertconstantindinescu.my_doctor_app.R
+import com.robertconstantindinescu.my_doctor_app.models.CuisineTypeModel
 import com.robertconstantindinescu.my_doctor_app.models.placesModel.PlaceModel
 
 class Constants {
@@ -39,11 +40,26 @@ class Constants {
 
 
 
-        //GoolgeMaps
+        //Chip Group elements
+        //-->GoolgeMaps
         var placesName = listOf<PlaceModel>(
             PlaceModel(1, R.drawable.ic_pharmacy, "Pharmacies", "pharmacy"),
             PlaceModel(2, R.drawable.ic_hospital, "Hospitals", "hospital")
         )
+        //-->Recipes Cuisine chip types.
+        var cuisineTypes = listOf<CuisineTypeModel>(
+            CuisineTypeModel(1, R.drawable.chinese, "chinese"),
+            CuisineTypeModel(1, R.drawable.japanise, "japanese"),
+            CuisineTypeModel(1, R.drawable.spanish, "spanish"),
+            CuisineTypeModel(1, R.drawable.turquia, "turkish"),
+            CuisineTypeModel(1, R.drawable.morroco, "moroccan"),
+            CuisineTypeModel(1, R.drawable.mexico, "mexican"),
+            CuisineTypeModel(1, R.drawable.italian, "italian"),
+            CuisineTypeModel(1, R.drawable.indian, "indian"),
+
+        )
+
+
 
         //DETAIL PATIENT APPOINTMENT
         const val PENDING_DOCTOR_APPOINTMENT_MODEL = "pending_doctor_appointment_model"
@@ -81,6 +97,11 @@ class Constants {
         const val QUERY_API_KEY = "apiKey"
         const val QUERY_TYPE = "type"
         const val QUERY_DIET = "diet"
+        const val QUERY_CUISINE = "cuisine"
+        const val QUERY_VITAMIN_A = "maxVitaminA"
+        const val QUERY_VITAMIN_E = "maxVitaminE"
+        const val QUERY_VITAMIN_C = "maxVitaminC"
+        const val QUERY_VITAMIN_D = "maxVitaminD"
         const val QUERY_ADD_RECIPE_INFORMATION = "addRecipeInformation"
         const val QUERY_FILL_INGREDIENTS = "fillIngredients"
 
@@ -89,12 +110,27 @@ class Constants {
         const val DEFAULT_RECIPES_NUMBER = "50"
         const val DEFAULT_MEAL_TYPE = "main course"
         const val DEFAULT_DIET_TYPE = "gluten free"
+        const val DEFAULT_CUISINE_TYPE = "italian"
+        const val DEFAULT_VITAMIN_A = "500"
+        const val DEFAULT_VITAMIN_E = "50"
+        const val DEFAULT_VITAMIN_D = "100"
+        const val DEFAULT_VITAMIN_C = "50"
 
         const val PREFERENCES_NAME = "foody_preferences" //this is hte namem of the datastore prefernece and under that name all other values will be store
         const val PREFERENCES_MEAL_TYPE = "mealType"
         const val PREFERENCES_MEAL_TYPE_ID = "mealTypeId"
         const val PREFERENCES_DIET_TYPE = "dietType"
         const val PREFERENCES_DIET_TYPE_ID = "dietTypeId"
+        const val PREFERENCES_CUISINE_TYPE = "cuisineType"
+        const val PREFERENCES_CUISINE_TYPE_ID = "cuisineTypeId"
+        const val PREFERENCES_VITAMIN_A = "vitaminA"
+        const val PREFERENCES_VITAMIN_A_ID = "vitaminAId"
+        const val PREFERENCES_VITAMIN_E = "vitaminE"
+        const val PREFERENCES_VITAMIN_E_ID = "vitaminEId"
+        const val PREFERENCES_VITAMIN_C = "vitaminC"
+        const val PREFERENCES_VITAMIN_C_ID = "vitaminCId"
+        const val PREFERENCES_VITAMIN_D = "vitaminD"
+        const val PREFERENCES_VITAMIN_D_ID = "vitaminDId"
 
         //Preferences Internet
         const val PREFERENCES_BACK_ONLINE = "backOnline"

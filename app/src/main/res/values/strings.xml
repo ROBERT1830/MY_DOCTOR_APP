@@ -122,5 +122,19 @@
     <string name="dairy_free">Dairy Free</string>
     <string name="healthy">Healty</string>
     <string name="cheap">Cheap</string>
+    <string name="cuisine_type">Cusine Type</string>
+    <string name="vitamin">Anticancer Vitamins</string>
+    <string name="vitaminA">Vitamin A</string>
+    <string name="vitaminE">Vitamin E</string>
+    <string name="vitaminC">Vitamin C</string>
+    <string name="vitaminD">Vitamin D</string>
+    <string name="chinese">chinese</string>
+    <string name="japanese">japanese</string>
+    <string name="spanish">spanish</string>
+    <string name="turkish">turkish</string>
+    <string name="moroccan">moroccan</string>
+    <string name="mexican">mexican</string>
+    <string name="italian">italian</string>
+    <string name="indian">indian</string>
 
 </resources>

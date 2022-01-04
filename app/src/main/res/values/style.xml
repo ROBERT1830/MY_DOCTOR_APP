@@ -20,6 +20,18 @@
         <item name="checkedIconTint">@color/chip_text_color</item>
     </style>
 
+    <style name="CustomChipStyle2" parent="Widget.MaterialComponents.Chip.Entry">
+
+        <item name="chipBackgroundColor">@color/chip_background_color</item> //le metes como estilo el xml que te has definido.
+        <item name="android:textColor">@color/chip_text_color</item>
+        <item name="checkedIconTint">@color/chip_text_color</item>
+    </style>
+
+    <style name="Theme.App" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        ...
+        <item name="colorOnSurface">@color/primaryColor</item>
+        <item name="colorSecondary">@color/lightGray</item>
+    </style>
 
 
 </resources>
