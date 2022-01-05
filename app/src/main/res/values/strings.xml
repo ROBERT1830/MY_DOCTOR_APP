@@ -139,5 +139,11 @@
     <string name="recipeOverViewTitle">Recipe OverView</string>
     <string name="ingredientsTitle">Ingredients</string>
     <string name="instructionsTitle">Instructions</string>
+    <string name="my_fav_recipe">Fav. Recipes</string>
+    <string name="save_to_favorites">Save To Favorites</string>
+    <string name="recipe_saved">Recipe saved</string>
+    <string name="removed_from_fav">Removed from Favorites</string>
+    <string name="delete_favorite_menu">Delete Favorite Menu</string>
+    <string name="no_favorite_recipes">No favorite Recipes</string>
 
 </resources>

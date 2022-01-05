@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.robertconstantindinescu.my_doctor_app.models.Repository
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.FavoritesEntity
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.RecipesEntity
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.recipesModels.FoodRecipeResponse
 import com.robertconstantindinescu.my_doctor_app.utils.NetworkResult
@@ -31,6 +32,7 @@ class RecipesMainViewModel @Inject constructor(
     val readRecipes: LiveData<List<RecipesEntity>> = repository.local.readRecipes()
         .asLiveData()  //we need to convert the flow to a live data. THIS
 
+    val readFavoriteRecipes: LiveData<List<FavoritesEntity>> = repository.local.readFavoriteRecipes().asLiveData()
 
     /**
      * RETROFIT
@@ -138,5 +140,22 @@ class RecipesMainViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository.local.insertRecipes(recipesEntity)
         }
+
+
+    fun insertFavoriteRecipe(favoritesEntity: FavoritesEntity) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.insertFavoriteRecipes(favoritesEntity)
+        }
+
+    fun deleteFavoriteRecipe(favoritesEntity: FavoritesEntity) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.deleteFavoriteRecipe(favoritesEntity)
+        }
+
+    fun deleteAllFavoriteRecipes() =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.deleteAllFavoriteRecipes()
+        }
+
 
 }

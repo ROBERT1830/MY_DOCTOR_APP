@@ -37,6 +37,7 @@ class Constants {
         const val RADIATION_WEATHER_TABLE = "radiation_weather_table"
         //-->RecipesDb
         const val RECIPES_TABLE = "recipes_table"
+        const val FAVORITE_RECIPES_TABLE = "favorite_recipes_table"
 
 
 
@@ -46,21 +47,6 @@ class Constants {
             PlaceModel(1, R.drawable.ic_pharmacy, "Pharmacies", "pharmacy"),
             PlaceModel(2, R.drawable.ic_hospital, "Hospitals", "hospital")
         )
-        //-->Recipes Cuisine chip types.
-        var cuisineTypes = listOf<CuisineTypeModel>(
-            CuisineTypeModel(1, R.drawable.chinese, "chinese"),
-            CuisineTypeModel(1, R.drawable.japanise, "japanese"),
-            CuisineTypeModel(1, R.drawable.spanish, "spanish"),
-            CuisineTypeModel(1, R.drawable.turquia, "turkish"),
-            CuisineTypeModel(1, R.drawable.morroco, "moroccan"),
-            CuisineTypeModel(1, R.drawable.mexico, "mexican"),
-            CuisineTypeModel(1, R.drawable.italian, "italian"),
-            CuisineTypeModel(1, R.drawable.indian, "indian"),
-
-        )
-
-
-
 
         //DETAIL PATIENT APPOINTMENT
         const val PENDING_DOCTOR_APPOINTMENT_MODEL = "pending_doctor_appointment_model"

@@ -78,7 +78,7 @@ class RecipeOverViewFragment : Fragment() {
                 healthyTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
 
             }
-            if (myBundle?.nutrition?.nutrients!!.isNotEmpty()){
+            if (myBundle?.nutrition?.nutrients?.isNotEmpty() == true){
                 if(myBundle?.nutrition?.nutrients[0].amount != 0.0){
                     vitaminAImageView.setColorFilter(ContextCompat.getColor(requireContext(), R.color.green))
                     vitaminATextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))

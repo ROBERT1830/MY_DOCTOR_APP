@@ -4,6 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../layout/custom_preview.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-mdpi/ic_elete.xml" value="0.597948717948718" />
+        <entry key="app/src/main/res/drawable-mdpi/ic_menu_book.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-mdpi/ic_star.xml" value="0.42962962962962964" />
         <entry key="app/src/main/res/drawable-xhdpi/edittext_background.xml" value="0.37962962962962965" />
         <entry key="app/src/main/res/drawable/gradient_overlay.xml" value="0.2462962962962963" />
         <entry key="app/src/main/res/drawable/ic_acept_appointment.xml" value="0.4388888888888889" />
@@ -34,6 +37,7 @@
         <entry key="app/src/main/res/layout/bottom_sheet_layout.xml" value="0.2874873353596758" />
         <entry key="app/src/main/res/layout/dialog_layout.xml" value="0.3641304347826087" />
         <entry key="app/src/main/res/layout/doctor_navigation_drawer_layout.xml" value="0.2874873353596758" />
+        <entry key="app/src/main/res/layout/favorite_recipes_row_layout.xml" value="0.33061594202898553" />
         <entry key="app/src/main/res/layout/fragment_accepted_appointments.xml" value="0.5911458333333334" />
         <entry key="app/src/main/res/layout/fragment_acepted_apointments_row.xml" value="0.4" />
         <entry key="app/src/main/res/layout/fragment_acepted_appointments.xml" value="0.3292572463768116" />
@@ -47,6 +51,7 @@
         <entry key="app/src/main/res/layout/fragment_contact_to_patient_row.xml" value="0.5911458333333334" />
         <entry key="app/src/main/res/layout/fragment_doctor_appointment_notes.xml" value="0.25462962962962965" />
         <entry key="app/src/main/res/layout/fragment_doctor_appointment_notes_row.xml" value="0.12133891213389121" />
+        <entry key="app/src/main/res/layout/fragment_favorites_recipes.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_ingredients.xml" value="0.34375" />
         <entry key="app/src/main/res/layout/fragment_instructions.xml" value="0.35885416666666664" />
         <entry key="app/src/main/res/layout/fragment_instructions_fragments.xml" value="0.32563405797101447" />
@@ -80,10 +85,16 @@
         <entry key="app/src/main/res/menu/cancer_records_menu.xml" value="0.45723684210526316" />
         <entry key="app/src/main/res/menu/doctor_bottom_nav_menu.xml" value="0.5911458333333334" />
         <entry key="app/src/main/res/menu/doctor_navigation_drawer_menu.xml" value="0.5820512820512821" />
+        <entry key="app/src/main/res/menu/favorite_recipe_menu.xml" value="0.5911458333333334" />
+        <entry key="app/src/main/res/menu/favorites_contextual_menu.xml" value="0.5911458333333334" />
         <entry key="app/src/main/res/menu/map_type_menu.xml" value="0.5911458333333334" />
         <entry key="app/src/main/res/menu/navigation_drawer_menu.xml" value="0.5131578947368421" />
+        <entry key="app/src/main/res/menu/recipe_details_menu.xml" value="0.5911458333333334" />
       </map>
     </option>
+  </component>
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-mdpi/ic_fav_recipe.svg" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />

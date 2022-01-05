@@ -131,7 +131,8 @@ class PatientActivity : AppCompatActivity() {
                 R.id.mapsFragment,
                 R.id.btnShowAvailableDoctors,
                 R.id.btnShowPendingAppointments,
-                R.id.btnMyAppointments
+                R.id.btnMyAppointments,
+                R.id.btnFavRecipes
             )
         )
         //set the bottom navigation with the navController.
@@ -154,6 +155,7 @@ class PatientActivity : AppCompatActivity() {
                 R.id.btnShowPendingAppointments -> bottomNavigationView.visibility = View.GONE
                 R.id.btnMyAppointments -> bottomNavigationView.visibility = View.GONE
                 R.id.cancerRecordsFragment -> bottomNavigationView.visibility = View.VISIBLE
+                R.id.btnFavRecipes -> bottomNavigationView.visibility = View.GONE
             }
 
         }
@@ -188,7 +190,7 @@ class PatientActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() ||  super.onSupportNavigateUp()
+        return navController.navigateUp() /*||  super.onSupportNavigateUp()*/
     }
 
     override fun onBackPressed() {
@@ -203,5 +205,7 @@ class PatientActivity : AppCompatActivity() {
         else
             super.onBackPressed()
     }
+
+
 
 }

@@ -34,6 +34,7 @@ import kotlinx.android.synthetic.main.activity_patient.*
 
 
 private const val TOPIC = "/topics/appointmentMyDoctorApp"
+
 @AndroidEntryPoint
 class DoctorActivity : AppCompatActivity() {
 
