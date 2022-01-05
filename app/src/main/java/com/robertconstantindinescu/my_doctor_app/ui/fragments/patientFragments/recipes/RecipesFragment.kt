@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments
+package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.recipes
 
 import android.os.Bundle
 import android.util.Log
@@ -177,6 +177,12 @@ class RecipesFragment : Fragment() {
 
     private fun hideShimmerEffect(){
         binding.recyclerview.hideShimmer()
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        /**with this we avoid the ememory leaks
+         * so when the recipe fragment is destroyed this binding will be set to null. */
+        _binding = null
     }
 
 }

@@ -8,11 +8,11 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Nutrient(
     @SerializedName("amount")
-    val amount: Double,
+    val amount: Double?,
     @SerializedName("name")
-    val name: String,
+    val name: String?,
     @SerializedName("title")
-    val title: String,
+    val title: String?,
     @SerializedName("unit")
-    val unit: String
+    val unit: String?
 ): Parcelable

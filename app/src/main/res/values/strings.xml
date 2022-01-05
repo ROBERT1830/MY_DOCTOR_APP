@@ -90,8 +90,7 @@
     <string name="call">Call</string>
 
 
-
-<!--    RECIPES -->
+    <!--    RECIPES -->
 
     <string name="meal_type">Meal Type</string>
     <string name="main_course">Main Course</string>
@@ -136,5 +135,9 @@
     <string name="mexican">mexican</string>
     <string name="italian">italian</string>
     <string name="indian">indian</string>
+
+    <string name="recipeOverViewTitle">Recipe OverView</string>
+    <string name="ingredientsTitle">Ingredients</string>
+    <string name="instructionsTitle">Instructions</string>
 
 </resources>

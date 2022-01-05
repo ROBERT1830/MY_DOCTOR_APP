@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/recipesFragment"
-        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RecipesFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.recipes.RecipesFragment"
         android:label="Diet"
         tools:layout="@layout/fragment_recipes">
         <action
@@ -39,6 +39,9 @@
             android:name="backFromBottomSheet"
             app:argType="boolean"
             android:defaultValue="false" />
+        <action
+            android:id="@+id/action_recipesFragment_to_detailsRecipeActivity"
+            app:destination="@id/detailsRecipeActivity" />
     </fragment>
     <activity
         android:id="@+id/detectorActivity"
@@ -101,4 +104,13 @@
             android:id="@+id/action_recipesBottomSheet_to_recipesFragment"
             app:destination="@id/recipesFragment" />
     </fragment>
+    <activity
+        android:id="@+id/detailsRecipeActivity"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.DetailsRecipeActivity"
+        android:label="activity_details_recipe"
+        tools:layout="@layout/activity_details_recipe" >
+        <argument
+            android:name="result"
+            app:argType="com.robertconstantindinescu.my_doctor_app.models.onlineData.recipesModels.Result" />
+    </activity>
 </navigation>
