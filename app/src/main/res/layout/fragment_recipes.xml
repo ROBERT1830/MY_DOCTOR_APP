@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/lightGray"
-        tools:context=".ui.fragments.patientFragments.RecipesFragment">
+        tools:context=".ui.fragments.patientFragments.recipes.RecipesFragment">
 
         <!--shimmer_recycler_item_count: to display only 3 placeholder recyclerrow
         shimmer_recycler_layout: add the placeholder we designed-->

@@ -89,7 +89,7 @@ class CancerRecordsFragment : Fragment() {
     private fun showSnackbar(){
         Snackbar.make(
             binding.root,
-            "All recipes removed",
+            "All records removed",
             Snackbar.LENGTH_SHORT
         ).setAction("Ok"){}.show()
     }

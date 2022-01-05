@@ -42,6 +42,9 @@
     <color name="checkedChipTextColor">@color/colorPrimary</color>
     <color name="chipTextColor">@color/darkGray</color>
 
+    //RECIPES
+    <color name="titleColor">@color/darker</color>
+
 
 
 

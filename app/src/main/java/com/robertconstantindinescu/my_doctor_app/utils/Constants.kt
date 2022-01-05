@@ -61,6 +61,7 @@ class Constants {
 
 
 
+
         //DETAIL PATIENT APPOINTMENT
         const val PENDING_DOCTOR_APPOINTMENT_MODEL = "pending_doctor_appointment_model"
 
@@ -85,8 +86,10 @@ class Constants {
 
 
 
+        //RECIPES GENERAL
+        const val RECIPE_RESULT_KEY = "recipeBundle"
 
-        //RECIPES QUERY KEYS
+        //-->RECIPES QUERY KEYS
         const val RECIPE_BASE_URL = "https://api.spoonacular.com"
         const val BASE_IMAGE_URL ="https://spoonacular.com/cdn/ingredients_100x100/"
         const val RECIPE_API_KEY = "fc9a88b126ac432786da2b6181c073d5"
