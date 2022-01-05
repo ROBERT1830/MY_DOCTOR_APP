@@ -5,13 +5,14 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.robertconstantindinescu.my_doctor_app.models.RecipesTypeConverter
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.FavoritesEntity
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.RecipesEntity
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.UVEntity
 
 // TODO: 15/11/21 SPECIFY THE DATABASE TYPECONVERTER 
 
 @Database(
-    entities = [CancerDataEntity::class, UVEntity::class, RecipesEntity::class],
+    entities = [CancerDataEntity::class, UVEntity::class, RecipesEntity::class, FavoritesEntity::class],
     version = 1,
     exportSchema = false
 )

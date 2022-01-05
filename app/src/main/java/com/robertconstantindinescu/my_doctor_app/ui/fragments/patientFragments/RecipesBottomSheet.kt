@@ -1,14 +1,20 @@
 package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.robertconstantindinescu.my_doctor_app.R
@@ -25,7 +31,7 @@ import java.lang.Exception
 import java.util.*
 
 
-class RecipesBottomSheet : Fragment() /*RecipesBottomSheetInterface*/ {
+class RecipesBottomSheet : BottomSheetDialogFragment() /*RecipesBottomSheetInterface*/ {
 
     private  lateinit var recipesQueryUtilsViewModel: RecipesQueryUtilsViewModel
 
@@ -156,9 +162,6 @@ class RecipesBottomSheet : Fragment() /*RecipesBottomSheetInterface*/ {
             }
         }
 
-
-
-
         //lsitener to apply button
         mView.apply_btn.setOnClickListener {
 
@@ -184,43 +187,16 @@ class RecipesBottomSheet : Fragment() /*RecipesBottomSheetInterface*/ {
             val action = RecipesBottomSheetDirections.actionRecipesBottomSheetToRecipesFragment(true)
             /**And when we navigate to the recipe fragment we will pas the argument seted to true*/
             findNavController().navigate(action)
+
+
         }
-
-
-
-        // TODO: 3/1/22 PERFOMR THE CLICKED FUNCTIONS THAT THE USER SELECT EACH TYPE. AND INVESTIATE HOW TO DO THE SAME WITH THE CHECKBOX.
-
-
-
-
-
-
-
 
         return mView
     }
 
-//    private fun generateCuisineChips(mView: View) {
-//        for(cuisineModel in cuisineTypes){
-//            val chip = Chip(requireContext())
-//            chip.text = cuisineModel.name
-//            chip.id = cuisineModel.id
-//            chip.setPadding(8, 8, 8, 8)
-//            chip.setTextColor(resources.getColor(R.color.black, null))
-//            chip.chipIcon = ResourcesCompat.getDrawable(resources, cuisineModel.drawableId, null)
-//            chip.isCheckable = true
-//            chip.isCheckedIconVisible = false
-//            mView.cuisineChipGroup.addView(chip)
-//
-//        }
-//    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
 
 
-    }
 
     private fun updateChip(chipId: Int, chipGroup: ChipGroup) {
         //our chip id will not be 0 if we hav emade a differnte selecion from the first one nd saved the data in the datastore
@@ -234,115 +210,7 @@ class RecipesBottomSheet : Fragment() /*RecipesBottomSheetInterface*/ {
         }
     }
 
-//    public fun onCheckBoxClick(view: View){
-//        if (view is CheckBox) {
-//            val checked: Boolean = view.isChecked
-//
-//            when (view.id) {
-//                R.id.vitaminA -> {
-//                    if(checked){
-//                        vitaminA =   DEFAULT_VITAMIN_A
-//                        vitaminAId = R.id.vitaminA
-//
-//                    }else {
-//                        vitaminA = "0"
-//                        vitaminAId = 0
-//                    }
-//
-//
-//                }
-//                R.id.vitaminE -> {
-//                    if(checked){
-//                        vitaminE =   DEFAULT_VITAMIN_E
-//                        vitaminEId = R.id.vitaminE
-//
-//                    }else {
-//                        vitaminE = "0"
-//                        vitaminEId = 0
-//                    }
-//                }
-//                R.id.vitaminC -> {
-//                    if(checked){
-//                        vitaminC =   DEFAULT_VITAMIN_C
-//                        vitaminCId = R.id.vitaminC
-//
-//                    }else {
-//                        vitaminC = "0"
-//                        vitaminCId = 0
-//                    }
-//                }
-//                R.id.vitaminD -> {
-//                    if(checked){
-//                        vitaminD =   DEFAULT_VITAMIN_D
-//                        vitaminDId = R.id.vitaminD
-//
-//                    }else {
-//                        vitaminD = "0"
-//                        vitaminDId = 0
-//                    }
-//                }
-//
-//
-//            }
-//        }
-//
-//    }
-//    override fun onCheckBoxClickListener() {
-//
-//
-//
-//        if (view is CheckBox) {
-//            val checked: Boolean = view.isChecked
-//
-//            when (view.id) {
-//                R.id.vitaminA -> {
-//                    if(checked){
-//                        vitaminA =   DEFAULT_VITAMIN_A
-//                        vitaminAId = R.id.vitaminA
-//
-//                    }else {
-//                        vitaminA = "0"
-//                        vitaminAId = 0
-//                    }
-//
-//
-//                }
-//                R.id.vitaminE -> {
-//                    if(checked){
-//                        vitaminE =   DEFAULT_VITAMIN_E
-//                        vitaminEId = R.id.vitaminE
-//
-//                    }else {
-//                        vitaminE = "0"
-//                        vitaminEId = 0
-//                    }
-//                }
-//                R.id.vitaminC -> {
-//                    if(checked){
-//                        vitaminC =   DEFAULT_VITAMIN_C
-//                        vitaminCId = R.id.vitaminC
-//
-//                    }else {
-//                        vitaminC = "0"
-//                        vitaminCId = 0
-//                    }
-//                }
-//                R.id.vitaminD -> {
-//                    if(checked){
-//                        vitaminD =   DEFAULT_VITAMIN_D
-//                        vitaminDId = R.id.vitaminD
-//
-//                    }else {
-//                        vitaminD = "0"
-//                        vitaminDId = 0
-//                    }
-//                }
-//
-//
-//            }
-//        }
-//
-//    }
+
 
 
 }

@@ -113,4 +113,13 @@
             android:name="result"
             app:argType="com.robertconstantindinescu.my_doctor_app.models.onlineData.recipesModels.Result" />
     </activity>
+    <fragment
+        android:id="@+id/btnFavRecipes"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.recipes.FavoritesRecipesFragment"
+        android:label="fragment_favorites_recipes"
+        tools:layout="@layout/fragment_favorites_recipes" >
+        <action
+            android:id="@+id/action_btnFavRecipes_to_detailsRecipeActivity"
+            app:destination="@id/detailsRecipeActivity" />
+    </fragment>
 </navigation>

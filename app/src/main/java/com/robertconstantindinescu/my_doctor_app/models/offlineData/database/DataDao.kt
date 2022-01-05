@@ -2,6 +2,7 @@ package com.robertconstantindinescu.my_doctor_app.models.offlineData.database
 
 import androidx.room.*
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.FavoritesEntity
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.RecipesEntity
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.UVEntity
 import kotlinx.coroutines.flow.Flow
@@ -34,6 +35,18 @@ interface DataDao {
     @Query("SELECT * FROM recipes_table ORDER BY id ASC")
     fun readRecipes(): Flow<List<RecipesEntity>>
 
+    @Query("SELECT * FROM favorite_recipes_table ORDER BY id ASC")
+    fun readFavoriteRecipes(): Flow<List<FavoritesEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecipes(recipesEntity: RecipesEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFavoriteRecipe(favoritesEntity: FavoritesEntity)
+
+    @Delete
+    suspend fun deleteFavoriteRecipe(favoritesEntity: FavoritesEntity)
+
+    @Query("DELETE FROM favorite_recipes_table")
+    suspend fun deleteAllFavoriteRecipes()
 }
