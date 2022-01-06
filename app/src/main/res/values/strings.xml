@@ -146,4 +146,9 @@
     <string name="delete_favorite_menu">Delete Favorite Menu</string>
     <string name="no_favorite_recipes">No favorite Recipes</string>
 
+
+    <!--    SETTINGS-->
+
+    <string name="storage_perm_denies">Storage permission denied</string>
+
 </resources>
