@@ -194,7 +194,7 @@ class RemoteDataSource @Inject constructor(
         //appToken: String
     ): PatientModel {
 
-        return PatientModel(image, name, phoneNumber, email, isDoctor, uid, /*appToken*/)
+        return PatientModel(image, name, phoneNumber, email, isDoctor, uid /*appToken*/)
     }
 
     private fun createDoctorModel(
@@ -923,7 +923,6 @@ class RemoteDataSource @Inject constructor(
     }
 
 
-
 //    fun sendNotificationToPatient(notification: PushNotificationModel): Flow<State<Any>> = flow<State<Any>>{
 //        emit(State.loading(true))
 //
@@ -947,7 +946,7 @@ class RemoteDataSource @Inject constructor(
      * RECIPES
      */
 
-    suspend fun getRecipes(queries: Map<String, String>): Response<FoodRecipeResponse>{
+    suspend fun getRecipes(queries: Map<String, String>): Response<FoodRecipeResponse> {
         return foodRecipeApi.getRecipes(queries)
     }
 
@@ -955,7 +954,7 @@ class RemoteDataSource @Inject constructor(
     /**
      * SETTINGS FRAGMENT
      */
-    fun updateImage(image: Uri): Flow<State<Any>> = flow<State<Any>>{
+    fun updateImage(image: Uri): Flow<State<Any>> = flow<State<Any>> {
         emit(State.loading(true))
 
         val auth = Firebase.auth
@@ -1059,6 +1058,29 @@ class RemoteDataSource @Inject constructor(
             emit(State.failed(it.message!!.toString()))
         }
 
+    suspend fun getDoctorNotes(patientAppointmentModel: PendingPatientAppointmentModel): ArrayList<CancerDoctorNote> {
+
+        val doctorNotesList = ArrayList<CancerDoctorNote>()
+        val doctorFirebaseId = patientAppointmentModel.doctorFirebaseId
+        val auth = Firebase.auth
+        val patientAppointmentKey = patientAppointmentModel.patientAppointmentKey
+
+        var database =
+            Firebase.database.reference.child("DoctorNotes").child(doctorFirebaseId!!)
+                .child(auth.uid!!).child(patientAppointmentKey!!).child("doctorNotesList")
+        val data = database!!.get().await()
+
+        if(data.exists()){
+            for (d in data.children){
+                val cancerDoctorNote: CancerDoctorNote = d.getValue(CancerDoctorNote::class.java)!!
+                doctorNotesList.add(cancerDoctorNote)
+            }
+        }
+
+        return doctorNotesList
+
+
+    }
 
 }
 

@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentPendingPatientAppointmentsRowBinding
+import com.robertconstantindinescu.my_doctor_app.interfaces.PatientAcceptedAppointmentInterface
 import com.robertconstantindinescu.my_doctor_app.interfaces.PendingPatientAppointmentInterface
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingPatientAppointmentModel
 
-class PendingPatientAppointmentAdapter(private val patientAppointmentInterface: PendingPatientAppointmentInterface) :
+class PendingPatientAppointmentAdapter(private val patientAppointmentInterface: PendingPatientAppointmentInterface,
+private val patientAcceptedAppointmentInterface: PatientAcceptedAppointmentInterface) :
     RecyclerView.Adapter<PendingPatientAppointmentAdapter.MyViewHolder>() {
     private var pendingPatientAppointmentList = emptyList<PendingPatientAppointmentModel>()
 
@@ -32,6 +34,8 @@ class PendingPatientAppointmentAdapter(private val patientAppointmentInterface: 
 
         val currentRecord = this.pendingPatientAppointmentList[position]
         holder.binding.listener = patientAppointmentInterface
+        holder.binding.listener2 = patientAcceptedAppointmentInterface
+
         holder.bind(currentRecord)
     }
 

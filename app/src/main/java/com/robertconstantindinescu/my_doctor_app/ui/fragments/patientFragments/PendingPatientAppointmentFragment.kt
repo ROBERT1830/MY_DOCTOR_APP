@@ -18,6 +18,7 @@ import com.google.firebase.ktx.Firebase
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.PendingPatientAppointmentAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentPendingPatientAppointmentBinding
+import com.robertconstantindinescu.my_doctor_app.interfaces.PatientAcceptedAppointmentInterface
 import com.robertconstantindinescu.my_doctor_app.interfaces.PendingPatientAppointmentInterface
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingPatientAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
@@ -27,13 +28,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentInterface {
+class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentInterface, PatientAcceptedAppointmentInterface {
 
     private lateinit var mBinding: FragmentPendingPatientAppointmentBinding
     private val requestAppointmentViewModel: RequestAppointmentViewModel by viewModels()
 
 
-    private val mAdapter by lazy { PendingPatientAppointmentAdapter(this) }
+    private val mAdapter by lazy { PendingPatientAppointmentAdapter(this, this) }
     private lateinit var pendingPatientAppontmentList: ArrayList<PendingPatientAppointmentModel>
     private lateinit var loadingDialog: LoadingDialog
 
@@ -151,6 +152,10 @@ class PendingPatientAppointmentFragment : Fragment(), PendingPatientAppointmentI
             }).setNegativeButton("No", null).show();
 
 
+    }
+
+    override fun onAcceptedAppointmentClick(patientAppointmentModel: PendingPatientAppointmentModel) {
+        return
     }
 
 

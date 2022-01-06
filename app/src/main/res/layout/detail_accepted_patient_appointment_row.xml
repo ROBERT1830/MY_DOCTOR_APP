@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="doctorNoteModel"
+            type="com.robertconstantindinescu.my_doctor_app.models.appointmentModels.CancerDoctorNote" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cancerRecords_row_cardView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            android:layout_margin="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/lightMediumGray"
+            app:strokeWidth="1dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+
+                <RelativeLayout
+                    android:id="@+id/relative_layout_cancerPhoto"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <!--                    getUriImage="@{cancerDataFirebaseModel.cancerImg}"-->
+                    <ImageView
+                        android:id="@+id/imgView_cancerPhoto"
+                        loadImageFromFirebase="@{doctorNoteModel.cancerImg}"
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:srcCompat="@tools:sample/avatars" />
+                </RelativeLayout>
+
+                <TextView
+                    android:padding="10dp"
+                    android:id="@+id/editText_doctorNote"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:maxLines="7"
+                    android:textSize="13sp"
+                    setDoctorNote="@{doctorNoteModel.note}"
+                    tools:text="Por este lunar no te preocupes. No parece que hayan signos de
+
+                malignidad ya que el color y el controno son regulares. Te recomiendo que repitas el pre-test enfocando mejor el lunar. Si fuera necesario elimina el pelo de esapara un mejor resultado. "
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/relative_layout_cancerPhoto" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

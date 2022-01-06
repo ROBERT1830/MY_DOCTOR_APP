@@ -98,7 +98,11 @@
         android:id="@+id/btnMyAppointments"
         android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.PatientAcceptedAppointmentsFragment"
         android:label="fragment_patient_accepted_appointments"
-        tools:layout="@layout/fragment_patient_accepted_appointments" />
+        tools:layout="@layout/fragment_patient_accepted_appointments" >
+        <action
+            android:id="@+id/action_btnMyAppointments_to_detailAcceptedPatientAppointment"
+            app:destination="@id/detailAcceptedPatientAppointment" />
+    </fragment>
     <fragment
         android:id="@+id/recipesBottomSheet"
         android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RecipesBottomSheet"
@@ -152,4 +156,13 @@
         android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.settings.EmailChangeFragment"
         android:label="fragment_email_change"
         tools:layout="@layout/fragment_email_change" />
+    <activity
+        android:id="@+id/detailAcceptedPatientAppointment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.appointmetsActitvities.DetailAcceptedPatientAppointmentActivity"
+        android:label="activity_detail_accepted_patient_appointment"
+        tools:layout="@layout/activity_detail_accepted_patient_appointment" >
+        <argument
+            android:name="patientAppointmentModel"
+            app:argType="com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingPatientAppointmentModel" />
+    </activity>
 </navigation>
