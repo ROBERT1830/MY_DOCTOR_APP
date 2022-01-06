@@ -60,7 +60,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:maxLines="7"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     setDoctorNote="@{doctorNoteModel.note}"
                     tools:text="Por este lunar no te preocupes. No parece que hayan signos de
 
