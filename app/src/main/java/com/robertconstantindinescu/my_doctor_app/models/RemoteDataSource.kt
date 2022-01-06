@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -116,7 +117,14 @@ class RemoteDataSource @Inject constructor(
                 createDoctor(doctorModel, auth)
             } else {
                 patientModel =
-                    createPatientModel(path, name, phoneNumber, email, isDoctor, auth.uid!!, /*appToken*/)
+                    createPatientModel(
+                        path,
+                        name,
+                        phoneNumber,
+                        email,
+                        isDoctor,
+                        auth.uid!!, /*appToken*/
+                    )
                 createPatient(patientModel, auth)
             }
             emit(State.succes("Email verification sent"))
@@ -133,7 +141,7 @@ class RemoteDataSource @Inject constructor(
 
         var token = ""
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (task.isSuccessful){
+            if (task.isSuccessful) {
                 Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                 return@addOnCompleteListener
             }
@@ -728,7 +736,8 @@ class RemoteDataSource @Inject constructor(
                                     pendingAppointmentDoctorModel.doctorModel.doctorName.toString()
                                 acceptedPatientAppointmentMap["appointmentDescription"] =
                                     pendingAppointmentDoctorModel.description!!
-                                acceptedPatientAppointmentMap["appointmentStatus"] = acceptedAppointmentMessage
+                                acceptedPatientAppointmentMap["appointmentStatus"] =
+                                    acceptedAppointmentMessage
                                 acceptedPatientAppointmentMap["doctorId"] =
                                     pendingAppointmentDoctorModel.doctorModel.doctorLiscence!!
                                 acceptedPatientAppointmentMap["doctorAppointmentKey"] =
@@ -744,7 +753,10 @@ class RemoteDataSource @Inject constructor(
                                     .child(pendingAppointmentDoctorModel.patientAppointmentKey)
                                     .updateChildren(acceptedPatientAppointmentMap)
                                     .addOnCompleteListener { task ->
-                                        if (task.isSuccessful && acceptedAppointmentMessage.contains("accepted")) {
+                                        if (task.isSuccessful && acceptedAppointmentMessage.contains(
+                                                "accepted"
+                                            )
+                                        ) {
                                             val cancerDataMap: MutableMap<String, Any> = HashMap()
                                             cancerDataMap["cancerDataList"] =
                                                 pendingAppointmentDoctorModel.cancerDataList!!
@@ -775,11 +787,16 @@ class RemoteDataSource @Inject constructor(
                                             //Accepted patient appointments JSON
 
                                             val patientsToCall: MutableMap<String, Any> = HashMap()
-                                            patientsToCall["patientName"] = pendingAppointmentDoctorModel.patientModel.patientName!!
-                                            patientsToCall["phoneNumber"] = pendingAppointmentDoctorModel.patientModel.phoneNumber!!
-                                            patientsToCall["email"] = pendingAppointmentDoctorModel.patientModel.email!!
-                                            patientsToCall["image"] = pendingAppointmentDoctorModel.patientModel.image!!
-                                            patientsToCall["appToken"] = pendingAppointmentDoctorModel.patientModel.appToken!!
+                                            patientsToCall["patientName"] =
+                                                pendingAppointmentDoctorModel.patientModel.patientName!!
+                                            patientsToCall["phoneNumber"] =
+                                                pendingAppointmentDoctorModel.patientModel.phoneNumber!!
+                                            patientsToCall["email"] =
+                                                pendingAppointmentDoctorModel.patientModel.email!!
+                                            patientsToCall["image"] =
+                                                pendingAppointmentDoctorModel.patientModel.image!!
+                                            patientsToCall["appToken"] =
+                                                pendingAppointmentDoctorModel.patientModel.appToken!!
                                             Firebase.database.reference.child("PatientsToCall")
                                                 .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
                                                 .child(pendingAppointmentDoctorModel.doctorAppointmentKey)
@@ -845,7 +862,7 @@ class RemoteDataSource @Inject constructor(
 
                 }
 
-            if(acceptedAppointmentMessage.contains("accepted")){
+            if (acceptedAppointmentMessage.contains("accepted")) {
                 emit(
                     State.succes(
                         "The appointment " +
@@ -853,7 +870,7 @@ class RemoteDataSource @Inject constructor(
                                 "Check it in 'Accepted Appointments'"
                     )
                 )
-            }else{
+            } else {
                 emit(
                     State.succes(
                         "The appointment " +
@@ -861,7 +878,6 @@ class RemoteDataSource @Inject constructor(
                     )
                 )
             }
-
 
 
         }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
@@ -888,7 +904,7 @@ class RemoteDataSource @Inject constructor(
         return acceptedDoctorAppointmentsList
     }
 
-   suspend fun getPatientsToCall(): ArrayList<PatientModel> {
+    suspend fun getPatientsToCall(): ArrayList<PatientModel> {
 
         val patientsToCall = ArrayList<PatientModel>()
         val auth = Firebase.auth
@@ -905,6 +921,7 @@ class RemoteDataSource @Inject constructor(
         return patientsToCall
 
     }
+
 
 
 //    fun sendNotificationToPatient(notification: PushNotificationModel): Flow<State<Any>> = flow<State<Any>>{
@@ -935,7 +952,112 @@ class RemoteDataSource @Inject constructor(
     }
 
 
+    /**
+     * SETTINGS FRAGMENT
+     */
+    fun updateImage(image: Uri): Flow<State<Any>> = flow<State<Any>>{
+        emit(State.loading(true))
 
+        val auth = Firebase.auth
+        val path = uploadImage(auth.uid!!, image).toString()
+        val database = Firebase.database.getReference("Users").child(auth.uid!!)
+        val profileChangeRequest = UserProfileChangeRequest.Builder()
+            .setPhotoUri(Uri.parse(path))
+            .build()
+
+        auth.currentUser?.updateProfile(profileChangeRequest)?.await()
+        val map: MutableMap<String, Any> = HashMap()
+
+        map["image"] = path
+
+        database.updateChildren(map)
+        emit(State.succes("Image updated"))
+    }.catch { emit(State.failed(it.message!!.toString())) }.flowOn(Dispatchers.IO)
+
+    fun updateName(name: String): Flow<State<Any>> = flow<State<Any>> {
+        emit(State.loading(true))
+
+        val auth = Firebase.auth
+        //Gets a DatabaseReference for the provided path
+        val database = Firebase.database.getReference("Users").child(auth.uid!!)
+
+        /**
+         * Use a class to pdate user profile information. and build it.
+         */
+        val profileChangeRequest = UserProfileChangeRequest.Builder()
+            //Sets the updated display name
+            .setDisplayName(name)
+            //Returns a UserProfileChangeRequest instance with the name to update.
+            .build()
+
+        //currentUser --> Returns the currently signed-in FirebaseUser.
+        //updateProfile is in charge of update the user information. And this method has to use the
+        // UserProfileChangeRequest.Builder to contruct the request.
+        auth.currentUser?.updateProfile(profileChangeRequest)?.await()
+
+        /**Now we have to create a hashMap with the specific child keys that will be modifyed.
+         * So because we will want to modofy the username(which is one of the tags in child firebase)
+         * we will have as a key username and as a value the name entered by the user. */
+        val map: MutableMap<String, Any> = HashMap()
+
+
+        map["patientName"] = name
+        //so now we use  that map with the key value pair to update the child.
+        //Update the specific child keys to the specified values. Passing null in a map to
+        // updateChildren() will remove the value at the specified location.
+        database.updateChildren(map)
+
+        emit(State.succes("Username updated"))
+
+    }.flowOn(Dispatchers.IO)
+        .catch {
+            emit(State.failed(it.message!!.toString()))
+        }
+
+    fun updateEmail(email: String): Flow<State<Any>> = flow<State<Any>> {
+        emit(State.loading(true))
+
+        //get the current authenticate user.
+        val auth = Firebase.auth
+        val database = Firebase.database.getReference("Users").child(auth.uid!!)
+        //update the emial with the new one.
+        auth.currentUser?.updateEmail(email)?.await()
+        val map: MutableMap<String, Any> = HashMap()
+        //ídem
+        map["email"] = email
+        //set the value in the database.
+        database.updateChildren(map).await()
+
+        emit(State.succes("Email updated"))
+    }.flowOn(Dispatchers.IO)
+        .catch {
+            emit(State.failed(it.message!!.toString()))
+        }
+
+    fun updatePassword(password: String): Flow<State<Any>> = flow<State<Any>> {
+        emit(State.loading(true))
+
+        val auth = Firebase.auth
+        auth.currentUser?.updatePassword(password)?.await()
+
+
+        emit(State.succes("Email updated"))
+    }.flowOn(Dispatchers.IO)
+        .catch {
+            emit(State.failed(it.message!!.toString()))
+        }
+
+    fun confirmEmail(authCredential: AuthCredential): Flow<State<Any>> = flow<State<Any>> {
+        emit(State.loading(true))
+
+        val auth = Firebase.auth
+        //Reauthenticates the user with the given credential.using the EmailAuthProvider that provide an email and pass mechanism for auth.
+        auth.currentUser?.reauthenticate(authCredential)?.await()
+        emit(State.succes("User authenticate"))
+    }.flowOn(Dispatchers.IO)
+        .catch {
+            emit(State.failed(it.message!!.toString()))
+        }
 
 
 }
