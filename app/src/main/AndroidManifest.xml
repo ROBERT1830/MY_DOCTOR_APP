@@ -30,9 +30,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.My_doctor_app">
         <activity
+            android:name=".ui.appointmetsActitvities.DetailAcceptedPatientAppointmentActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.DetailsRecipeActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".ui.PatientVideoCallActivity"
             android:exported="false" />
@@ -97,8 +99,7 @@
             android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.PatientActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <!--
         WE must insert this activity manually so that we can acces image cropper and go for
 gallery

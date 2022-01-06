@@ -11,6 +11,10 @@
         <variable
             name="listener"
             type="com.robertconstantindinescu.my_doctor_app.interfaces.PendingPatientAppointmentInterface" />
+
+        <variable
+            name="listener2"
+            type="com.robertconstantindinescu.my_doctor_app.interfaces.PatientAcceptedAppointmentInterface" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,6 +25,7 @@
         <androidx.cardview.widget.CardView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card_view_pendingAppointment"
+            android:onClick="@{()->listener2.onAcceptedAppointmentClick(patientAppointmentModel)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"

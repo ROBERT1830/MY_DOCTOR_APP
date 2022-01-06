@@ -69,6 +69,10 @@ class RequestAppointmentViewModel @Inject constructor(
     suspend fun getAcceptedDoctorAppointments(): ArrayList<AcceptedDoctorAppointmentModel> =
         repository.remote.getAcceptedDoctorAppointments()
 
+    suspend fun getDoctorNotes(patientAppointmentModel: PendingPatientAppointmentModel): ArrayList<CancerDoctorNote> =
+        repository.remote.getDoctorNotes(patientAppointmentModel)
+
+
 
 //    fun getDoctorNotes(recyclerView: RecyclerView): ArrayList<String> {
 //

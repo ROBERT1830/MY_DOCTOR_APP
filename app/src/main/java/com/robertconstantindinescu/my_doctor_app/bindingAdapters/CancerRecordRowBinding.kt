@@ -35,6 +35,12 @@ class CancerRecordRowBinding {
             imageView.load(url)
         }
 
+        @BindingAdapter("setDoctorNote")
+        @JvmStatic
+        fun setDoctorNote(textView: TextView, doctorNote:String){
+            textView.text = doctorNote.trim()
+        }
+
 
 
         @BindingAdapter("applyMalignBenignColor")
