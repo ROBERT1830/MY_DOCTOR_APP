@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.robertconstantindinescu.my_doctor_app.models.Repository
 import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GooglePlaceModel
+import com.robertconstantindinescu.my_doctor_app.models.placesModel.SavedPlaceModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -38,6 +39,7 @@ class LocationViewModel @Inject constructor(
         repository.remote.addUserPlace(googlePlaceModel, userSavedLocationId)
 
     fun getDirection(url: String) = repository.remote.getDirection(url)
+    suspend fun getSavedPlaces(): ArrayList<GooglePlaceModel> = repository.remote.getSavedPlaces()
 
 
 }

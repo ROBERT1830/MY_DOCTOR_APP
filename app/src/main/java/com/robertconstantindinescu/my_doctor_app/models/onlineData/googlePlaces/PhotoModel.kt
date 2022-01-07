@@ -11,19 +11,19 @@ import kotlinx.android.parcel.Parcelize
 data class PhotoModel(
     @field:Json(name = "height")
 
-    val height: Int?,
+    val height: Int?=null,
 
     @field:Json(name = "html_attributions")
 
-    val htmlAttributions: List<String>?,
+    val htmlAttributions: List<String>?=null,
 
     @field:Json(name = "photo_reference")
 
-    val photoReference: String?,
+    val photoReference: String?=null,
 
     @field:Json(name = "width")
 
-    val width: Int?
+    val width: Int?=null
 ): Parcelable {
     companion object {
 

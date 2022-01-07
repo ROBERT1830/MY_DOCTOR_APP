@@ -298,16 +298,17 @@ class RemoteDataSource @Inject constructor(
             Firebase.database.getReference("Users").child(auth.uid!!).child("Saved Locations")
 
         val database =
-            Firebase.database.getReference("Places").child(googlePlaceModel.placeId!!).get().await()
+            Firebase.database.getReference("Places").child(auth.uid!!).child(googlePlaceModel.placeId!!).get().await()
         //if the database Places does not exists, create the model and add it into firebase.
         if (!database.exists()) {
-            val savePlaceModel = SavedPlaceModel(
-                googlePlaceModel.name!!, googlePlaceModel.vicinity!!,
-                googlePlaceModel.placeId, googlePlaceModel.userRatingsTotal!!,
-                googlePlaceModel.rating!!, googlePlaceModel.geometry?.location?.lat!!,
-                googlePlaceModel.geometry.location.lng!!
-            )
-            addPlace(savePlaceModel)
+//            val savePlaceModel = SavedPlaceModel(
+//                googlePlaceModel.name!!, googlePlaceModel.vicinity!!,
+//                googlePlaceModel.placeId, googlePlaceModel.userRatingsTotal!!,
+//                googlePlaceModel.rating!!, googlePlaceModel.geometry?.location?.lat!!,
+//                googlePlaceModel.geometry.location.lng!!, googlePlaceModel.icon!!,
+//                googlePlaceModel.vicinity!!
+//            )
+            addPlace(googlePlaceModel ,auth)
         }
 
         //add the place id to the userSavedLocaitonId places
@@ -325,10 +326,10 @@ class RemoteDataSource @Inject constructor(
     /**
      * method to add a place in the Places Database.
      */
-    private suspend fun addPlace(savePlaceModel: SavedPlaceModel) {
-        val databse = Firebase.database.getReference("Places")
+    private suspend fun addPlace(googlePlaceModel: GooglePlaceModel, auth: FirebaseAuth) {
+        val databse = Firebase.database.getReference("Places").child(auth.uid!!)
         //create that child from the database Places
-        databse.child(savePlaceModel.placeId).setValue(savePlaceModel).await()
+        databse.child(googlePlaceModel.placeId!!).setValue(googlePlaceModel).await()
 
     }
 
@@ -859,6 +860,7 @@ class RemoteDataSource @Inject constructor(
                     }
 
                 }.addOnFailureListener {
+                }.addOnFailureListener {
 
                 }
 
@@ -1078,6 +1080,25 @@ class RemoteDataSource @Inject constructor(
         }
 
         return doctorNotesList
+
+
+    }
+
+    suspend fun getSavedPlaces(): java.util.ArrayList<GooglePlaceModel> {
+
+        var googlePlaceModelList = ArrayList<GooglePlaceModel>()
+        val auth = Firebase.auth
+
+        var dataBase = Firebase.database.reference.child("Places").child(auth.uid!!)
+        val data = dataBase!!.get().await()
+        if (data.exists()){
+            for (d in data.children){
+                val googlePlaceModel: GooglePlaceModel = d.getValue(GooglePlaceModel::class.java)!!
+                googlePlaceModelList.add(googlePlaceModel)
+            }
+        }
+
+        return  googlePlaceModelList
 
 
     }
