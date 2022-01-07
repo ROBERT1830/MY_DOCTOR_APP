@@ -61,7 +61,11 @@
         android:id="@+id/btnSavedPlaces"
         android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.SavedPlacesFragment"
         android:label="fragment_saved_places"
-        tools:layout="@layout/fragment_saved_places" />
+        tools:layout="@layout/fragment_saved_places" >
+        <action
+            android:id="@+id/action_btnSavedPlaces_to_directionActivity2"
+            app:destination="@id/directionActivity" />
+    </fragment>
     <activity
         android:id="@+id/directionActivity"
         android:name="com.robertconstantindinescu.my_doctor_app.ui.DirectionActivity"

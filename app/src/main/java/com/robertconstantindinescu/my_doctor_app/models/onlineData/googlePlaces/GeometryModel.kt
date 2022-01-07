@@ -8,5 +8,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class GeometryModel(
     @field:Json(name = "location")
-    val location: LocationModel?
+    val location: LocationModel?=null
 ): Parcelable

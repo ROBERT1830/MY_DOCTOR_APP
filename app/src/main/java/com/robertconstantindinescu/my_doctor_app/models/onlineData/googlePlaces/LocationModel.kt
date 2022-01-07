@@ -8,8 +8,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class LocationModel(
     @field:Json(name = "lat")
-    val lat: Double?,
+    val lat: Double?=null,
 
     @field:Json(name = "lng")
-    val lng: Double?
+    val lng: Double?=null
 ):Parcelable

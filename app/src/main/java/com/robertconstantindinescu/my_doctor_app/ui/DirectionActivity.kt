@@ -78,8 +78,8 @@ class DirectionActivity : AppCompatActivity(), OnMapReadyCallback {
         //get arguments from bundle.
         endLat = args.googlePlaceModel.geometry!!.location!!.lat
         endLng = args.googlePlaceModel.geometry!!.location!!.lng
-
         placeId = args.googlePlaceModel.placeId!!
+
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         appPermissions = AppPermissions()
