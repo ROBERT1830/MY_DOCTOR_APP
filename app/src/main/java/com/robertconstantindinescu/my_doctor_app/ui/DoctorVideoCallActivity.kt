@@ -28,6 +28,8 @@ class DoctorVideoCallActivity : AppCompatActivity() {
     var agView: AgoraVideoViewer? = null
 
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityDoctorVideoCallBinding.inflate(layoutInflater)
@@ -36,7 +38,6 @@ class DoctorVideoCallActivity : AppCompatActivity() {
         val _intent = intent
         val roomCode: String = _intent.getStringExtra(Constants.ROOM_CODE)!!
 
-        //editText inherits from TextView so we can do it like that.
 
         mBinding.edTextRoomCode.setText(roomCode)
 
@@ -57,16 +58,11 @@ class DoctorVideoCallActivity : AppCompatActivity() {
             }
 
         mBinding.btnCall.setOnClickListener {
-
-
             setUpVideoCall()
 
         }
 
-
     }
-
-
 
     @ExperimentalUnsignedTypes
     private fun setUpVideoCall() {
