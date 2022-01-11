@@ -6,7 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityLoginBinding
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
@@ -26,6 +29,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.ui.DoctorActivity
 import com.robertconstantindinescu.my_doctor_app.ui.PatientActivity
+import com.robertconstantindinescu.my_doctor_app.utils.NetworkListener
+import com.robertconstantindinescu.my_doctor_app.viewmodels.RecipesQueryUtilsViewModel
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,11 +45,16 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var email: String
     private lateinit var password: String
 
+    private lateinit var recipesQueryUtilsViewModel: RecipesQueryUtilsViewModel
+    private lateinit var networkListener: NetworkListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+
+        recipesQueryUtilsViewModel =
+            ViewModelProvider(this).get(RecipesQueryUtilsViewModel::class.java)
 
         lifecycleScope.launch(Dispatchers.IO) {
             //val uid = FirebaseAuth.getInstance().currentUser?.uid
@@ -65,63 +75,85 @@ class LoginActivity : AppCompatActivity() {
             Log.i("isDoctor", isDoctor.toString())
 
         }
-
+// TODO: 11/1/22 MODULARIZAR 
 
         loadingDialog = LoadingDialog(this)
 
-        with(mBinding) {
-            //llamas a una función con que tiene como parametro una lambda.
-            //if you put this, the context will be the mBinding (not what we want)
-            btnSignUp.setOnClickListener {
-                startActivity(
-                    Intent(
-                        this@LoginActivity,
-                        SignUpChooseUsrActivity::class.java
-                    )
-                )
+        recipesQueryUtilsViewModel.readBackOnline.observe(this, Observer {
+            recipesQueryUtilsViewModel.backOnline = it
+        })
+        lifecycleScope.launch {
+            networkListener = NetworkListener()
+            networkListener.checkNetworkAvailability(this@LoginActivity).collect { status ->
 
-            }
-        }
+                Log.d("NetworkListener", status.toString())
+                recipesQueryUtilsViewModel.networkStatus = status
+                recipesQueryUtilsViewModel.showNetworkStatus()
 
-        //Login
-        mBinding.btnLogin.setOnClickListener {
-            if (areFieldsReady()) {
-                lifecycleScope.launchWhenStarted {
+                if(recipesQueryUtilsViewModel.networkStatus){
+                    with(mBinding) {
+                        //llamas a una función con que tiene como parametro una lambda.
+                        //if you put this, the context will be the mBinding (not what we want)
+                        btnSignUp.setOnClickListener {
+                            startActivity(
+                                Intent(
+                                    this@LoginActivity,
+                                    SignUpChooseUsrActivity::class.java
+                                )
+                            )
 
-                    loginViewModel.login(email, password).collect { loginResult ->
-                        when (loginResult) {
-                            is State.Loading -> {
-                                if (loginResult.flag == true) loadingDialog.startLoading()
-                            }
-                            is State.Succes -> {
-
-                                loadingDialog.stopLoading()
-                                Snackbar.make(
-                                    mBinding.root,
-                                    loginResult.data.toString(),
-                                    Snackbar.LENGTH_SHORT
-                                ).show()
-
-                                lifecycleScope.launch(Dispatchers.IO) {
-                                    checkUserAccesLevel()
-
-                                }
-
-                            }
-                            is State.Failed -> {
-                                loadingDialog.stopLoading()
-                                Snackbar.make(
-                                    mBinding.root,
-                                    loginResult.error,
-                                    Snackbar.LENGTH_SHORT
-                                ).show()
-                            }
                         }
                     }
-                }
-            }
 
+                    //Login
+                    mBinding.btnLogin.setOnClickListener {
+                        if (areFieldsReady()) {
+                            lifecycleScope.launchWhenStarted {
+
+                                loginViewModel.login(email, password).collect { loginResult ->
+                                    when (loginResult) {
+                                        is State.Loading -> {
+                                            if (loginResult.flag == true) loadingDialog.startLoading()
+                                        }
+                                        is State.Succes -> {
+
+                                            loadingDialog.stopLoading()
+                                            Snackbar.make(
+                                                mBinding.root,
+                                                loginResult.data.toString(),
+                                                Snackbar.LENGTH_SHORT
+                                            ).show()
+
+                                            lifecycleScope.launch(Dispatchers.IO) {
+                                                checkUserAccesLevel()
+
+                                            }
+
+                                        }
+                                        is State.Failed -> {
+                                            loadingDialog.stopLoading()
+                                            Snackbar.make(
+                                                mBinding.root,
+                                                loginResult.error,
+                                                Snackbar.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+                }else{
+                    recipesQueryUtilsViewModel.showNetworkStatus()
+                }
+
+            }
         }
+
+
+
     }
 
     private fun checkUserAccesLevel() {
