@@ -3,8 +3,8 @@ package com.robertconstantindinescu.my_doctor_app.viewmodels
 import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
-import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RadiationFragment.Companion.latitude
-import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RadiationFragment.Companion.longitude
+import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.recipes.RadiationFragment.Companion.latitude
+import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.recipes.RadiationFragment.Companion.longitude
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.API_KEY
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_API
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.QUERY_LATITUDE

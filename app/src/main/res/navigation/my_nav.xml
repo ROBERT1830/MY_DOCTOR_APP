@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/radiationFragment"
-        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RadiationFragment"
+        android:name="com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.recipes.RadiationFragment"
         android:label="Radiation"
         tools:layout="@layout/fragment_radiation"/>
     <fragment
