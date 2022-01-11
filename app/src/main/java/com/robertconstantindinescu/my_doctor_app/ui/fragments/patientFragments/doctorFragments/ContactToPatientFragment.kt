@@ -48,6 +48,7 @@ class ContactToPatientFragment : Fragment(), ContactPatientInterface {
 
     private var mPosition: Int? = null
     private var videoCallClicked = false
+    private var viewItem: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,17 +100,17 @@ class ContactToPatientFragment : Fragment(), ContactPatientInterface {
 
     private fun changeDeleteCallButtonVisibility() {
         Log.d("changeDeleteCallButtonVisibility", "--->changeDeleteCallButtonVisibility called")
-        var viewItem: View? = null
+
         if (videoCallClicked) {
             viewItem = mBinding.recyclerViewPatientsToCall.layoutManager
                 ?.findViewByPosition(mPosition!!)!!
 
-            viewItem.imgView_deleteCall.visibility = View.VISIBLE
+            viewItem!!.imgView_deleteCall.visibility = View.VISIBLE
             videoCallClicked = false
             mPosition = 0
         } else {
             if (viewItem != null) {
-                viewItem.imgView_deleteCall.visibility = View.GONE
+                viewItem!!.imgView_deleteCall.visibility = View.GONE
                 videoCallClicked = false
                 mPosition = 0
             }
@@ -158,6 +159,10 @@ class ContactToPatientFragment : Fragment(), ContactPatientInterface {
         val alertDialog = AlertDialog.Builder(requireContext())
         alertDialog.setTitle(resources.getString(com.robertconstantindinescu.my_doctor_app.R.string.delete_call))
         alertDialog.setPositiveButton("YES", DialogInterface.OnClickListener { _, _ ->
+
+//            viewItem = mBinding.recyclerViewPatientsToCall.layoutManager
+//                ?.findViewByPosition(mPosition!!)!!
+            viewItem!!.imgView_deleteCall.visibility = View.GONE
             patientsToCallList.removeAt(position)
 
 
