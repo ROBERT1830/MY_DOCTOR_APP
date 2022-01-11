@@ -801,8 +801,11 @@ class RemoteDataSource @Inject constructor(
                                             )
                                         ) {
                                             val cancerDataMap: MutableMap<String, Any> = HashMap()
-                                            cancerDataMap["cancerDataList"] =
-                                                pendingAppointmentDoctorModel.cancerDataList!!
+                                            if (pendingAppointmentDoctorModel.cancerDataList != null){
+                                                cancerDataMap["cancerDataList"] =
+                                                    pendingAppointmentDoctorModel.cancerDataList!!
+                                            }
+
                                             Firebase.database.reference.child("CancelledConfirmedDoctorAppointments")
                                                 .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
                                                 .child(pendingAppointmentDoctorModel.doctorAppointmentKey)

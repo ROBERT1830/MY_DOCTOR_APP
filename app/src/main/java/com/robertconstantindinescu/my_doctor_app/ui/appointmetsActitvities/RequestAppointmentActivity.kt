@@ -138,17 +138,20 @@ class RequestAppointmentActivity : AppCompatActivity(),
             time = editTextTime.text?.trim().toString()
         }
         val view: View? = null
-        val flag = false
+        var flag = false
 
         when {
             description.isEmpty() -> {
                 mBinding.edtDescription.error = resources.getString(R.string.field_required)
+                flag = true
             }
             date.isEmpty() -> {
                 mBinding.editTextDate.error = resources.getString(R.string.field_required)
+                flag = true
             }
             time.isEmpty() -> {
                 mBinding.editTextTime.error = resources.getString(R.string.field_required)
+                flag = true
             }
         }
 
