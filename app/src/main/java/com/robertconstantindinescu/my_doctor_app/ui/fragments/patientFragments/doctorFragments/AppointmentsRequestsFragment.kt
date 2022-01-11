@@ -32,12 +32,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.lang.Exception
 
-//Email
-
-
-import com.robertconstantindinescu.my_doctor_app.utils.emailSender.GMailSender
-
-
 @AndroidEntryPoint
 class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequestsInterface {
 
@@ -47,7 +41,7 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 
     private val mAdapter by lazy { AppointmentsRequestedAdapter(this) }
     private lateinit var requestedDoctorAppointmentsList: ArrayList<PendingDoctorAppointmentModel>
-    private lateinit var doctorAppointmentKeysList: ArrayList<String>
+    //private lateinit var doctorAppointmentKeysList: ArrayList<String>
     private lateinit var loadingDialog: LoadingDialog
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -75,8 +69,8 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
         // Inflate the layout for this fragment
         mBinding = FragmentAppointmentsRequestsBinding.inflate(layoutInflater)
         loadingDialog = LoadingDialog(requireActivity())
-        requestedDoctorAppointmentsList = ArrayList()
-        doctorAppointmentKeysList = ArrayList()
+        //requestedDoctorAppointmentsList = ArrayList()
+        //doctorAppointmentKeysList = ArrayList()
         swipeRefreshLayout = mBinding.swipeRefreshRecycler
 
 
@@ -89,14 +83,19 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 
         setUpRecyclerView()
 
-        lifecycleScope.launchWhenStarted {
-            getRequestedAppointments()
-        }
+
 
 
 
 
         return mBinding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launchWhenStarted {
+            getRequestedAppointments()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -117,8 +116,8 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
             }
         }
 
+        //
     }
-
 
     private suspend fun getRequestedAppointments() {
 
@@ -132,6 +131,7 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
             mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
         } else {
             loadingDialog.stopLoading()
+            mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
             Toast.makeText(
                 requireContext(),
                 "No appointments requested at the moment",
@@ -190,12 +190,6 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
             alertDialog.setCancelable(false).show()
         } else {
 
-
-//            val emailDoctor = pendingAppointmentDoctorModel.doctorModel!!.email
-//            var passwordSender: String = ""
-//
-//
-//            passwordSender = "rjjrjpenaxdnavac"
             val acceptedAppointmentMessage =
                 resources.getString(R.string.accept_appointment_title) +
                         "${pendingAppointmentDoctorModel.doctorModel!!.doctorName}"
@@ -207,18 +201,18 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 
             alertDialog.setPositiveButton("YES", DialogInterface.OnClickListener { _, _ ->
 
-                var lastDoctorAppointmentKeyPosition: Int? = null
-                var doctorAppointmentKeysList = ArrayList<String>()
-
-
+//                var lastDoctorAppointmentKeyPosition: Int? = null
+//                var doctorAppointmentKeysList = ArrayList<String>()
 
 
                 sendEmail(true, pendingAppointmentDoctorModel)
                 cancelAcceptAppointment(pendingAppointmentDoctorModel, acceptedAppointmentMessage, true)
 
+
             })
             alertDialog.setNegativeButton("Cancel", null)
             alertDialog.setCancelable(false).show()
+            fromSavedDoctorNote = false
         }
 
     }
@@ -245,6 +239,7 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 
 //            val emailDoctor = pendingAppointmentDoctorModel.doctorModel!!.email
 //            val passwordSender = "rjjrjpenaxdnavac"
+
 
             sendEmail(false, pendingAppointmentDoctorModel)
             cancelAcceptAppointment(pendingAppointmentDoctorModel, cancelAppointmentMessage, false)
@@ -301,95 +296,6 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
     }
 
 
-//    private fun sendEmailToPatient(
-//        emailDoctor: String,
-//        passwordSender: String,
-//        pendingAppointmentDoctorModel: PendingDoctorAppointmentModel,
-//        accept: Boolean
-//    ) {
-//        var subject = ""
-//        var body = ""
-//
-//        if (accept) {
-//            subject =
-//                "Accepted Appointment with ${pendingAppointmentDoctorModel.doctorModel!!.doctorName}"
-//            body =
-//                "On ${pendingAppointmentDoctorModel.date} at ${pendingAppointmentDoctorModel.time} " +
-//                        "you have an appointment with Dr.${pendingAppointmentDoctorModel.doctorModel.doctorName}. " +
-//                        "Please make sure you will assist"
-//        } else {
-//            subject =
-//                "Appointment with ${pendingAppointmentDoctorModel.doctorModel!!.doctorName} Cancelled"
-//            body = "The main reason is: ${doctorCancelChoice[cancelOption]} "
-//        }
-//
-//        /**
-//         * To send the gmail from doctor to patient, the doctor gmail has to nable less secure app and have 2 stepverification enabled.
-//         * Moreover we had to perform the app pasword from gmail and use ir here.
-//         *
-//         * ---> in the future maybe we will have to make doctor introduce the password but for now i will use
-//         * this one. rjjrjpenaxdnavac.
-//         */
-//        Thread {
-//            try {
-//                val sender = GMailSender(emailDoctor, passwordSender)
-//                sender.sendMail(
-//                    subject,
-//                    "<b>$body</b>",
-//                    emailDoctor,
-//                    pendingAppointmentDoctorModel.patientModel!!.email!!.toString()
-//                )
-//                //makeAlert()
-//            } catch (e: Exception) {
-//                Log.e("SendMail", e.message, e)
-//            }
-//        }.start()
-//
-//
-////        val props = Properties()
-////        props["mail.smtp.auth"] = "true"
-////        props["mail.smtp.starttls.enable"] = "true"
-////        props["mail.smtp.host"] = "smtp.gmail.com"
-////        props["mail.smtp.port"] = "587"
-////        val session = Session.getInstance(props, object : Authenticator() {
-////            override fun getPasswordAuthentication(): PasswordAuthentication {
-////                return PasswordAuthentication(emailDoctor, passwordSender)
-////            }
-////        })
-////
-////
-////        try {
-////            val message = MimeMessage(session)
-////            message.setFrom(InternetAddress(emailDoctor))
-////            message.setRecipients(
-////                Message.RecipientType.TO,
-////                InternetAddress.parse(pendingAppointmentDoctorModel.patientModel!!.email))
-////            message.subject = "Accepted appointment with doctor"
-////            message.setText("The appointment has benn accepted on day tal")
-////            lifecycleScope.launch(Dispatchers.Main) {
-////                Transport.send(message)
-////            }
-////
-////            Toast.makeText(requireContext(), "email send succesfully", Toast.LENGTH_SHORT).show()
-////        }catch (error:MessagingException){
-////            throw RuntimeException(error)
-////        }
-////
-////        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-////        StrictMode.setThreadPolicy(policy)
-//
-//
-//    }
-
-//    private fun makeAlert() {
-//        this.runOnUiThread(Runnable {
-//            Toast.makeText(
-//                this@MainActivity,
-//                "Mail Sent",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        })
-//    }
 
     private fun cancelAcceptAppointment(
         pendingAppointmentDoctorModel: PendingDoctorAppointmentModel,
@@ -397,8 +303,8 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
         appointmentAccepted:Boolean
     ) {
         // TODO: 8/1/22 ver esto porwue me sale null  
-        var lastDoctorAppointmentKeyPosition: Int? = null
-        var doctorAppointmentKeysList = ArrayList<String>()
+        //var lastDoctorAppointmentKeyPosition: Int? = null
+        //var doctorAppointmentKeysList = ArrayList<String>()
         if (appointmentAccepted){
             lifecycleScope.launchWhenStarted {
 //                requestAppointmentsViewModel.getDoctorAppointmentKeys(object : DoctorAppointmentKeysCallBack{
@@ -408,18 +314,14 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 //                    }
 //                })
                 requestAppointmentsViewModel.getDoctorAppointmentKeys(pendingAppointmentDoctorModel)
-                if (lastDoctorAppointmentKeyPosition == null){
-                    lastDoctorAppointmentKeyPosition = 0
-                }
+
             }
         }
-        requestedDoctorAppointmentsList.remove(pendingAppointmentDoctorModel)
+        //requestedDoctorAppointmentsList.remove(pendingAppointmentDoctorModel)
         lifecycleScope.launchWhenStarted {
             requestAppointmentsViewModel.saveCancelDoctorPatientAcceptedAppointment(
                 pendingAppointmentDoctorModel,
-                AppointmentMessage,
-                appointmentAccepted,
-                lastDoctorAppointmentKeyPosition!!
+                AppointmentMessage
             ).collect {
                 when (it) {
                     is State.Loading -> {
@@ -429,8 +331,8 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
                     }
                     is State.Succes -> {
                         loadingDialog.stopLoading()
-                        mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
-                        mAdapter.notifyDataSetChanged()
+                        //mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
+                        //mAdapter.notifyDataSetChanged()
                         //mAdapter.setUpAdapter(requestedDoctorAppointmentsList)
 
                         //mAdapter.delete(pendingAppointmentDoctorModel)

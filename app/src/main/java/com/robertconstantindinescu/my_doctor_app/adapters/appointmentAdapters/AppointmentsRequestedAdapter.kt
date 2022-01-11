@@ -13,21 +13,21 @@ import com.robertconstantindinescu.my_doctor_app.utils.CancerDiffUtil
 class AppointmentsRequestedAdapter(private val pendingDoctorAppointmentRequestInterface: PendingDoctorAppointmentRequestsInterface) :
     RecyclerView.Adapter<AppointmentsRequestedAdapter.MyViewHolder>() {
 
-    private var requestedDoctorAppointments = ArrayList<PendingDoctorAppointmentModel>()
+    private var requestedDoctorAppointments = emptyList<PendingDoctorAppointmentModel>()
 
     fun setUpAdapter(requestedDoctorAppointments: ArrayList<PendingDoctorAppointmentModel>) {
-        val dataDiffUtil = CancerDiffUtil(this.requestedDoctorAppointments, requestedDoctorAppointments)
-        val diffUtilResult = DiffUtil.calculateDiff(dataDiffUtil)
+//        val dataDiffUtil = CancerDiffUtil(this.requestedDoctorAppointments, requestedDoctorAppointments)
+//        val diffUtilResult = DiffUtil.calculateDiff(dataDiffUtil)
         this.requestedDoctorAppointments = requestedDoctorAppointments
         // TODO: 12/12/21 dif util
-        diffUtilResult.dispatchUpdatesTo(this)
+        //diffUtilResult.dispatchUpdatesTo(this)
         notifyDataSetChanged()
     }
 
-     fun delete(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel) {
-        requestedDoctorAppointments.remove(pendingAppointmentDoctorModel)
-        notifyDataSetChanged()
-    }
+//     fun delete(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel) {
+//        requestedDoctorAppointments.remove(pendingAppointmentDoctorModel)
+//        notifyDataSetChanged()
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 

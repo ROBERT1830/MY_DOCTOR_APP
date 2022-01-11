@@ -64,10 +64,10 @@ class RequestAppointmentViewModel @Inject constructor(
     fun saveCancelDoctorPatientAcceptedAppointment(
         pendingAppointmentDoctorModel: PendingDoctorAppointmentModel,
         acceptedAppointmentMessage: String,
-        appointmentAccepted:Boolean,
-        lastDoctorAppointmentKeyPosition: Int
+        //appointmentAccepted:Boolean,
+        //lastDoctorAppointmentKeyPosition: Int
     ) =
-        repository.remote.saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel, acceptedAppointmentMessage, appointmentAccepted, lastDoctorAppointmentKeyPosition)
+        repository.remote.saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel, acceptedAppointmentMessage /*appointmentAccepted lastDoctorAppointmentKeyPosition*/)
 
     suspend fun getAcceptedDoctorAppointments(): ArrayList<AcceptedDoctorAppointmentModel> =
         repository.remote.getAcceptedDoctorAppointments()
