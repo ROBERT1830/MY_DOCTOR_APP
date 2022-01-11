@@ -44,6 +44,7 @@ class RequestAppointmentActivity : AppCompatActivity(),
     private val mAdapter: RequestAppointmentAdapter by lazy {
         RequestAppointmentAdapter(this@RequestAppointmentActivity, mainViewModel, this)
 
+        //
     }
     private lateinit var description: String
     private lateinit var date: String
