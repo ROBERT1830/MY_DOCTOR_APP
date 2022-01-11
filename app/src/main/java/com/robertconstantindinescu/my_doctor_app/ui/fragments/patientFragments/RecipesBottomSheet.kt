@@ -29,9 +29,13 @@ import com.robertconstantindinescu.my_doctor_app.viewmodels.RecipesQueryUtilsVie
 import kotlinx.android.synthetic.main.fragment_recipes_bottom_sheet.view.*
 import java.lang.Exception
 import java.util.*
+import androidx.appcompat.app.AppCompatActivity
 
 
-class RecipesBottomSheet : BottomSheetDialogFragment() /*RecipesBottomSheetInterface*/ {
+
+
+
+class RecipesBottomSheet : Fragment() /*RecipesBottomSheetInterface*/ {
 
     private  lateinit var recipesQueryUtilsViewModel: RecipesQueryUtilsViewModel
 
@@ -66,6 +70,8 @@ class RecipesBottomSheet : BottomSheetDialogFragment() /*RecipesBottomSheetInter
         arguments?.let {
 
         }
+        //activity?.actionBar?.hide()
+        //(activity as AppCompatActivity?)!!.supportActionBar!!.hide()
         recipesQueryUtilsViewModel = ViewModelProvider(requireActivity()).get(RecipesQueryUtilsViewModel::class.java)
     }
 
@@ -208,6 +214,11 @@ class RecipesBottomSheet : BottomSheetDialogFragment() /*RecipesBottomSheetInter
                 Log.d("RecipesBottomSheet", e.message.toString())
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
     }
 
 
