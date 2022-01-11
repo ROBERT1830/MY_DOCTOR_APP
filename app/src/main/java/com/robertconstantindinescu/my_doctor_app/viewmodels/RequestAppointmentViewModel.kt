@@ -4,6 +4,7 @@ import android.app.Application
 import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.recyclerview.widget.RecyclerView
+import com.robertconstantindinescu.my_doctor_app.interfaces.DoctorAppointmentKeysCallBack
 import com.robertconstantindinescu.my_doctor_app.models.Repository
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.*
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
@@ -62,9 +63,11 @@ class RequestAppointmentViewModel @Inject constructor(
 
     fun saveCancelDoctorPatientAcceptedAppointment(
         pendingAppointmentDoctorModel: PendingDoctorAppointmentModel,
-        acceptedAppointmentMessage: String
+        acceptedAppointmentMessage: String,
+        appointmentAccepted:Boolean,
+        lastDoctorAppointmentKeyPosition: Int
     ) =
-        repository.remote.saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel, acceptedAppointmentMessage)
+        repository.remote.saveDoctorPatientAcceptedAppointment(pendingAppointmentDoctorModel, acceptedAppointmentMessage, appointmentAccepted, lastDoctorAppointmentKeyPosition)
 
     suspend fun getAcceptedDoctorAppointments(): ArrayList<AcceptedDoctorAppointmentModel> =
         repository.remote.getAcceptedDoctorAppointments()
@@ -72,6 +75,9 @@ class RequestAppointmentViewModel @Inject constructor(
     suspend fun getDoctorNotes(patientAppointmentModel: PendingPatientAppointmentModel): ArrayList<CancerDoctorNote> =
         repository.remote.getDoctorNotes(patientAppointmentModel)
 
+    fun getDoctorAppointmentKeys(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel){
+        repository.remote.getDoctorAppointmentKeys(pendingAppointmentDoctorModel)
+    }
 
 
 //    fun getDoctorNotes(recyclerView: RecyclerView): ArrayList<String> {

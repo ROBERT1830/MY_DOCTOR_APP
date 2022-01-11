@@ -28,6 +28,9 @@ class DoctorVideoCallActivity : AppCompatActivity() {
     var agView: AgoraVideoViewer? = null
 
 
+    companion object{
+        var deletePatientCalled:Boolean = false
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +61,8 @@ class DoctorVideoCallActivity : AppCompatActivity() {
             }
 
         mBinding.btnCall.setOnClickListener {
+            deletePatientCalled = true
+
             setUpVideoCall()
 
         }

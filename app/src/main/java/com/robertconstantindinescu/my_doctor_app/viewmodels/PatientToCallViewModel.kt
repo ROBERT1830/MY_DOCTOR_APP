@@ -52,6 +52,8 @@ class PatientToCallViewModel @Inject constructor(
 
     }
 
+    suspend fun deletePatientCalled(position: Int) = repository.remote.deletePatientCalled(position)
+
     //fun sendNotificationToPatient(notification: PushNotificationModel) = repository.remote.sendNotificationToPatient(notification)
 
 }

@@ -13,13 +13,11 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.ktx.storage
-import com.google.gson.Gson
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.*
 import com.robertconstantindinescu.my_doctor_app.models.googlePlaceModel.GooglePlaceModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.PatientModel
-import com.robertconstantindinescu.my_doctor_app.models.notificationModels.NotificationDataModel
 import com.robertconstantindinescu.my_doctor_app.models.notificationModels.PushNotificationModel
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.FoodRecipeApi
@@ -28,7 +26,6 @@ import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.Notif
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.radiationIndex.UVResponse
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.network.UvRadiationApi
 import com.robertconstantindinescu.my_doctor_app.models.onlineData.recipesModels.FoodRecipeResponse
-import com.robertconstantindinescu.my_doctor_app.models.placesModel.SavedPlaceModel
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.CANCER_PATH
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PROFILE_PATH
 import com.robertconstantindinescu.my_doctor_app.utils.State
@@ -41,6 +38,13 @@ import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import com.google.firebase.database.DatabaseError
+
+import com.google.firebase.database.DataSnapshot
+
+import com.google.firebase.database.ValueEventListener
+
+import com.google.firebase.database.FirebaseDatabase
 
 
 class RemoteDataSource @Inject constructor(
@@ -298,7 +302,8 @@ class RemoteDataSource @Inject constructor(
             Firebase.database.getReference("Users").child(auth.uid!!).child("Saved Locations")
 
         val database =
-            Firebase.database.getReference("Places").child(auth.uid!!).child(googlePlaceModel.placeId!!).get().await()
+            Firebase.database.getReference("Places").child(auth.uid!!)
+                .child(googlePlaceModel.placeId!!).get().await()
         //if the database Places does not exists, create the model and add it into firebase.
         if (!database.exists()) {
 //            val savePlaceModel = SavedPlaceModel(
@@ -308,7 +313,7 @@ class RemoteDataSource @Inject constructor(
 //                googlePlaceModel.geometry.location.lng!!, googlePlaceModel.icon!!,
 //                googlePlaceModel.vicinity!!
 //            )
-            addPlace(googlePlaceModel ,auth)
+            addPlace(googlePlaceModel, auth)
         }
 
         //add the place id to the userSavedLocaitonId places
@@ -706,13 +711,50 @@ class RemoteDataSource @Inject constructor(
 
         }.catch { emit(State.failed(it.message!!)) }.flowOn(Dispatchers.IO)
 
+    /**
+     * ------------------------------------------------------------------------------
+     */
     fun saveDoctorPatientAcceptedAppointment(
         pendingAppointmentDoctorModel: PendingDoctorAppointmentModel,
-        acceptedAppointmentMessage: String
+        acceptedAppointmentMessage: String,
+        appointmentAccepted: Boolean,
+        lastDoctorAppointmentKeyPosition: Int
     ): Flow<State<Any>> =
         flow<State<Any>> {
             emit(State.loading(true))
 
+//            if (appointmentAccepted) {
+//                val doctorAppointmentKeysMap: MutableMap<String, Any> = HashMap()
+//                doctorAppointmentKeysMap["$lastDoctorAppointmentKeyPosition"] =
+//                    pendingAppointmentDoctorModel.doctorAppointmentKey!!
+//
+//                Firebase.database.reference.child("DoctorAppointmentKeys")
+//                    .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
+//                    .updateChildren(doctorAppointmentKeysMap).addOnCompleteListener {
+//
+//
+//                    }.addOnFailureListener {
+//
+//                    }
+//
+//
+////                val cancerL = ArrayList<CancerDataFirebaseModel>()
+////                val cancerDataMap: MutableMap<String, Any> =
+////                    HashMap()
+////
+////                //cancerDataMap["cancerDataList"] = ArrayList<CancerDataFirebaseModel>()
+////
+////
+////                for (c in cancerDataFirebaseModelList) {
+////                    cancerL.add(c)
+////                }
+////                cancerDataMap["cancerDataList"] = cancerL
+////                Firebase.database.reference.child("PendingDoctorAppointments")
+////                    /*.child(doctorModel.doctorLiscence.toString())*/
+////                    .child(doctorModel.firebaseId!!)
+////                    .child(doctorAppointmentKey.toString())
+////                    .setValue(cancerDataMap)
+//            }
             Firebase.database.reference.child("PendingDoctorAppointments")
                 .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
                 .child(pendingAppointmentDoctorModel.doctorAppointmentKey!!).removeValue()
@@ -1072,8 +1114,8 @@ class RemoteDataSource @Inject constructor(
                 .child(auth.uid!!).child(patientAppointmentKey!!).child("doctorNotesList")
         val data = database!!.get().await()
 
-        if(data.exists()){
-            for (d in data.children){
+        if (data.exists()) {
+            for (d in data.children) {
                 val cancerDoctorNote: CancerDoctorNote = d.getValue(CancerDoctorNote::class.java)!!
                 doctorNotesList.add(cancerDoctorNote)
             }
@@ -1086,22 +1128,124 @@ class RemoteDataSource @Inject constructor(
 
     suspend fun getSavedPlaces(): java.util.ArrayList<GooglePlaceModel> {
 
-        var googlePlaceModelList = ArrayList<GooglePlaceModel>()
+        val googlePlaceModelList = ArrayList<GooglePlaceModel>()
         val auth = Firebase.auth
 
-        var dataBase = Firebase.database.reference.child("Places").child(auth.uid!!)
+        val dataBase = Firebase.database.reference.child("Places").child(auth.uid!!)
         val data = dataBase!!.get().await()
-        if (data.exists()){
-            for (d in data.children){
+        if (data.exists()) {
+            for (d in data.children) {
                 val googlePlaceModel: GooglePlaceModel = d.getValue(GooglePlaceModel::class.java)!!
                 googlePlaceModelList.add(googlePlaceModel)
             }
         }
 
-        return  googlePlaceModelList
+        return googlePlaceModelList
 
 
     }
+
+
+    fun getDoctorAppointmentKeys(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel) {
+
+        //val doctorAppointmentKeysList = ArrayList<String>()
+        var counter: Int = 0
+        val auth = Firebase.auth
+
+
+        // TODO: 7/1/22 VER COMO SACAR DE AQUI EL SIZE CON UN CALLBACK MIO 
+        val root = FirebaseDatabase.getInstance().reference
+        val users = root.child("DoctorAppointmentKeys").child(auth.uid!!)
+        users.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    for (d in snapshot.children) {
+                        //val doctorAppointmentKey: String = d.getValue(String::class.java)!!
+                        //doctorAppointmentKeysList.add("1")
+                        counter++
+                    }
+                    createDoctorAppointmentKeysBranch(
+                        pendingAppointmentDoctorModel,
+                        counter
+                        //doctorAppointmentKeysList.size
+                    )
+
+                } else {
+                    createDoctorAppointmentKeysBranch(
+                        pendingAppointmentDoctorModel,
+                        counter
+                        //doctorAppointmentKeysList.size
+                    )
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        })
+
+    }
+
+    private fun createDoctorAppointmentKeysBranch(
+        pendingAppointmentDoctorModel: PendingDoctorAppointmentModel,
+        doctorAppointmentKeysList: Int = 0
+    ) {
+
+        val doctorAppointmentKeysMap: MutableMap<String, Any> = HashMap()
+        doctorAppointmentKeysMap["$doctorAppointmentKeysList"] =
+            pendingAppointmentDoctorModel.doctorAppointmentKey!!
+
+        Firebase.database.reference.child("DoctorAppointmentKeys")
+            .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
+            .updateChildren(doctorAppointmentKeysMap).addOnCompleteListener {
+
+            }.addOnFailureListener {
+
+            }
+    }
+
+    suspend fun deletePatientCalled(position: Int): Flow<State<Any>> = flow<State<Any>> {
+        emit(State.loading(true))
+
+        var doctorAppointmentKeysList = ArrayList<String>()
+        var requiredDoctorAppointmentKey: String? = null
+        var generalDoctorAppointmentKey: String? = null
+        var deleteDoctorAppointmentKey: Boolean = false
+        val map: MutableMap<String, Any> = HashMap()
+
+        val auth = Firebase.auth
+        val database = Firebase.database.reference.child("DoctorAppointmentKeys").child(auth.uid!!)
+        val data = database.get().await()
+        if (data.exists()){
+            for (d in data.children){
+                if (d.key == position.toString()){
+                    requiredDoctorAppointmentKey = d.getValue(String::class.java)
+                }
+                generalDoctorAppointmentKey = d.getValue(String::class.java)
+                doctorAppointmentKeysList.add(generalDoctorAppointmentKey!!)
+            }
+        }
+        Firebase.database.reference.child("PatientsToCall").child(auth.uid!!)
+            .child(requiredDoctorAppointmentKey!!).removeValue().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    doctorAppointmentKeysList.removeAt(position)
+                    for ((index, value) in doctorAppointmentKeysList.withIndex()){
+                        map[index.toString()] = value
+                    }
+                    Firebase.database.reference.child("DoctorAppointmentKeys").child(auth.uid!!).setValue(map).addOnCompleteListener {
+                        Firebase.database.reference.child("CancelledConfirmedDoctorAppointments")
+                                .child(auth.uid!!)
+                                .child(requiredDoctorAppointmentKey)
+                                .removeValue()
+                                .addOnSuccessListener {
+
+                                }.addOnFailureListener { }
+                    }.addOnFailureListener {  }
+                }
+            }
+        emit(State.succes("The call has been deleted"))
+
+
+    }.catch { State.failed<Any>(it.message!!.toString()) }.flowOn(Dispatchers.IO)
+
 
 }
 

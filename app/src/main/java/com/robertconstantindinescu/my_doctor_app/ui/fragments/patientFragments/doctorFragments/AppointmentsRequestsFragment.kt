@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.AppointmentsRequestedAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAppointmentsRequestsBinding
+import com.robertconstantindinescu.my_doctor_app.interfaces.DoctorAppointmentKeysCallBack
 import com.robertconstantindinescu.my_doctor_app.interfaces.PendingDoctorAppointmentRequestsInterface
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.FROM_SAVE_DOCTOR_NOTES
@@ -46,6 +47,7 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 
     private val mAdapter by lazy { AppointmentsRequestedAdapter(this) }
     private lateinit var requestedDoctorAppointmentsList: ArrayList<PendingDoctorAppointmentModel>
+    private lateinit var doctorAppointmentKeysList: ArrayList<String>
     private lateinit var loadingDialog: LoadingDialog
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -74,6 +76,7 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
         mBinding = FragmentAppointmentsRequestsBinding.inflate(layoutInflater)
         loadingDialog = LoadingDialog(requireActivity())
         requestedDoctorAppointmentsList = ArrayList()
+        doctorAppointmentKeysList = ArrayList()
         swipeRefreshLayout = mBinding.swipeRefreshRecycler
 
 
@@ -204,12 +207,14 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 
             alertDialog.setPositiveButton("YES", DialogInterface.OnClickListener { _, _ ->
 
+                var lastDoctorAppointmentKeyPosition: Int? = null
+                var doctorAppointmentKeysList = ArrayList<String>()
+
+
+
+
                 sendEmail(true, pendingAppointmentDoctorModel)
-                cancelAcceptAppointment(pendingAppointmentDoctorModel, acceptedAppointmentMessage)
-
-
-                //sendEmailToPatient(emailDoctor!!, passwordSender, pendingAppointmentDoctorModel, true)
-
+                cancelAcceptAppointment(pendingAppointmentDoctorModel, acceptedAppointmentMessage, true)
 
             })
             alertDialog.setNegativeButton("Cancel", null)
@@ -242,7 +247,7 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 //            val passwordSender = "rjjrjpenaxdnavac"
 
             sendEmail(false, pendingAppointmentDoctorModel)
-            cancelAcceptAppointment(pendingAppointmentDoctorModel, cancelAppointmentMessage)
+            cancelAcceptAppointment(pendingAppointmentDoctorModel, cancelAppointmentMessage, false)
             //sendEmailToPatient(emailDoctor!!, passwordSender, pendingAppointmentDoctorModel, false)
 
 
@@ -388,13 +393,33 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 
     private fun cancelAcceptAppointment(
         pendingAppointmentDoctorModel: PendingDoctorAppointmentModel,
-        AppointmentMessage: String
+        AppointmentMessage: String,
+        appointmentAccepted:Boolean
     ) {
+        // TODO: 8/1/22 ver esto porwue me sale null  
+        var lastDoctorAppointmentKeyPosition: Int? = null
+        var doctorAppointmentKeysList = ArrayList<String>()
+        if (appointmentAccepted){
+            lifecycleScope.launchWhenStarted {
+//                requestAppointmentsViewModel.getDoctorAppointmentKeys(object : DoctorAppointmentKeysCallBack{
+//                    override fun onGetAppointmentKeysCallBack(doctorAppointmentKeysList: ArrayList<String>) {
+//                        lastDoctorAppointmentKeyPosition = doctorAppointmentKeysList.size
+//                        Log.d("lastDoctorAppointmentKeyPosition", lastDoctorAppointmentKeyPosition.toString())
+//                    }
+//                })
+                requestAppointmentsViewModel.getDoctorAppointmentKeys(pendingAppointmentDoctorModel)
+                if (lastDoctorAppointmentKeyPosition == null){
+                    lastDoctorAppointmentKeyPosition = 0
+                }
+            }
+        }
         requestedDoctorAppointmentsList.remove(pendingAppointmentDoctorModel)
         lifecycleScope.launchWhenStarted {
             requestAppointmentsViewModel.saveCancelDoctorPatientAcceptedAppointment(
                 pendingAppointmentDoctorModel,
-                AppointmentMessage
+                AppointmentMessage,
+                appointmentAccepted,
+                lastDoctorAppointmentKeyPosition!!
             ).collect {
                 when (it) {
                     is State.Loading -> {

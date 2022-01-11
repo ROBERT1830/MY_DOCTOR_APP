@@ -88,6 +88,7 @@
     <string name="my_appointments">My Appointments</string>
     <string name="reasson_appointment_cancelation">Choose the reason of appointment cancellation and notify it by email</string>
     <string name="call">Call</string>
+    <string name="delete_call">Do you really want to delete the call?</string>
 
 
     <!--    RECIPES -->

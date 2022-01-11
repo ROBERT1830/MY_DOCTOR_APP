@@ -27,6 +27,7 @@ class ContactToPatientAdapter(private val contactPatientInterface: ContactPatien
 
         val currentRecord = this.patientsToCallList[position]
         holder.binding.listener = contactPatientInterface
+        holder.binding.position = position
         holder.bind(currentRecord)
     }
 
