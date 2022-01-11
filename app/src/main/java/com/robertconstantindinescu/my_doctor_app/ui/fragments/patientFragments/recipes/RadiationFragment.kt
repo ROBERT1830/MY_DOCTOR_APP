@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments
+package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.recipes
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,20 +16,28 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentRadiationBinding
+import com.robertconstantindinescu.my_doctor_app.utils.NetworkListener
 import com.robertconstantindinescu.my_doctor_app.utils.NetworkResult
 import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
 import com.robertconstantindinescu.my_doctor_app.viewmodels.QueryViewModel
+import com.robertconstantindinescu.my_doctor_app.viewmodels.RecipesMainViewModel
+import com.robertconstantindinescu.my_doctor_app.viewmodels.RecipesQueryUtilsViewModel
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_radiation.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+@AndroidEntryPoint
 class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     companion object {
@@ -46,6 +55,9 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var queryViewModel: QueryViewModel
 
+    private lateinit var recipesQueryUtilsViewModel: RecipesQueryUtilsViewModel
+    private lateinit var networkListener: NetworkListener
+
     /******** Get location coordinate ********/
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -60,6 +72,8 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         queryViewModel = ViewModelProvider(requireActivity()).get((QueryViewModel::class.java))
+        recipesQueryUtilsViewModel =
+            ViewModelProvider(requireActivity()).get(RecipesQueryUtilsViewModel::class.java)
     }
 
     /**This annotations is used becase when we use fusedLocationProviderClient.lastLocation
@@ -72,55 +86,65 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentRadiationBinding.inflate(inflater, container, false)
-
-
-
         /**Every time the fragment is launched we have to check for the permisisons.
          * If we have permissions we want to show the data and if the app doesnt have
          * the permission then we will show up the button.*/
-//        setViewVisibility()
-//        binding.btnGrantPermission.setOnClickListener {
-//            requestLocationPermission()
-//        }
-        fusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(requireContext())
 
-        //binding.btnGrantPermission.setOnClickListener {
 
-        //if we dont have the permission when we reach the fragment, then we will request one in else
-        if (hasLocationPermission()) {
-            /*lastLocation is like a get, that returns the last locattion currently
-            * available. if has location, return a Location object to work with*/
-            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-                //if we have a location, then the lambda is activated. And with this
-                //location object we can retrive information from him such as latitude and lingitude
-                /*Moreover, with geoCoder, we can get the city name from those coordinates*/
-                val geoCoder = Geocoder(requireContext())
-                /*with that geoCoder object now we are available to get specific data from
-                * those coordinates. */
-                val currentLocation = geoCoder.getFromLocation(
-                    location.latitude,
-                    location.longitude,
-                    1
-                )
-                latitude = location.latitude
-                longitude = location.longitude
-                countryName = currentLocation.first().countryName
-                localityName = currentLocation.first().locality
-                requestApiData()
+        recipesQueryUtilsViewModel.readBackOnline.observe(viewLifecycleOwner, Observer {
+            recipesQueryUtilsViewModel.backOnline = it
+        })
+        lifecycleScope.launch {
+            networkListener = NetworkListener()
+            networkListener.checkNetworkAvailability(requireContext()).collect { status ->
 
-//                var countryCode = currentLocation.first().countryName
-//                Log.d("RadiationFragment", countryCode)
-//                var subLocality: String = currentLocation.first().locality
-//                Log.d("RadiationFragment", subLocality)
-//                Log.d("RadiationFragment", location.latitude.toString())
-//                Log.d("RadiationFragment", location.longitude.toString())
+                Log.d("NetworkListener", status.toString())
+                recipesQueryUtilsViewModel.networkStatus = status
+                recipesQueryUtilsViewModel.showNetworkStatus()
+
+                if(recipesQueryUtilsViewModel.networkStatus){
+                    fusedLocationProviderClient =
+                        LocationServices.getFusedLocationProviderClient(requireContext())
+                    //if we dont have the permission when we reach the fragment, then we will request one in else
+
+                    if (hasLocationPermission()) {
+                        /*lastLocation is like a get, that returns the last locattion currently
+                        * available. if has location, return a Location object to work with*/
+                        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                            //if we have a location, then the lambda is activated. And with this
+                            //location object we can retrive information from him such as latitude and lingitude
+                            /*Moreover, with geoCoder, we can get the city name from those coordinates*/
+                            val geoCoder = Geocoder(requireContext())
+                            /*with that geoCoder object now we are available to get specific data from
+                            * those coordinates. */
+                            val currentLocation = geoCoder.getFromLocation(
+                                location.latitude,
+                                location.longitude,
+                                1
+                            )
+                            latitude = location.latitude
+                            longitude = location.longitude
+                            countryName = currentLocation.first().countryName
+                            localityName = currentLocation.first().locality
+                            requestApiData()
+
+                        }
+                    } else {
+                        requestLocationPermission()
+
+
+                    }
+
+                }else{
+                    recipesQueryUtilsViewModel.showNetworkStatus()
+                }
+
+
             }
-        } else {
-            requestLocationPermission()
-
-
         }
+
+
+
 
         // TODO: 19/11/21 readback online + networkStatus (NetworkListener) 
         
