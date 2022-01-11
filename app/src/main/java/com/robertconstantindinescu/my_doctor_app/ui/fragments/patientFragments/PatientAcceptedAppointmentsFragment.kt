@@ -130,7 +130,7 @@ class PatientAcceptedAppointmentsFragment : Fragment(), PendingPatientAppointmen
                             is State.Succes -> {
                                 loadingDialog.stopLoading()
                                 mAdapter.setUpAdapter(acceptedPatientAppointmentList)
-                                mAdapter.notifyDataSetChanged()
+                                //mAdapter.notifyDataSetChanged()
                                 Snackbar.make(
                                     mBinding.root,
                                     it.data.toString(),

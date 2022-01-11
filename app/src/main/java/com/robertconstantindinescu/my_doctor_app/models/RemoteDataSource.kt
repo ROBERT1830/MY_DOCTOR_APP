@@ -717,8 +717,8 @@ class RemoteDataSource @Inject constructor(
     fun saveDoctorPatientAcceptedAppointment(
         pendingAppointmentDoctorModel: PendingDoctorAppointmentModel,
         acceptedAppointmentMessage: String,
-        appointmentAccepted: Boolean,
-        lastDoctorAppointmentKeyPosition: Int
+        //appointmentAccepted: Boolean,
+        //lastDoctorAppointmentKeyPosition: Int
     ): Flow<State<Any>> =
         flow<State<Any>> {
             emit(State.loading(true))
