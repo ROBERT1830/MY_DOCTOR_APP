@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import coil.load
 import com.robertconstantindinescu.my_doctor_app.R
+import com.robertconstantindinescu.my_doctor_app.ui.DoctorVideoCallActivity.Companion.deletePatientCalled
 import java.lang.Byte.decode
 import java.sql.Date
 import java.util.*
@@ -27,6 +28,15 @@ class CancerRecordRowBinding {
             imageView.setImageBitmap(bitmap)
 
         }
+
+//        // TODO: 7/1/22 modify
+//        @BindingAdapter("setDeleteButtonVisibility", requireAll = false)
+//        @JvmStatic
+//        fun setDeleteButtonVisibility(imageView: ImageView, int: Int? = null){
+//            if(deletePatientCalled){
+//                imageView.visibility = View.VISIBLE
+//            }else imageView.visibility = View.GONE
+//        }
 
         @BindingAdapter("loadImageFromFirebase")
         @JvmStatic
