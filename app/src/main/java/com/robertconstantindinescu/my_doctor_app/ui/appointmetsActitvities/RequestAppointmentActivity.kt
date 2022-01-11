@@ -79,6 +79,7 @@ class RequestAppointmentActivity : AppCompatActivity(),
                                 editTextDate.text.trim()
                             } at ${editTextTime.text.trim()} ?"
                         )
+
                     alertDialog.setPositiveButton(
                         "Yes",
                         DialogInterface.OnClickListener { _, _ ->
