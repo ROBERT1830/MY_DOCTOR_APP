@@ -13,10 +13,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.AvailableDoctorsAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAvailableDoctorsBinding
 import com.robertconstantindinescu.my_doctor_app.models.loginUsrModels.DoctorModel
+import com.robertconstantindinescu.my_doctor_app.utils.CheckInternet
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
 import com.robertconstantindinescu.my_doctor_app.utils.NetworkListener
 import com.robertconstantindinescu.my_doctor_app.viewmodels.AvailableDoctorsViewModel
@@ -35,8 +37,10 @@ class AvailableDoctorsFragment : Fragment() {
     private lateinit var availableDoctors: ArrayList<DoctorModel>
     private lateinit var loadingDialog: LoadingDialog
 
-    private lateinit var recipesQueryUtilsViewModel: RecipesQueryUtilsViewModel
-    private lateinit var networkListener: NetworkListener
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+
+//    private lateinit var recipesQueryUtilsViewModel: RecipesQueryUtilsViewModel
+//    private lateinit var networkListener: NetworkListener
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +48,6 @@ class AvailableDoctorsFragment : Fragment() {
         arguments?.let {
 
         }
-        recipesQueryUtilsViewModel =
-            ViewModelProvider(requireActivity()).get(RecipesQueryUtilsViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -56,35 +58,48 @@ class AvailableDoctorsFragment : Fragment() {
         mBinding = FragmentAvailableDoctorsBinding.inflate(inflater, container, false)
         loadingDialog = LoadingDialog(requireActivity())
         availableDoctors = ArrayList<DoctorModel>()
+        swipeRefreshLayout = mBinding.swipeRefreshRecycler
 
         setUpRecyclerView()
 
-        recipesQueryUtilsViewModel.readBackOnline.observe(viewLifecycleOwner, Observer {
-            recipesQueryUtilsViewModel.backOnline = it
-        })
-
-        lifecycleScope.launchWhenStarted {
-            networkListener = NetworkListener()
-            networkListener.checkNetworkAvailability(requireContext()).collect { status ->
-
-                Log.d("NetworkListener", status.toString())
-                recipesQueryUtilsViewModel.networkStatus = status
-                recipesQueryUtilsViewModel.showNetworkStatus()
-
-                if(recipesQueryUtilsViewModel.networkStatus){
-
-                    getAvailableDoctors()
-
-                }else{
-                    recipesQueryUtilsViewModel.showNetworkStatus()
-                }
-
+        if(CheckInternet.hasInternetConnection(requireContext())){
+            lifecycleScope.launchWhenStarted {
+                getAvailableDoctors()
             }
+
+        }else{
+            Toast.makeText(
+                requireContext(),
+                resources.getString(R.string.no_internet_connection),
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-
-
         return mBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        swipeRefreshLayout.setOnRefreshListener {
+            if (swipeRefreshLayout.isRefreshing) {
+                swipeRefreshLayout.isRefreshing = false
+            }
+            if(CheckInternet.hasInternetConnection(requireContext())){
+                lifecycleScope.launchWhenStarted {
+                    getAvailableDoctors()
+                    Log.d("requestedDoctorAppointmentsList", availableDoctors.toString())
+                }
+            }else{
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.no_internet_connection),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        }
+
     }
 
     private suspend fun getAvailableDoctors() {
@@ -116,6 +131,8 @@ class AvailableDoctorsFragment : Fragment() {
 
 
     }
+
+
 
 
 }

@@ -4,13 +4,10 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,9 +19,8 @@ import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.Re
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityRequestAppointmentBinding
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import com.robertconstantindinescu.my_doctor_app.utils.*
-import com.robertconstantindinescu.my_doctor_app.utils.emailSender.CheckInternet
+import com.robertconstantindinescu.my_doctor_app.utils.CheckInternet
 import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
-import com.robertconstantindinescu.my_doctor_app.viewmodels.RecipesQueryUtilsViewModel
 import com.robertconstantindinescu.my_doctor_app.viewmodels.RequestAppointmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_request_appointment.*

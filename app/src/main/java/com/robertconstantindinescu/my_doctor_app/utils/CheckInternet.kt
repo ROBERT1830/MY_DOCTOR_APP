@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_doctor_app.utils.emailSender
+package com.robertconstantindinescu.my_doctor_app.utils
 
 import android.app.Application
 import android.content.Context
@@ -6,8 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.internal.Contexts.getApplication
+
 
 
 class CheckInternet {
