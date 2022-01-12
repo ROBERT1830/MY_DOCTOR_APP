@@ -21,6 +21,7 @@ class RequestAppointmentAdapter(
 
     interface OnItemClickListener{
         fun onItemClickListener(cancerDataEntity: CancerDataEntity)
+
     }
 
 
