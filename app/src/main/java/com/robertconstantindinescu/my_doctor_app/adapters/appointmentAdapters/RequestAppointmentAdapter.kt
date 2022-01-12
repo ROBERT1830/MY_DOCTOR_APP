@@ -1,6 +1,7 @@
 package com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters
 
 import android.app.Activity
+import android.util.Log
 import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -9,6 +10,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityRequestApointmentRowBinding
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
+import com.robertconstantindinescu.my_doctor_app.ui.appointmetsActitvities.RequestAppointmentActivity
+import com.robertconstantindinescu.my_doctor_app.ui.appointmetsActitvities.RequestAppointmentActivity.Companion.cancerDataList
 import com.robertconstantindinescu.my_doctor_app.utils.CancerDiffUtil
 import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_cancer_records_row.view.*
@@ -20,7 +23,8 @@ class RequestAppointmentAdapter(
 ): RecyclerView.Adapter<RequestAppointmentAdapter.MyViewHolder>(), ActionMode.Callback {
 
     interface OnItemClickListener{
-        fun onItemClickListener(cancerDataEntity: CancerDataEntity)
+        fun onAddClickListener(cancerDataEntity: CancerDataEntity, position: Int)
+        fun onDeleteClickListener(cancerDataEntity: CancerDataEntity, position: Int)
 
     }
 
@@ -30,8 +34,12 @@ class RequestAppointmentAdapter(
     private lateinit var rootView: View
 
     private var multiSelection = false
+    private var onDestroyActionMode = false
     private var selectedCancerRecord = arrayListOf<CancerDataEntity>()
     private var myViewHolders = arrayListOf<MyViewHolder>()
+
+
+    private var itemClickPositionsList: MutableList<Int> = ArrayList()
 
 
 
@@ -55,8 +63,11 @@ class RequestAppointmentAdapter(
         holder.itemView.cancerRecordsRowLayout.setOnLongClickListener {
             if (!multiSelection){
                 multiSelection = true
+                onDestroyActionMode = false
                 activity.startActionMode(this)
-                itemClickListener.onItemClickListener(currentRecord)
+                itemClickListener.onAddClickListener(currentRecord, position)
+                itemClickPositionsList.add(position)
+
                 applySelection(holder, currentRecord)
                 true
             }else{
@@ -68,8 +79,18 @@ class RequestAppointmentAdapter(
         holder.itemView.cancerRecordsRowLayout.setOnClickListener {
             if (multiSelection){
                 applySelection(holder, currentRecord)
-                itemClickListener.onItemClickListener(currentRecord)
+                if (itemClickPositionsList.contains(position)){
+                    itemClickListener.onDeleteClickListener(currentRecord, position)
+                    itemClickPositionsList.remove(position)
+                }
 
+                else{
+                    if (!onDestroyActionMode){
+                        itemClickPositionsList.add(position)
+                        itemClickListener.onAddClickListener(currentRecord, position)
+                    }
+
+                }
             }
         }
 
@@ -118,6 +139,11 @@ class RequestAppointmentAdapter(
         when(selectedCancerRecord.size){
             0 -> {
                 mActionMode.finish()
+
+
+                Log.d("finishActionMode --> itemClickPositionsList", "$itemClickPositionsList")
+
+
             }
             1 -> { //if we select only one recipe change the title
                 mActionMode.title = "${selectedCancerRecord.size} item selected"
@@ -170,6 +196,10 @@ class RequestAppointmentAdapter(
     }
 
     override fun onDestroyActionMode(mode: ActionMode?) {
+        onDestroyActionMode = true
+        itemClickPositionsList.clear()
+        RequestAppointmentActivity.cancerDataList.clear()
+        Log.d("finishActionMode --> cancerDataList", "$cancerDataList")
         myViewHolders.forEach { holder ->
             changeCancerRecordStyle(holder, R.color.cardBackgroundColor, R.color.strokeColor)
         }
