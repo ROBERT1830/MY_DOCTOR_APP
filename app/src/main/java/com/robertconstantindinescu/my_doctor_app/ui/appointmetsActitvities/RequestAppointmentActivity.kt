@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -37,7 +38,12 @@ class RequestAppointmentActivity : AppCompatActivity(),
 
     private val mainViewModel: MainViewModel by viewModels()
     private val requestAppointmentViewModel: RequestAppointmentViewModel by viewModels()
-    private var cancerDataList = mutableListOf<CancerDataEntity /*CancerDataFirebaseModel*/>()
+
+    companion object{
+         var cancerDataList = mutableListOf<CancerDataEntity /*CancerDataFirebaseModel*/>()
+    }
+
+
 
     private val mAdapter: RequestAppointmentAdapter by lazy {
         RequestAppointmentAdapter(this@RequestAppointmentActivity, mainViewModel, this)
@@ -209,11 +215,28 @@ class RequestAppointmentActivity : AppCompatActivity(),
 
     }
 
-    override fun onItemClickListener(cancerDataEntity: CancerDataEntity) {
+//    override fun onItemClickListener(cancerDataEntity: CancerDataEntity, position: Int) {
+//
+//        ItemClickPositionsList.add(position)
+//        // TODO: 11/12/21 we have discovered a nice feature. every time we click an result to be sended we can display a litle image of the cancer that will be sended.
+//        //mBinding.imgtest.load(cancerDataEntity.img)
+//
+//
+//        cancerDataList.add(cancerDataEntity)
+//
+//
+//
+//    }
 
-        // TODO: 11/12/21 we have discovered a nice feature. every time we click an result to be sended we can display a litle image of the cancer that will be sended.
-        //mBinding.imgtest.load(cancerDataEntity.img)
+    override fun onAddClickListener(cancerDataEntity: CancerDataEntity, position:Int) {
         cancerDataList.add(cancerDataEntity)
-
+        Log.d("add --> cancerDataList", "${cancerDataList.size} --> position $position")
     }
+
+    override fun onDeleteClickListener(cancerDataEntity: CancerDataEntity, position:Int) {
+        cancerDataList.remove(cancerDataEntity)
+        Log.d("delete --> cancerDataList", "${cancerDataList.size} --> position $position")
+    }
+
+
 }
