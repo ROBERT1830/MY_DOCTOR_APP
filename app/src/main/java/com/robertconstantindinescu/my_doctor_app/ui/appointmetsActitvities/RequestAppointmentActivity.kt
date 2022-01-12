@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,11 +20,9 @@ import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.RequestAppointmentAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityRequestAppointmentBinding
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
-import com.robertconstantindinescu.my_doctor_app.utils.DatePicker
-import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
-import com.robertconstantindinescu.my_doctor_app.utils.State
-import com.robertconstantindinescu.my_doctor_app.utils.TimePicker
+import com.robertconstantindinescu.my_doctor_app.utils.*
 import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
+import com.robertconstantindinescu.my_doctor_app.viewmodels.RecipesQueryUtilsViewModel
 import com.robertconstantindinescu.my_doctor_app.viewmodels.RequestAppointmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_request_appointment.*
@@ -41,6 +41,9 @@ class RequestAppointmentActivity : AppCompatActivity(),
     private val requestAppointmentViewModel: RequestAppointmentViewModel by viewModels()
     private var cancerDataList = mutableListOf<CancerDataEntity /*CancerDataFirebaseModel*/>()
 
+    private lateinit var recipesQueryUtilsViewModel: RecipesQueryUtilsViewModel
+    private lateinit var networkListener: NetworkListener
+
     private val mAdapter: RequestAppointmentAdapter by lazy {
         RequestAppointmentAdapter(this@RequestAppointmentActivity, mainViewModel, this)
 
@@ -54,6 +57,12 @@ class RequestAppointmentActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         mBinding = ActivityRequestAppointmentBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+
+        recipesQueryUtilsViewModel =
+            ViewModelProvider(this).get(RecipesQueryUtilsViewModel::class.java)
+        recipesQueryUtilsViewModel.readBackOnline.observe(this, Observer {
+            recipesQueryUtilsViewModel.backOnline = it
+        })
 
         loadingDialog = LoadingDialog(this)
         mBinding.lifecycleOwner = this
@@ -69,6 +78,8 @@ class RequestAppointmentActivity : AppCompatActivity(),
             buttonTime.setOnClickListener {
                 showTimePickerDialog()
             }
+
+
             buttonSendRequest.setOnClickListener {
                 // TODO: 10/12/21 check for valid fields
                 if (fieldsAreReady()) {
@@ -83,37 +94,9 @@ class RequestAppointmentActivity : AppCompatActivity(),
                         "Yes",
                         DialogInterface.OnClickListener { _, _ ->
                             lifecycleScope.launchWhenStarted {
-                                requestAppointmentViewModel.createPendingDoctorPatientAppointment(
-                                    args.doctorModel,
-                                    cancerDataList, description!!, date!!, time!!
-                                ).collect {
-                                    when (it) {
-                                        is State.Loading -> {
-                                            if (it.flag == true) {
-                                                loadingDialog.startLoading()
-                                            }
-                                        }
-                                        is State.Succes -> {
-                                            loadingDialog.stopLoading()
-                                            // TODO: 11/12/21 here we can make a toast
-                                            Snackbar.make(
-                                                mBinding.root,
-                                                it.data.toString(),
-                                                Snackbar.LENGTH_LONG
-                                            ).show()
-                                            // TODO: 11/12/21 here we can use the scroll event in the snackbar so that it finishes go to the fargment by using onbackpress. we have used that when delete a location.  
 
-                                        }
-                                        is State.Failed -> {
-                                            loadingDialog.stopLoading()
-                                            Snackbar.make(
-                                                mBinding.root,
-                                                it.error,
-                                                Snackbar.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                    }
-                                }
+                                createPendingDoctorPatientAppointment()
+
                             }
 
                         })
@@ -128,6 +111,41 @@ class RequestAppointmentActivity : AppCompatActivity(),
             txtView_doctorName.text = args.doctorModel.doctorName.toString()
             txtView_doctorEmail.text = args.doctorModel.email.toString()
             txtView_doctorLiscence.text = args.doctorModel.doctorLiscence.toString()
+        }
+    }
+
+    private suspend fun createPendingDoctorPatientAppointment() {
+
+        requestAppointmentViewModel.createPendingDoctorPatientAppointment(
+            args.doctorModel,
+            cancerDataList, description!!, date!!, time!!
+        ).collect {
+            when (it) {
+                is State.Loading -> {
+                    if (it.flag == true) {
+                        loadingDialog.startLoading()
+                    }
+                }
+                is State.Succes -> {
+                    loadingDialog.stopLoading()
+                    // TODO: 11/12/21 here we can make a toast
+                    Snackbar.make(
+                        mBinding.root,
+                        it.data.toString(),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    // TODO: 11/12/21 here we can use the scroll event in the snackbar so that it finishes go to the fargment by using onbackpress. we have used that when delete a location.
+
+                }
+                is State.Failed -> {
+                    loadingDialog.stopLoading()
+                    Snackbar.make(
+                        mBinding.root,
+                        it.error,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
     }
 
@@ -185,7 +203,7 @@ class RequestAppointmentActivity : AppCompatActivity(),
 
     @SuppressLint("SetTextI18n")
     private fun onDateSelected(day: Int, month: Int, year: Int) {
-        mBinding.editTextDate.setText("$day-$month-$year")
+        mBinding.editTextDate.text = "$day-$month-$year"
 
     }
 

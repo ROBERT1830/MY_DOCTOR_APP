@@ -723,38 +723,6 @@ class RemoteDataSource @Inject constructor(
         flow<State<Any>> {
             emit(State.loading(true))
 
-//            if (appointmentAccepted) {
-//                val doctorAppointmentKeysMap: MutableMap<String, Any> = HashMap()
-//                doctorAppointmentKeysMap["$lastDoctorAppointmentKeyPosition"] =
-//                    pendingAppointmentDoctorModel.doctorAppointmentKey!!
-//
-//                Firebase.database.reference.child("DoctorAppointmentKeys")
-//                    .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
-//                    .updateChildren(doctorAppointmentKeysMap).addOnCompleteListener {
-//
-//
-//                    }.addOnFailureListener {
-//
-//                    }
-//
-//
-////                val cancerL = ArrayList<CancerDataFirebaseModel>()
-////                val cancerDataMap: MutableMap<String, Any> =
-////                    HashMap()
-////
-////                //cancerDataMap["cancerDataList"] = ArrayList<CancerDataFirebaseModel>()
-////
-////
-////                for (c in cancerDataFirebaseModelList) {
-////                    cancerL.add(c)
-////                }
-////                cancerDataMap["cancerDataList"] = cancerL
-////                Firebase.database.reference.child("PendingDoctorAppointments")
-////                    /*.child(doctorModel.doctorLiscence.toString())*/
-////                    .child(doctorModel.firebaseId!!)
-////                    .child(doctorAppointmentKey.toString())
-////                    .setValue(cancerDataMap)
-//            }
             Firebase.database.reference.child("PendingDoctorAppointments")
                 .child(pendingAppointmentDoctorModel.doctorFirebaseId!!)
                 .child(pendingAppointmentDoctorModel.doctorAppointmentKey!!).removeValue()
