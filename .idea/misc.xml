@@ -64,7 +64,7 @@
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.37681159420289856" />
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.2874873353596758" />
         <entry key="app/src/main/res/layout/fragment_password_change.xml" value="0.3215258855585831" />
-        <entry key="app/src/main/res/layout/fragment_patient_accepted_appointments.xml" value="0.2884012539184953" />
+        <entry key="app/src/main/res/layout/fragment_patient_accepted_appointments.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_patient_accepted_appointments_row.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_patient_appointment_details.xml" value="0.3567708333333333" />
         <entry key="app/src/main/res/layout/fragment_patient_appointment_detatails_cancerdata_row.xml" value="0.1" />
