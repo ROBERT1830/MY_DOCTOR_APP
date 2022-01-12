@@ -63,7 +63,7 @@ class AvailableDoctorsFragment : Fragment() {
             recipesQueryUtilsViewModel.backOnline = it
         })
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             networkListener = NetworkListener()
             networkListener.checkNetworkAvailability(requireContext()).collect { status ->
 
@@ -72,6 +72,7 @@ class AvailableDoctorsFragment : Fragment() {
                 recipesQueryUtilsViewModel.showNetworkStatus()
 
                 if(recipesQueryUtilsViewModel.networkStatus){
+
                     getAvailableDoctors()
 
                 }else{

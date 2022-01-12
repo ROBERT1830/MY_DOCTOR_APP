@@ -90,7 +90,6 @@
     <string name="call">Call</string>
     <string name="delete_call">Do you really want to delete the call?</string>
 
-
     <!--    RECIPES -->
 
     <string name="meal_type">Meal Type</string>
@@ -152,4 +151,7 @@
 
     <string name="storage_perm_denies">Storage permission denied</string>
 
+<!--    InternetConnection-->
+
+    <string name="no_internet_connection">No internet connection</string>
 </resources>
