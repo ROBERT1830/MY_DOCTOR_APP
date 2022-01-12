@@ -31,6 +31,8 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.opengl.Visibility
 import android.util.Log
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.robertconstantindinescu.my_doctor_app.utils.CheckInternet
 import kotlinx.android.synthetic.main.fragment_contact_to_patient_row.view.*
 import kotlinx.coroutines.flow.collect
 
@@ -45,6 +47,7 @@ class ContactToPatientFragment : Fragment(), ContactPatientInterface {
 
     private lateinit var patientsToCallList: ArrayList<PatientModel>
     private lateinit var loadingDialog: LoadingDialog
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     private var mPosition: Int? = null
     private var videoCallClicked = false
@@ -65,31 +68,42 @@ class ContactToPatientFragment : Fragment(), ContactPatientInterface {
         mBinding = FragmentContactToPatientBinding.inflate(inflater, container, false)
         loadingDialog = LoadingDialog(requireActivity())
         patientsToCallList = ArrayList()
-
+        swipeRefreshLayout = mBinding.swipeRefreshRecycler
         setUpRecyclerView()
 
-        lifecycleScope.launchWhenStarted {
-            loadingDialog.startLoading()
-            patientsToCallList = patientToCallViewModel.getPatientsToCall()
-            if (!patientsToCallList.isNullOrEmpty()) {
-                loadingDialog.stopLoading()
-                mAdapter.setUpAdapter(patientsToCallList)
-            } else {
-                loadingDialog.stopLoading()
-                Toast.makeText(
-                    requireContext(),
-                    "No available patients to call at the moment",
-                    Toast.LENGTH_SHORT
-                ).show()
+        if(CheckInternet.hasInternetConnection(requireContext())){
+            lifecycleScope.launchWhenStarted {
+                getPatientsToCall()
+
             }
+
+        }else{
+            Toast.makeText(
+                requireContext(),
+                resources.getString(com.robertconstantindinescu.my_doctor_app.R.string.no_internet_connection),
+                Toast.LENGTH_SHORT
+            ).show()
         }
-
-
-
-
 
         return mBinding.root
     }
+
+    private suspend fun getPatientsToCall() {
+        loadingDialog.startLoading()
+        patientsToCallList = patientToCallViewModel.getPatientsToCall()
+        if (!patientsToCallList.isNullOrEmpty()) {
+            loadingDialog.stopLoading()
+            mAdapter.setUpAdapter(patientsToCallList)
+        } else {
+            loadingDialog.stopLoading()
+            Toast.makeText(
+                requireContext(),
+                "No available patients to call at the moment",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -97,6 +111,33 @@ class ContactToPatientFragment : Fragment(), ContactPatientInterface {
             changeDeleteCallButtonVisibility()
         }
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        swipeRefreshLayout.setOnRefreshListener {
+            if (swipeRefreshLayout.isRefreshing) {
+                swipeRefreshLayout.isRefreshing = false
+            }
+            if(CheckInternet.hasInternetConnection(requireContext())){
+                lifecycleScope.launchWhenStarted {
+                    getPatientsToCall()
+
+                }
+
+            }else{
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(com.robertconstantindinescu.my_doctor_app.R.string.no_internet_connection),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        }
+
+
+    }
+
 
     private fun changeDeleteCallButtonVisibility() {
         Log.d("changeDeleteCallButtonVisibility", "--->changeDeleteCallButtonVisibility called")
@@ -130,70 +171,89 @@ class ContactToPatientFragment : Fragment(), ContactPatientInterface {
 
         // TODO: 7/1/22 we can pass he position from here and the use that position, or store it ina  global variable and then use it to acces the imageview from recycler child.
 
-        this.mPosition = position
-        videoCallClicked = true
-        //generate the random room string
-        val source = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        val roomCode = java.util.Random().ints(10, 0, source.length)
-            .asSequence()
-            .map(source::get)
-            .joinToString("")
+        if(CheckInternet.hasInternetConnection(requireContext())){
+            this.mPosition = position
+            videoCallClicked = true
+            //generate the random room string
+            val source = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            val roomCode = java.util.Random().ints(10, 0, source.length)
+                .asSequence()
+                .map(source::get)
+                .joinToString("")
 
-        PushNotificationModel(
-            NotificationDataModel(
-                "Hi ${patientModel.patientName}",
-                "You have a video call appointment with the next code $roomCode"
-            ), patientModel.appToken!!
-        ).also {
-            sendNotificationToPatient(it)
+            PushNotificationModel(
+                NotificationDataModel(
+                    "Hi ${patientModel.patientName}",
+                    "You have a video call appointment with the next code $roomCode"
+                ), patientModel.appToken!!
+            ).also {
+                sendNotificationToPatient(it)
+            }
+
+            val intent = Intent(requireContext(), DoctorVideoCallActivity::class.java)
+            intent.putExtra(ROOM_CODE, roomCode)
+            startActivity(intent)
+        }else{
+            Toast.makeText(
+                requireContext(),
+                resources.getString(com.robertconstantindinescu.my_doctor_app.R.string.no_internet_connection),
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        val intent = Intent(requireContext(), DoctorVideoCallActivity::class.java)
-        intent.putExtra(ROOM_CODE, roomCode)
-        startActivity(intent)
 
 
     }
 
     override fun onDeleteCallClick(position: Int) {
-        val alertDialog = AlertDialog.Builder(requireContext())
-        alertDialog.setTitle(resources.getString(com.robertconstantindinescu.my_doctor_app.R.string.delete_call))
-        alertDialog.setPositiveButton("YES", DialogInterface.OnClickListener { _, _ ->
+
+        if(CheckInternet.hasInternetConnection(requireContext())){
+            val alertDialog = AlertDialog.Builder(requireContext())
+            alertDialog.setTitle(resources.getString(com.robertconstantindinescu.my_doctor_app.R.string.delete_call))
+            alertDialog.setPositiveButton("YES", DialogInterface.OnClickListener { _, _ ->
 
 //            viewItem = mBinding.recyclerViewPatientsToCall.layoutManager
 //                ?.findViewByPosition(mPosition!!)!!
-            viewItem!!.imgView_deleteCall.visibility = View.GONE
-            patientsToCallList.removeAt(position)
+                viewItem!!.imgView_deleteCall.visibility = View.GONE
+                patientsToCallList.removeAt(position)
 
 
-            lifecycleScope.launchWhenCreated {
-                patientToCallViewModel.deletePatientCalled(position).collect {
-                    when(it){
-                        is State.Loading ->{
-                            if (it.flag == true){
-                                loadingDialog.startLoading()
+                lifecycleScope.launchWhenCreated {
+                    patientToCallViewModel.deletePatientCalled(position).collect {
+                        when(it){
+                            is State.Loading ->{
+                                if (it.flag == true){
+                                    loadingDialog.startLoading()
+                                }
                             }
-                        }
-                        is State.Succes ->{
-                            loadingDialog.stopLoading()
-                            mAdapter.setUpAdapter(patientsToCallList)
-                            mAdapter.notifyDataSetChanged()
-                            Snackbar.make(mBinding.root, it.data.toString(), Snackbar.LENGTH_SHORT).show()
-                        }
-                        is State.Failed -> {
-                            loadingDialog.stopLoading()
-                            Snackbar.make(
-                                mBinding.root,
-                                it.error.toString(),
-                                Snackbar.LENGTH_LONG
-                            ).show()
+                            is State.Succes ->{
+                                loadingDialog.stopLoading()
+                                mAdapter.setUpAdapter(patientsToCallList)
+                                mAdapter.notifyDataSetChanged()
+                                Snackbar.make(mBinding.root, it.data.toString(), Snackbar.LENGTH_SHORT).show()
+                            }
+                            is State.Failed -> {
+                                loadingDialog.stopLoading()
+                                Snackbar.make(
+                                    mBinding.root,
+                                    it.error.toString(),
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+                            }
                         }
                     }
                 }
-            }
-        }).setNegativeButton("CANCEL", DialogInterface.OnClickListener { _, _ ->
-            null
-        }).show()
+            }).setNegativeButton("CANCEL", DialogInterface.OnClickListener { _, _ ->
+                null
+            }).show()
+        }else{
+            Toast.makeText(
+                requireContext(),
+                resources.getString(com.robertconstantindinescu.my_doctor_app.R.string.no_internet_connection),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
     }
 
     private fun sendNotificationToPatient(notification: PushNotificationModel) {

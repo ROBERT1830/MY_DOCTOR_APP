@@ -46,19 +46,20 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var password: String
 
     private lateinit var recipesQueryUtilsViewModel: RecipesQueryUtilsViewModel
-    private lateinit var networkListener: NetworkListener
+    private  var networkListener: NetworkListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        networkListener = NetworkListener()
 
         recipesQueryUtilsViewModel =
             ViewModelProvider(this).get(RecipesQueryUtilsViewModel::class.java)
 
         lifecycleScope.launch(Dispatchers.IO) {
             //val uid = FirebaseAuth.getInstance().currentUser?.uid
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            if (FirebaseAuth.getInstance().currentUser != null) {
                 checkUserAccesLevel()
             }
 
@@ -84,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
         })
         lifecycleScope.launch {
             networkListener = NetworkListener()
-            networkListener.checkNetworkAvailability(this@LoginActivity).collect { status ->
+            networkListener!!.checkNetworkAvailability(this@LoginActivity).collect { status ->
 
                 Log.d("NetworkListener", status.toString())
                 recipesQueryUtilsViewModel.networkStatus = status
@@ -196,11 +197,6 @@ class LoginActivity : AppCompatActivity() {
         uidRef.addListenerForSingleValueEvent(valueEventListener)
     }
 
-    override fun onStart() {
-        super.onStart()
-
-    }
-
     private fun areFieldsReady(): Boolean {
         with(mBinding) {
             email = edtEmail.text.trim().toString()
@@ -235,5 +231,15 @@ class LoginActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    /**
+     * Here we destroy the networkListener so that in the remaining app, we will handle the internet connection and
+     * avoid memory leaks. If we don't do that the networklistener will be listening for internet connection each and every time.
+     */
+    override fun onStop() {
+        super.onStop()
+        finish()
+        networkListener = null
     }
 }

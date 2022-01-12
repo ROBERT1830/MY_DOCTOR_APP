@@ -23,6 +23,7 @@ import com.robertconstantindinescu.my_doctor_app.databinding.FragmentAppointment
 import com.robertconstantindinescu.my_doctor_app.interfaces.DoctorAppointmentKeysCallBack
 import com.robertconstantindinescu.my_doctor_app.interfaces.PendingDoctorAppointmentRequestsInterface
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
+import com.robertconstantindinescu.my_doctor_app.utils.CheckInternet
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.FROM_SAVE_DOCTOR_NOTES
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.doctorCancelChoice
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
@@ -66,11 +67,10 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         mBinding = FragmentAppointmentsRequestsBinding.inflate(layoutInflater)
         loadingDialog = LoadingDialog(requireActivity())
-        //requestedDoctorAppointmentsList = ArrayList()
-        //doctorAppointmentKeysList = ArrayList()
+
         swipeRefreshLayout = mBinding.swipeRefreshRecycler
 
 
@@ -93,9 +93,18 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
 
     override fun onResume() {
         super.onResume()
-        lifecycleScope.launchWhenStarted {
-            getRequestedAppointments()
+        if (CheckInternet.hasInternetConnection(requireContext())){
+            lifecycleScope.launchWhenStarted {
+                getRequestedAppointments()
+            }
+        }else{
+            Toast.makeText(
+                requireContext(),
+                resources.getString(R.string.no_internet_connection),
+                Toast.LENGTH_SHORT
+            ).show()
         }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -108,11 +117,16 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
             if (swipeRefreshLayout.isRefreshing) {
                 swipeRefreshLayout.isRefreshing = false
             }
-            lifecycleScope.launchWhenStarted {
-
-                getRequestedAppointments()
-                Log.d("requestedDoctorAppointmentsList", requestedDoctorAppointmentsList.toString())
-
+            if (CheckInternet.hasInternetConnection(requireContext())){
+                lifecycleScope.launchWhenStarted {
+                    getRequestedAppointments()
+                }
+            }else{
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.no_internet_connection),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -174,82 +188,94 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
         pendingAppointmentDoctorModel: PendingDoctorAppointmentModel,
         position: Int
     ) {
+        if(CheckInternet.hasInternetConnection(requireContext())){
+            if (!fromSavedDoctorNote) {
+                val alertDialog = AlertDialog.Builder(requireContext())
+                alertDialog.setTitle("Information")
+                    .setMessage(this.resources.getString(R.string.accept_appointment_no_valid))
+                alertDialog.setPositiveButton("GO", DialogInterface.OnClickListener { _, _ ->
+                    val action =
+                        AppointmentsRequestsFragmentDirections.actionRequestedAppointmentsFragmentToPatientAppointmentDetailsActivity(
+                            pendingAppointmentDoctorModel
+                        )
+                    findNavController().navigate(action)
+                })
+                alertDialog.setNegativeButton("Cancel", null)
+                alertDialog.setCancelable(false).show()
+            } else {
 
-        if (!fromSavedDoctorNote) {
-            val alertDialog = AlertDialog.Builder(requireContext())
-            alertDialog.setTitle("Information")
-                .setMessage(this.resources.getString(R.string.accept_appointment_no_valid))
-            alertDialog.setPositiveButton("GO", DialogInterface.OnClickListener { _, _ ->
-                val action =
-                    AppointmentsRequestsFragmentDirections.actionRequestedAppointmentsFragmentToPatientAppointmentDetailsActivity(
-                        pendingAppointmentDoctorModel
-                    )
-                findNavController().navigate(action)
-            })
-            alertDialog.setNegativeButton("Cancel", null)
-            alertDialog.setCancelable(false).show()
-        } else {
+                val acceptedAppointmentMessage =
+                    resources.getString(R.string.accept_appointment_title) +
+                            "${pendingAppointmentDoctorModel.doctorModel!!.doctorName}"
 
-            val acceptedAppointmentMessage =
-                resources.getString(R.string.accept_appointment_title) +
-                        "${pendingAppointmentDoctorModel.doctorModel!!.doctorName}"
+                val alertDialog = AlertDialog.Builder(requireContext())
 
-            val alertDialog = AlertDialog.Builder(requireContext())
+                alertDialog.setTitle("Information")
+                    .setMessage(this.resources.getString(R.string.accept_appointment) /*+ " ${pendingAppointmentDoctorModel.patientModel!!.patientName}"*/)
 
-            alertDialog.setTitle("Information")
-                .setMessage(this.resources.getString(R.string.accept_appointment) /*+ " ${pendingAppointmentDoctorModel.patientModel!!.patientName}"*/)
+                alertDialog.setPositiveButton("YES", DialogInterface.OnClickListener { _, _ ->
 
-            alertDialog.setPositiveButton("YES", DialogInterface.OnClickListener { _, _ ->
+                    sendEmail(true, pendingAppointmentDoctorModel)
+                    cancelAcceptAppointment(pendingAppointmentDoctorModel, acceptedAppointmentMessage, true)
 
-//                var lastDoctorAppointmentKeyPosition: Int? = null
-//                var doctorAppointmentKeysList = ArrayList<String>()
-
-
-                sendEmail(true, pendingAppointmentDoctorModel)
-                cancelAcceptAppointment(pendingAppointmentDoctorModel, acceptedAppointmentMessage, true)
-
-
-            })
-            alertDialog.setNegativeButton("Cancel", null)
-            alertDialog.setCancelable(false).show()
-            fromSavedDoctorNote = false
+                })
+                alertDialog.setNegativeButton("Cancel", null)
+                alertDialog.setCancelable(false).show()
+                fromSavedDoctorNote = false
+            }
+        }else{
+            Toast.makeText(
+                requireContext(),
+                resources.getString(R.string.no_internet_connection),
+                Toast.LENGTH_SHORT
+            ).show()
         }
+
 
     }
 
     override fun onCancelDoctorPendingAppointmentClick(pendingAppointmentDoctorModel: PendingDoctorAppointmentModel) {
 
-        var cancelAppointmentMessage: String = ""
-        val alertDialog = AlertDialog.Builder(requireContext())
-        alertDialog.setTitle(resources.getString(R.string.reasson_appointment_cancelation))
-        alertDialog.setSingleChoiceItems(
-            doctorCancelChoice,
-            0
-        ) { dialogInterface: DialogInterface, position: Int ->
-            cancelOption = position
-            cancelAppointmentMessage =
-                " The appointment with ${pendingAppointmentDoctorModel.doctorModel!!.doctorName} " +
-                        "has been cancelled with the next reason: " +
-                        "" + doctorCancelChoice[position]
-            Toast.makeText(requireContext(), "You selected option $position", Toast.LENGTH_LONG)
-                .show()
-        }
+        if(CheckInternet.hasInternetConnection(requireContext())){
+            var cancelAppointmentMessage: String = ""
+            val alertDialog = AlertDialog.Builder(requireContext())
+            alertDialog.setTitle(resources.getString(R.string.reasson_appointment_cancelation))
+            alertDialog.setSingleChoiceItems(
+                doctorCancelChoice,
+                0
+            ) { dialogInterface: DialogInterface, position: Int ->
+                cancelOption = position
+                cancelAppointmentMessage =
+                    " The appointment with ${pendingAppointmentDoctorModel.doctorModel!!.doctorName} " +
+                            "has been cancelled with the next reason: " +
+                            "" + doctorCancelChoice[position]
+                Toast.makeText(requireContext(), "You selected option $position", Toast.LENGTH_LONG)
+                    .show()
+            }
 
-        alertDialog.setPositiveButton("Accept", DialogInterface.OnClickListener { _, _ ->
+            alertDialog.setPositiveButton("Accept", DialogInterface.OnClickListener { _, _ ->
 
 //            val emailDoctor = pendingAppointmentDoctorModel.doctorModel!!.email
 //            val passwordSender = "rjjrjpenaxdnavac"
 
 
-            sendEmail(false, pendingAppointmentDoctorModel)
-            cancelAcceptAppointment(pendingAppointmentDoctorModel, cancelAppointmentMessage, false)
-            //sendEmailToPatient(emailDoctor!!, passwordSender, pendingAppointmentDoctorModel, false)
+                sendEmail(false, pendingAppointmentDoctorModel)
+                cancelAcceptAppointment(pendingAppointmentDoctorModel, cancelAppointmentMessage, false)
+                //sendEmailToPatient(emailDoctor!!, passwordSender, pendingAppointmentDoctorModel, false)
 
 
-        })
+            })
 
-        alertDialog.setNegativeButton("Cancel", null)
-        alertDialog.setCancelable(false).show()
+            alertDialog.setNegativeButton("Cancel", null)
+            alertDialog.setCancelable(false).show()
+        }else{
+            Toast.makeText(
+                requireContext(),
+                resources.getString(R.string.no_internet_connection),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
 
 
     }
