@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.models.DataStoreRepository
 import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RecipesBottomSheet.Companion.vitaminAChecked
 import com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments.RecipesBottomSheet.Companion.vitaminCChecked

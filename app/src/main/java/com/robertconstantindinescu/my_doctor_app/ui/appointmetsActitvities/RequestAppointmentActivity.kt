@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
@@ -21,6 +22,7 @@ import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.Re
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityRequestAppointmentBinding
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import com.robertconstantindinescu.my_doctor_app.utils.*
+import com.robertconstantindinescu.my_doctor_app.utils.emailSender.CheckInternet
 import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
 import com.robertconstantindinescu.my_doctor_app.viewmodels.RecipesQueryUtilsViewModel
 import com.robertconstantindinescu.my_doctor_app.viewmodels.RequestAppointmentViewModel
@@ -41,9 +43,6 @@ class RequestAppointmentActivity : AppCompatActivity(),
     private val requestAppointmentViewModel: RequestAppointmentViewModel by viewModels()
     private var cancerDataList = mutableListOf<CancerDataEntity /*CancerDataFirebaseModel*/>()
 
-    private lateinit var recipesQueryUtilsViewModel: RecipesQueryUtilsViewModel
-    private lateinit var networkListener: NetworkListener
-
     private val mAdapter: RequestAppointmentAdapter by lazy {
         RequestAppointmentAdapter(this@RequestAppointmentActivity, mainViewModel, this)
 
@@ -58,11 +57,6 @@ class RequestAppointmentActivity : AppCompatActivity(),
         mBinding = ActivityRequestAppointmentBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
-        recipesQueryUtilsViewModel =
-            ViewModelProvider(this).get(RecipesQueryUtilsViewModel::class.java)
-        recipesQueryUtilsViewModel.readBackOnline.observe(this, Observer {
-            recipesQueryUtilsViewModel.backOnline = it
-        })
 
         loadingDialog = LoadingDialog(this)
         mBinding.lifecycleOwner = this
@@ -80,30 +74,42 @@ class RequestAppointmentActivity : AppCompatActivity(),
             }
 
 
+
             buttonSendRequest.setOnClickListener {
-                // TODO: 10/12/21 check for valid fields
-                if (fieldsAreReady()) {
-                    val alertDialog = AlertDialog.Builder(this@RequestAppointmentActivity)
-                    alertDialog.setTitle("Confirmation")
-                        .setMessage(
-                            "Are you sure you want set an appointment with Dr.${args.doctorModel.doctorName} on ${
-                                editTextDate.text.trim()
-                            } at ${editTextTime.text.trim()} ?"
-                        )
-                    alertDialog.setPositiveButton(
-                        "Yes",
-                        DialogInterface.OnClickListener { _, _ ->
-                            lifecycleScope.launchWhenStarted {
 
-                                createPendingDoctorPatientAppointment()
+                if (CheckInternet.hasInternetConnection(this@RequestAppointmentActivity)) {
+                    if (fieldsAreReady()) {
+                        val alertDialog = AlertDialog.Builder(this@RequestAppointmentActivity)
+                        alertDialog.setTitle("Confirmation")
+                            .setMessage(
+                                "Are you sure you want set an appointment with Dr.${args.doctorModel.doctorName} on ${
+                                    editTextDate.text.trim()
+                                } at ${editTextTime.text.trim()} ?"
+                            )
+                        alertDialog.setPositiveButton(
+                            "Yes",
+                            DialogInterface.OnClickListener { _, _ ->
+                                lifecycleScope.launchWhenStarted {
 
-                            }
+                                    createPendingDoctorPatientAppointment()
 
-                        })
-                    alertDialog.setNegativeButton("No", null)
-                    alertDialog.setCancelable(false).show()
+                                }
+
+                            })
+                        alertDialog.setNegativeButton("No", null)
+                        alertDialog.setCancelable(false).show()
+
+                    }
+                } else {
+                    Toast.makeText(
+                        this@RequestAppointmentActivity,
+                        resources.getString(R.string.no_internet_connection),
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                 }
+                // TODO: 10/12/21 check for valid fields
+
             }
         }
         with(mBinding) {
