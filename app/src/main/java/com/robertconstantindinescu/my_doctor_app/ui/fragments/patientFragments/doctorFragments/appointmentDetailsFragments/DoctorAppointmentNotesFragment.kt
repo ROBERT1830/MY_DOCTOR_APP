@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.robertconstantindinescu.my_doctor_app.R
 
 import com.robertconstantindinescu.my_doctor_app.adapters.appointmentAdapters.DoctorAppointmentNotesAdapter
 import com.robertconstantindinescu.my_doctor_app.bindingAdapters.DoctorNotesBinding.Companion.cancerImagesMap
@@ -21,6 +22,7 @@ import com.robertconstantindinescu.my_doctor_app.databinding.FragmentDoctorAppoi
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.DoctorNoteModel
 import com.robertconstantindinescu.my_doctor_app.models.appointmentModels.PendingDoctorAppointmentModel
 import com.robertconstantindinescu.my_doctor_app.ui.DoctorActivity
+import com.robertconstantindinescu.my_doctor_app.utils.CheckInternet
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.FROM_SAVE_DOCTOR_NOTES
 import com.robertconstantindinescu.my_doctor_app.utils.Constants.Companion.PENDING_DOCTOR_APPOINTMENT_MODEL
 import com.robertconstantindinescu.my_doctor_app.utils.LoadingDialog
@@ -67,15 +69,18 @@ class DoctorAppointmentNotes : Fragment() {
         showCancerOutcome()
 
         mBinding.btnSaveNotes.setOnClickListener {
-            getAllDoctorNotes()
+            if (CheckInternet.hasInternetConnection(requireContext())){
+                getAllDoctorNotes()
+            }else{
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.no_internet_connection),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
         }
-
-
-
-
         return mBinding.root
-
     }
 
     private fun getAllDoctorNotes() {
