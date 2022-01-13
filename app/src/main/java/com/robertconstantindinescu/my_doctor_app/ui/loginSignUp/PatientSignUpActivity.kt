@@ -94,7 +94,10 @@ class PatientSignUpActivity : AppCompatActivity() {
                                         mBinding.root, result.data.toString(),
                                         Snackbar.LENGTH_SHORT
                                     ).show()
-                                    onBackPressed()
+                                    val intent = Intent(this@PatientSignUpActivity, LoginActivity::class.java)
+                                    intent.putExtra("fromSignUp", true)
+                                    startActivity(intent)
+                                    finish()
 
                                     FirebaseService.sharedPref =
                                         getSharedPreferences("sharedPref", Context.MODE_PRIVATE)

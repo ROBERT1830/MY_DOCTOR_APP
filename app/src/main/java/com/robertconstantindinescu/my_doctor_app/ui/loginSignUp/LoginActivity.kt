@@ -48,6 +48,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var recipesQueryUtilsViewModel: RecipesQueryUtilsViewModel
     private  var networkListener: NetworkListener? = null
 
+    private var fromSignUp:Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityLoginBinding.inflate(layoutInflater)
@@ -57,25 +59,38 @@ class LoginActivity : AppCompatActivity() {
         recipesQueryUtilsViewModel =
             ViewModelProvider(this).get(RecipesQueryUtilsViewModel::class.java)
 
+        val intent = intent
+        fromSignUp = intent.getBooleanExtra("fromSignUp", false)
+
         lifecycleScope.launch(Dispatchers.IO) {
             //val uid = FirebaseAuth.getInstance().currentUser?.uid
             if (FirebaseAuth.getInstance().currentUser != null) {
-                checkUserAccesLevel()
+                //that's for prevent autologin when came from signUp
+                if (!fromSignUp){
+                    checkUserAccesLevel()
+                }
+
+
             }
 
 
         }
 
-        val isDoctor = false
+        //val isDoctor = false
 
         //get bolean from inteNT
-        val bundle: Bundle? = intent.extras
-        if (bundle != null) {
-            val isDoctor = bundle.getBoolean("isDoctor") // 1
 
-            Log.i("isDoctor", isDoctor.toString())
 
-        }
+
+
+
+//        val bundle: Bundle? = intent.extras
+//        if (bundle != null) {
+//            val isDoctor = bundle.getBoolean("isDoctor") // 1
+//
+//            Log.i("isDoctor", isDoctor.toString())
+//
+//        }
 // TODO: 11/1/22 MODULARIZAR 
 
         loadingDialog = LoadingDialog(this)
