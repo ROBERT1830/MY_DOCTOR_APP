@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -15,16 +18,48 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.ui.loginSignUp.LoginActivity
+import com.robertconstantindinescu.my_doctor_app.utils.NetworkListener
+import com.robertconstantindinescu.my_doctor_app.viewmodels.RecipesQueryUtilsViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
+
+    private lateinit var recipesQueryUtilsViewModel: RecipesQueryUtilsViewModel
+    private  var networkListener: NetworkListener? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
+        recipesQueryUtilsViewModel =
+            ViewModelProvider(this).get(RecipesQueryUtilsViewModel::class.java)
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            checkUserAccessLevel()
-        }, 3000)
+        recipesQueryUtilsViewModel.readBackOnline.observe(this, Observer {
+            recipesQueryUtilsViewModel.backOnline = it
+        })
+
+        lifecycleScope.launch {
+            networkListener = NetworkListener()
+            networkListener!!.checkNetworkAvailability(this@SplashActivity).collect { status ->
+
+                Log.d("NetworkListener", status.toString())
+                recipesQueryUtilsViewModel.networkStatus = status
+                recipesQueryUtilsViewModel.showNetworkStatus()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    if(recipesQueryUtilsViewModel.networkStatus){
+                        checkUserAccessLevel()
+                    }else{
+                        recipesQueryUtilsViewModel.showNetworkStatus()
+                    }
+
+                }, 2000)
+            }
+        }
+
+
     }
 
 
@@ -72,5 +107,10 @@ class SplashActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
+    }
+    override fun onStop() {
+        super.onStop()
+        finish()
+        networkListener = null
     }
 }

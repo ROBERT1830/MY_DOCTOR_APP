@@ -162,6 +162,27 @@ class PatientActivity : AppCompatActivity() {
 
     }
 
+//    override fun onResume() {
+//        super.onResume()
+//        toolbarLayoutBinding = patientBinding.toolbarMain
+//
+////        /**Navigation view to perform click*/
+////        val nav_view: NavigationView = findViewById(R.id.navigationView)
+////        nav_view.setNavigationItemSelectedListener(this)
+////        nav_view.bringToFront();
+//
+//        setSupportActionBar(toolbarLayoutBinding.toolbar)
+//        val toogle = ActionBarDrawerToggle(
+//            this,
+//            navigationDrawerLayoutBinding.navDrawer,
+//            toolbarLayoutBinding.toolbar,
+//            R.string.open_navigation_drawer,
+//            R.string.close_navigation_drawer
+//        )
+//        toogle.syncState()
+//
+//    }
+
     private fun getUserData() {
 
         val database = Firebase.database.getReference("Users").child(firebaseAuth.uid!!)
