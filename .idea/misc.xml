@@ -7,7 +7,9 @@
         <entry key="app/src/main/res/drawable-mdpi/ic_elete.xml" value="0.597948717948718" />
         <entry key="app/src/main/res/drawable-mdpi/ic_menu_book.xml" value="0.1" />
         <entry key="app/src/main/res/drawable-mdpi/ic_star.xml" value="0.42962962962962964" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable-xhdpi/edittext_background.xml" value="0.37962962962962965" />
+        <entry key="app/src/main/res/drawable-xhdpi/ic_launcher_foreground.xml" value="0.12962962962962962" />
         <entry key="app/src/main/res/drawable/gradient_overlay.xml" value="0.2462962962962963" />
         <entry key="app/src/main/res/drawable/ic_acept_appointment.xml" value="0.4388888888888889" />
         <entry key="app/src/main/res/drawable/ic_checkmark.xml" value="0.2462962962962963" />
@@ -100,6 +102,8 @@
         <entry key="app/src/main/res/menu/map_type_menu.xml" value="0.5911458333333334" />
         <entry key="app/src/main/res/menu/navigation_drawer_menu.xml" value="0.5131578947368421" />
         <entry key="app/src/main/res/menu/recipe_details_menu.xml" value="0.5911458333333334" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.39384615384615385" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.39384615384615385" />
       </map>
     </option>
   </component>

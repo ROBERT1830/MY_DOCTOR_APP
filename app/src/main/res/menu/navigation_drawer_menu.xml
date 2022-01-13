@@ -33,12 +33,17 @@
         </menu>
     </item>
 
-    <item
-        android:id="@+id/btnLogOut"
-        android:title="Log Out"
-        android:icon="@drawable/ic_logout_24">
+    <item android:title="Other">
+        <menu>
+            <item
+                android:id="@+id/btnLogOut"
+                android:title="Log Out"
+                android:icon="@drawable/ic_logout_24">
 
+            </item>
+        </menu>
     </item>
+
 <!--    <item android:title="">-->
 <!--        <menu>-->
 <!--            <item-->
