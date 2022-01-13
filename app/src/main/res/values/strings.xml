@@ -23,7 +23,7 @@
     <string name="buttonSelectPhoto">Pick Photo</string>
     <string name="descriptionImage">insert image</string>
     <string name="buttonDiagnose">Get diagnostic</string>
-    <string name="defaultImage">Result</string>
+    <string name="defaultImage">Result: </string>
     <string name="no_cancer_records">No pre-diagnostic records available</string>
     <string name="delete_cancer_record">Delete Cancer Record</string>
     <string name="button_save">Save pre-diagnostic</string>
@@ -154,4 +154,9 @@
 <!--    InternetConnection-->
 
     <string name="no_internet_connection">No internet connection</string>
+
+<!--    DETECTOR ACTIVITY-->
+    <string name="invalid_img">Default picture no valid</string>
+    <string name="ask_for_save_diagnostic">Are you sure to save this pre-diagnostic?</string>
+    <string name="detection_needed">Before save result, get a diagnostic</string>
 </resources>
