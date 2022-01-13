@@ -66,7 +66,7 @@ class DoctorSignUpActivity : AppCompatActivity() {
 
 
         mBinding.txtLogin.setOnClickListener {
-            val intent =  Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             intent.putExtra("isDoctor", true)
             startActivity(intent)
         }
@@ -98,12 +98,21 @@ class DoctorSignUpActivity : AppCompatActivity() {
                                         mBinding.root, result.data.toString(),
                                         Snackbar.LENGTH_SHORT
                                     ).show()
-                                    onBackPressed()
+
+                                    val intent =
+                                        Intent(this@DoctorSignUpActivity, LoginActivity::class.java)
+                                    intent.putExtra("fromSignUp", true)
+                                    startActivity(intent)
+                                    finish()
 
                                     var token = ""
                                     FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-                                        if (!task.isSuccessful){
-                                            Log.w(ContentValues.TAG, "Fetching FCM registration token failed", task.exception)
+                                        if (!task.isSuccessful) {
+                                            Log.w(
+                                                ContentValues.TAG,
+                                                "Fetching FCM registration token failed",
+                                                task.exception
+                                            )
                                             return@addOnCompleteListener
                                         }
                                         token = task.result
@@ -127,7 +136,7 @@ class DoctorSignUpActivity : AppCompatActivity() {
 
                         }
                     }
-                }else{
+                } else {
                     Snackbar.make(
                         mBinding.root,
                         resources.getString(R.string.select_image),
@@ -135,11 +144,6 @@ class DoctorSignUpActivity : AppCompatActivity() {
                     ).show()
                 }
             }
-
-
-
-
-
 
 
         }
@@ -203,6 +207,7 @@ class DoctorSignUpActivity : AppCompatActivity() {
         }
 
     }
+
     private fun areFieldsReady(): Boolean {
         with(mBinding) {
             name = edtUsername.text.trim().toString()
@@ -228,7 +233,7 @@ class DoctorSignUpActivity : AppCompatActivity() {
                 }
             }
             doctorliscence.isEmpty() -> {
-                with(mBinding){
+                with(mBinding) {
                     edtDoctorLiscenceNumber.error = resources.getString(R.string.field_required)
                     flag = true
 

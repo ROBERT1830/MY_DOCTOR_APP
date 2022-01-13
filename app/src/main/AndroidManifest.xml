@@ -30,6 +30,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.My_doctor_app">
         <activity
+            android:name=".ui.SplashActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.appointmetsActitvities.DetailAcceptedPatientAppointmentActivity"
             android:exported="false" />
         <activity
@@ -87,11 +96,7 @@
             android:name=".ui.loginSignUp.LoginActivity"
             android:exported="true"
             android:theme="@style/ActionBarTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.DetectorActivity"
