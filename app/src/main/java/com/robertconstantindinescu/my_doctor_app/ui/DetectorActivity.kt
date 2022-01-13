@@ -1,6 +1,8 @@
 package com.robertconstantindinescu.my_doctor_app.ui
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
@@ -14,6 +16,7 @@ import android.view.Gravity
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
+import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.mlmodel.Classifier
 import com.robertconstantindinescu.my_doctor_app.databinding.ActivityDetectorBinding
 import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
@@ -39,6 +42,9 @@ class DetectorActivity : AppCompatActivity() {
     private val mModelPath = "model.tflite"
     private val mLabelPath = "labels.txt"
     private val mSamplePath = "skin-icon.jpg"
+
+    private var realPicture:Boolean = false
+    private var detectionDone:Boolean = false
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,29 +83,55 @@ class DetectorActivity : AppCompatActivity() {
                 startActivityForResult(callGalleryIntent, mGalleryRequestCode)
             }
             mBinding.mDetectButton.setOnClickListener {
-                /*Cuadno pulsamos el boton de detectar llamamos a la calse mClassifier. que ya la habíamos
-                * inicializado. y llamamso al metodo recognizeImage. */
-                val results = mClassifier.recognizeImage(mBitmap).firstOrNull()
-                mBinding.mResultTextView.text= results?.title+"\n Confidence:"+results?.confidence
-
+                if(realPicture){
+                    detectionDone = true
+                    /*Cuadno pulsamos el boton de detectar llamamos a la calse mClassifier. que ya la habíamos
+                    * inicializado. y llamamso al metodo recognizeImage. */
+                    val results = mClassifier.recognizeImage(mBitmap).firstOrNull()
+                    mBinding.mResultTextView.text= results?.title+" Confidence:"+results?.confidence
+                }else{
+                    Toast.makeText(this,
+                        resources.getString(R.string.invalid_img),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
 
             mBinding.saveButton.setOnClickListener {
-                // TODO: 16/11/21 crear fecha directamente, coger la actual
-                // TODO: 16/11/21 Crar objeto cancerentity
-                // TODO: 16/11/21 guardar objeto usando el viewmodel que hay que inyectarlo
-                val date: String = generateDate()
-                val cancerDataEntity = CancerDataEntity(
-                    date, mBitmap, mBinding.mResultTextView.text.toString()
-                )
+                if(realPicture){
+                    if (detectionDone){
+                        val alertDialog = AlertDialog.Builder(this).setTitle("Information")
+                        alertDialog.setMessage(resources.getString(R.string.ask_for_save_diagnostic))
+                        alertDialog.setPositiveButton("YES", DialogInterface.OnClickListener { _, _ ->
+                            val date: String = generateDate()
+                            val cancerDataEntity = CancerDataEntity(
+                                date, mBitmap, mBinding.mResultTextView.text.toString()
+                            )
+                            saveCancerRecord(cancerDataEntity)
+                            finish()
+                            realPicture = false
+                        }).setNegativeButton("NO", null)
+                            .setCancelable(false).show()
+                        detectionDone = false
+                    }else{
+                        Toast.makeText(this,
+                            resources.getString(R.string.detection_needed),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }else{
+                    Toast.makeText(this,
+                        resources.getString(R.string.invalid_img),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
 
-                saveCancerRecord(cancerDataEntity)
+            }
+
+            mBinding.btnBack.setOnClickListener {
+                finish()
             }
         }
-
-
-
-
     }
 
     private fun saveCancerRecord(cancerDataEntity: CancerDataEntity) {
@@ -127,6 +159,7 @@ class DetectorActivity : AppCompatActivity() {
             //y además los datos que se reciben del intent camera no son nulos
 
             if(resultCode == Activity.RESULT_OK && data != null) {
+                realPicture = true
                 /*Entonces a nuestro Bitmap vamos a asociarle esa foto que viene de la camara
                 * o mejor dicho ese bitmap porque lo casteamos. Y ademas cuando obtenemos ese bitmap
                 * le vamos a asociar una clave, en este caso data. */
@@ -152,6 +185,7 @@ class DetectorActivity : AppCompatActivity() {
                 //con el data hacemos como un get y obtenemos esa uri de la iamgen de al galeria.
                 //devuelve //The URI of the data this intent is targeting
 
+                realPicture = true
                 val uri = data.data
 
                 //ahora con esa uri te creas el bitmap.

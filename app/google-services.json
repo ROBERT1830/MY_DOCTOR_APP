@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1092454787257:android:bc1d034a26e5d541ef5368",
         "android_client_info": {
-          "package_name": "com.robertconstantindinescu.my_doctor"
+          "package_name": "com.robertconstantindinescu.my_doctor_app"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "1092454787257-0qhinq5kc1i1obm6acni3crpqmeesghf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.robertconstantindinescu.my_doctor",
+            "package_name": "com.robertconstantindinescu.my_doctor_app",
             "certificate_hash": "5a3ebab4d9c0f9164ab1a8a7bdad65d17981326b"
           }
         },
