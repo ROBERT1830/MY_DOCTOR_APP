@@ -657,7 +657,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                     super.onDismissed(transientBottomBar, event)
                     //remove place from firebase of the current user logged.
                     lifecycleScope.launchWhenStarted {
-                        locationViewModel.removePlace(userSavedLocationId).collect {
+                        locationViewModel.removePlace(userSavedLocationId, googlePlaceModel.placeId.toString()).collect {
                             when(it){
                                 is State.Loading -> {
                                     if(it.flag == true){

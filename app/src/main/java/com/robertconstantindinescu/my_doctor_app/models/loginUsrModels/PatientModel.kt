@@ -11,7 +11,8 @@ data class PatientModel(
     var email: String? = null,
     var isDoctor:Boolean? = null,
     var firebaseId: String? = null,
-    var appToken: String? = null
+    var appToken: String? = null,
+    var savedLocations: ArrayList<String>? = null
 
 ): Parcelable
 
