@@ -2,6 +2,8 @@ package com.robertconstantindinescu.my_doctor_app.ui.appointmetsActitvities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -29,6 +31,8 @@ class DetailAcceptedPatientAppointmentActivity : AppCompatActivity() {
     private lateinit var cancerDoctorNotesList: ArrayList<CancerDoctorNote>
     private lateinit var loadingDialog: LoadingDialog
 
+    private var areNotesAvailable: Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +44,30 @@ class DetailAcceptedPatientAppointmentActivity : AppCompatActivity() {
 
         setUpRecyclerView()
 
-        lifecycleScope.launchWhenStarted {
-            getCancerDoctorNotes(args.patientAppointmentModel)
+        mBinding.btnBack.setOnClickListener {
+            finish()
         }
+
+        lifecycleScope.launchWhenStarted {
+            areNotesAvailable = getCancerDoctorNotes(args.patientAppointmentModel)
+            Log.d("areNotesAvailable", areNotesAvailable.toString())
+            when(areNotesAvailable){
+                true -> {
+                    mBinding.recyclerViewPatientAcceptedAppointmentDetail.visibility = View.VISIBLE
+                    mBinding.noDataImageView.visibility = View.GONE
+                    mBinding.noDataTextView.visibility = View.GONE
+                }
+                false -> {
+                    mBinding.recyclerViewPatientAcceptedAppointmentDetail.visibility = View.GONE
+                    mBinding.noDataImageView.visibility = View.VISIBLE
+                    mBinding.noDataTextView.visibility = View.VISIBLE
+                }
+            }
+        }
+
+
+
+
 
 
     }
@@ -60,7 +85,7 @@ class DetailAcceptedPatientAppointmentActivity : AppCompatActivity() {
 
     }
 
-    private suspend fun getCancerDoctorNotes(patientAppointmentModel: PendingPatientAppointmentModel) {
+    private suspend fun getCancerDoctorNotes(patientAppointmentModel: PendingPatientAppointmentModel): Boolean {
 
         loadingDialog.startLoading()
         cancerDoctorNotesList = requestAppointmentsViewModel.getDoctorNotes(patientAppointmentModel)
@@ -68,6 +93,7 @@ class DetailAcceptedPatientAppointmentActivity : AppCompatActivity() {
         if (!cancerDoctorNotesList.isNullOrEmpty()){
             loadingDialog.stopLoading()
             mAdapter.setUpAdapter(cancerDoctorNotesList)
+            return true
         }else{
             loadingDialog.stopLoading()
             Toast.makeText(
@@ -76,6 +102,7 @@ class DetailAcceptedPatientAppointmentActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+        return false
 
     }
 

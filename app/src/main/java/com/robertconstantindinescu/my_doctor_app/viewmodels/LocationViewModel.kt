@@ -32,8 +32,8 @@ class LocationViewModel @Inject constructor(
 
     }
 
-    fun removePlace(userSavedLocationId: ArrayList<String>) =
-        repository.remote.removePlace(userSavedLocationId)
+    fun removePlace(userSavedLocationId: ArrayList<String>, googlePlaceId:String) =
+        repository.remote.removePlace(userSavedLocationId, googlePlaceId)
 
     fun addUserPlace(googlePlaceModel: GooglePlaceModel, userSavedLocationId: ArrayList<String>) =
         repository.remote.addUserPlace(googlePlaceModel, userSavedLocationId)

@@ -261,7 +261,7 @@ class RemoteDataSource @Inject constructor(
         val userPlaces = ArrayList<String>()
         val auth = Firebase.auth
         val database =
-            Firebase.database.getReference("Users").child(auth.uid!!).child("Saved Locations")
+            Firebase.database.getReference("Users").child(auth.uid!!).child("savedLocations")
         val data = database.get().await()
         //if we get data...
         if (data.exists()) {
@@ -276,13 +276,15 @@ class RemoteDataSource @Inject constructor(
     }
 
     /** -- REMOVE PLACE -- */
-    fun removePlace(userSavedLocationId: ArrayList<String>) = flow<State<Any>> {
+    fun removePlace(userSavedLocationId: ArrayList<String>, googlePlaceId:String) = flow<State<Any>> {
         emit(State.loading(true))
         val auth = Firebase.auth
         val database =
-            Firebase.database.getReference("Users").child(auth.uid!!).child("Saved Locations")
+            Firebase.database.getReference("Users").child(auth.uid!!).child("savedLocations")
         //set the database with the remaining data not been removed.
         database.setValue(userSavedLocationId).await()
+
+        val placesDatabase = Firebase.database.getReference("Places").child(auth.uid!!).child(googlePlaceId).removeValue()
         emit(State.succes("Remove Successfully"))
 
     }.catch {
@@ -299,7 +301,7 @@ class RemoteDataSource @Inject constructor(
 
         //get reference to Saved Location from current user
         val userDatabase =
-            Firebase.database.getReference("Users").child(auth.uid!!).child("Saved Locations")
+            Firebase.database.getReference("Users").child(auth.uid!!).child("savedLocations")
 
         val database =
             Firebase.database.getReference("Places").child(auth.uid!!)
