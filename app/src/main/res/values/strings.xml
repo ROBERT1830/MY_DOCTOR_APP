@@ -162,4 +162,5 @@
     <string name="no_notes_records">No doctor notes</string>
     <string name="pick_other">Pick other</string>
     <string name="take_other">Take other</string>
+    <string name="records">Records</string>
 </resources>
