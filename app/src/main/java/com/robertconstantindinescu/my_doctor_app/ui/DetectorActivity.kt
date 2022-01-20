@@ -44,7 +44,7 @@ class DetectorActivity : AppCompatActivity() {
     private val mInputSize = 224
     private val mModelPath = "model.tflite"
     private val mLabelPath = "labels.txt"
-    private val mSamplePath = "skin-icon.jpg"
+    private val mSamplePath = "default_ic_detector.jpg"
 
     private var realPicture:Boolean = false
     private var detectionDone:Boolean = false
