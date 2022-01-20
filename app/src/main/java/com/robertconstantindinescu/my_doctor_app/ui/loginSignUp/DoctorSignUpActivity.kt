@@ -259,4 +259,10 @@ class DoctorSignUpActivity : AppCompatActivity() {
 
 
     }
+
+    override fun onStop() {
+        super.onStop()
+        finish()
+
+    }
 }

@@ -145,6 +145,7 @@ class LoginActivity : AppCompatActivity() {
 
                                             }
 
+
                                         }
                                         is State.Failed -> {
                                             loadingDialog.stopLoading()
@@ -254,7 +255,9 @@ class LoginActivity : AppCompatActivity() {
      */
     override fun onStop() {
         super.onStop()
-        finish()
+
         networkListener = null
     }
+
+
 }
