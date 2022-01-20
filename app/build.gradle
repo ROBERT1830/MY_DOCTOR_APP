@@ -206,6 +206,9 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:2.4.0-beta01"
     implementation "androidx.activity:activity-compose:1.4.0"
 
+    //tooltip
+    implementation 'com.github.vihtarb:tooltip:0.1.9'
+
 
 
 

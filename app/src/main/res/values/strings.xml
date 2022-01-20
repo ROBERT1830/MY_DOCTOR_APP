@@ -160,4 +160,6 @@
     <string name="ask_for_save_diagnostic">Are you sure to save this pre-diagnostic?</string>
     <string name="detection_needed">Before save result, get a diagnostic</string>
     <string name="no_notes_records">No doctor notes</string>
+    <string name="pick_other">Pick other</string>
+    <string name="take_other">Take other</string>
 </resources>
