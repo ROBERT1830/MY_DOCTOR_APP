@@ -22,11 +22,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/buttonTakePhoto"
-        android:layout_margin="40dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginBottom="20dp"
 
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
         app:layout_constraintBottom_toTopOf="@+id/mPhotoImageView"/>
 
 
@@ -34,9 +33,9 @@
         android:id="@+id/mGalleryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="40dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/buttonSelectPhoto"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/mPhotoImageView"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -60,6 +59,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/mDetectButton"
         android:layout_marginBottom="8dp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -77,7 +77,9 @@
         android:textAlignment="center"
         android:maxLines="1"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        android:textSize="25dp"
+        android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,11 +90,25 @@
         android:text="@string/button_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_margin="10dp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-
         app:layout_constraintTop_toBottomOf="@id/mResultTextView"/>
+
+    <ImageView
+        android:id="@+id/img_ic_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_info"
+        app:layout_constraintStart_toStartOf="@id/mResultTextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mResultTextView"
+        android:visibility="invisible"
+        android:clickable="true"
+        android:tooltipText="Value between 0.7 - 0.9 means trustable result"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

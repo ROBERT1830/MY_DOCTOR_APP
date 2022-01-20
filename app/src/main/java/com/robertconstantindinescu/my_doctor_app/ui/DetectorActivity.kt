@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Gravity
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
@@ -24,6 +25,8 @@ import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import java.text.SimpleDateFormat
+
+
 
 // TODO: 16/11/21 Tenemos que opne rqeu sera un entry point pq el viewmodel está inyectado.
 @AndroidEntryPoint
@@ -45,6 +48,8 @@ class DetectorActivity : AppCompatActivity() {
 
     private var realPicture:Boolean = false
     private var detectionDone:Boolean = false
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,10 +90,17 @@ class DetectorActivity : AppCompatActivity() {
             mBinding.mDetectButton.setOnClickListener {
                 if(realPicture){
                     detectionDone = true
+
                     /*Cuadno pulsamos el boton de detectar llamamos a la calse mClassifier. que ya la habíamos
                     * inicializado. y llamamso al metodo recognizeImage. */
                     val results = mClassifier.recognizeImage(mBitmap).firstOrNull()
                     mBinding.mResultTextView.text= results?.title+" Confidence:"+results?.confidence
+                    if (results!!.title.contains("Malignant")){
+                        mBinding.mResultTextView.setTextColor(resources.getColor(R.color.red))
+                    }else mBinding.mResultTextView.setTextColor(resources.getColor(R.color.green))
+                    mBinding.mResultTextView.visibility = View.VISIBLE
+                    mBinding.saveButton.visibility = View.VISIBLE
+                    mBinding.imgIcInfo.visibility = View.VISIBLE
                 }else{
                     Toast.makeText(this,
                         resources.getString(R.string.invalid_img),
@@ -96,6 +108,11 @@ class DetectorActivity : AppCompatActivity() {
                     ).show()
                 }
             }
+
+
+
+            //mBinding.imgIcInfo.tooltipText = "Value between 0.7 - 0.9 means trustable result"
+
 
             mBinding.saveButton.setOnClickListener {
                 if(realPicture){
@@ -159,6 +176,8 @@ class DetectorActivity : AppCompatActivity() {
             //y además los datos que se reciben del intent camera no son nulos
 
             if(resultCode == Activity.RESULT_OK && data != null) {
+                mBinding.mDetectButton.visibility = View.VISIBLE
+                mBinding.mCameraButton.text = resources.getString(R.string.pick_other)
                 realPicture = true
                 /*Entonces a nuestro Bitmap vamos a asociarle esa foto que viene de la camara
                 * o mejor dicho ese bitmap porque lo casteamos. Y ademas cuando obtenemos ese bitmap
@@ -181,6 +200,8 @@ class DetectorActivity : AppCompatActivity() {
         } else if(requestCode == mGalleryRequestCode) {
             //si los datos no son nulos
             if (data != null) {
+                mBinding.mDetectButton.visibility = View.VISIBLE
+                mBinding.mGalleryButton.text = resources.getString(R.string.take_other)
                 //Ahora vamos a alamcenarnos la dirección de la imagen de la galeria. Es decir la uri
                 //con el data hacemos como un get y obtenemos esa uri de la iamgen de al galeria.
                 //devuelve //The URI of the data this intent is targeting
