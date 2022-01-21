@@ -277,7 +277,7 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                     response.data?.let {
                         uvIndex = it.current.uvi
                     }
-                    println(uvIndex)
+                    Log.d("uvIndex", uvIndex.toString())
 
                     setUvHeaderInfo(uvIndex)
                     setUvImageInfo(uvIndex)
@@ -313,34 +313,70 @@ class RadiationFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private fun setUvAdviceBody(uvIndex: Double) {
         txtView_advice_title.visibility = View.VISIBLE
         txtView_advice_body.visibility = View.VISIBLE
+
+//        when(uvIndex){
+//             in 0.0..2.0 -> { _binding!!.txtViewAdviceBody.text = getString(R.string.low_risk_body)}
+//             in 3.0..5.0 -> {
+//                _binding!!.txtViewAdviceBody.text = getString(R.string.moderate_risk_body)
+//            }
+//             in 6.0..7.0 -> {
+//                _binding!!.txtViewAdviceBody.text = getString(R.string.high_risk_body)
+//            }
+//             in 8.0..10.0 -> {
+//                _binding!!.txtViewAdviceBody.text = getString(R.string.veryHigh_risk_body)
+//            }
+//            in 11.0..15.0 -> {
+//                _binding!!.txtViewAdviceBody.text = getString(R.string.extreme_risk_body)
+//            }
+//        }
         when{
-            uvIndex in 0.0..2.0 -> { _binding!!.txtViewAdviceBody.text = getString(R.string.low_risk_body)}
-            uvIndex in 3.0..5.0 -> { _binding!!.txtViewAdviceBody.text = getString(R.string.moderate_risk_body) }
-            uvIndex in 6.0..7.0 -> { _binding!!.txtViewAdviceBody.text = getString(R.string.high_risk_body) }
-            uvIndex in 8.0..10.0 -> { _binding!!.txtViewAdviceBody.text = getString(R.string.veryHigh_risk_body) }
-            uvIndex >= 11.0 -> { _binding!!.txtViewAdviceBody.text = getString(R.string.extreme_risk_body) }
+            uvIndex >= 1 -> { _binding!!.txtViewAdviceBody.text = getString(R.string.low_risk_body)}
+            uvIndex >= 3.0 -> {
+                _binding!!.txtViewAdviceBody.text = getString(R.string.moderate_risk_body)
+            }
+            uvIndex >= 6.0 -> {
+                _binding!!.txtViewAdviceBody.text = getString(R.string.high_risk_body)
+            }
+            uvIndex >= 8.0 -> {
+                _binding!!.txtViewAdviceBody.text = getString(R.string.veryHigh_risk_body)
+            }
+            uvIndex >= 11.0 -> {
+                _binding!!.txtViewAdviceBody.text = getString(R.string.extreme_risk_body)
+            }
         }
     }
 
     private fun setUvImageInfo(uvIndex: Double) {
         imgView_info.visibility = View.VISIBLE
         when{
-            uvIndex in 0.0..2.0 -> { _binding!!.imgViewInfo.setImageResource(R.drawable.img_riesgo_bajo) }
-            uvIndex in 3.0..5.0 -> { _binding!!.imgViewInfo.setImageResource(R.drawable.img_riesgo_moderado) }
-            uvIndex in 6.0..7.0 -> { _binding!!.imgViewInfo.setImageResource(R.drawable.img_riesgo_alato) }
-            uvIndex in 8.0..10.0 -> { _binding!!.imgViewInfo.setImageResource(R.drawable.img_riesgo_muy_alto) }
-            uvIndex >= 11.0 -> { _binding!!.imgViewInfo.setImageResource(R.drawable.img_extremo) }
+            uvIndex >= 1  -> { _binding!!.imgViewInfo.setImageResource(R.drawable.img_riesgo_bajo) }
+            uvIndex >= 3.0 -> { _binding!!.imgViewInfo.setImageResource(R.drawable.img_riesgo_moderado) }
+            uvIndex >= 6.0 -> {
+                _binding!!.imgViewInfo.setImageResource(R.drawable.img_riesgo_alato)
+            }
+            uvIndex >= 8.0 -> {
+                _binding!!.imgViewInfo.setImageResource(R.drawable.img_riesgo_muy_alto)
+            }
+            uvIndex >= 11.0 -> {
+                _binding!!.imgViewInfo.setImageResource(R.drawable.img_extremo)
+            }
         }
     }
 
     private fun setUvHeaderInfo(uvIndex: Double) {
-        linear_layout_uvIndex_info.visibility = View.VISIBLE
+        relative_layout_resume.visibility = View.VISIBLE
         when{
-            uvIndex in 0.0..2.0 -> { _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.low_risk) }
-            uvIndex in 3.0..5.0 -> { _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.moderate_risk) }
-            uvIndex in 6.0..7.0 -> { _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.high_risk) }
-            uvIndex in 8.0..10.0 -> { _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.veryHigh_risk) }
-            uvIndex >= 11.0 -> { _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.extreme_risk) }
+            uvIndex >= 1  -> { _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.low_risk) }
+            uvIndex >= 3.0 -> { binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.moderate_risk) }
+            uvIndex >= 6.0 -> {
+                _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.high_risk)
+            }
+            uvIndex >= 8.0 -> {
+                _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.veryHigh_risk)
+            }
+            uvIndex >= 11.0 -> {
+                _binding!!.txtViewTxtInfoUvIndex.text = getString(R.string.extreme_risk)
+            }
 
         }
         _binding!!.txtUvIndexResult.text = uvIndex.toString()
