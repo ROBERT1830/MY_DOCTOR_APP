@@ -65,16 +65,19 @@ class Classifier(assetManager: AssetManager, modelPath: String, labelPath: Strin
     }
 
     /**
-     * A este método le pasamos un bitmap y nos devolvera una dataclas Recognitiion con el diagnostico.
+     * A este método le pasamos un bitmap ya escalado para crear internamente una imagen escalada
+     * @return --> dataclass Recognition con el diagnostico.
      */
     fun recognizeImage(bitmap: Bitmap): List<Recognition> {
-        //El bitmap que obtenemos, y que está en el iamgeview lo escalamos y no le pasamos filtro de alta resolucion
+        //El bitmap que obtenemos, y que está en el iamgeview lo escalamos
+        // y no le pasamos filtro de alta resolucion
         val scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false)
         //Ahora vamos a convertir ese bytmap escalado a bites.
         val byteBuffer = convertBitmapToByteBuffer(scaledBitmap)
         //definimos cual sera el output que nos devuevle el interpreter
         val result = Array(1) { FloatArray(LABEL_LIST.size) }
-        //Corremos el algoritmo en la iamgen o conjunto de byte que hemos pasado y le definimos la longidud del out put pq la del input es la chorizo de bites del buffer
+        //Corremos el algoritmo en la iamgen o conjunto de byte que hemos pasado
+        // y le definimos la longidud del out put porque la del input es el chorizo de bites del buffer
         INTERPRETER.run(byteBuffer, result)
         return getSortedResult(result)
     }

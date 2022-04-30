@@ -142,10 +142,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
             }
 
-        /**Instanciate the fragment that holds the map*/
+        /**Instantiate the fragment that holds the map*/
         val mapFragment =
             (childFragmentManager.findFragmentById(R.id.MapsFragmentMap) as SupportMapFragment)
-        mapFragment?.getMapAsync(this)
+        mapFragment.getMapAsync(this)
 
         /**Create the chipGroup from the array of palces in constants*/
         for (placeModel in Constants.placesName) {
@@ -356,9 +356,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 requestLocation()
             }
 
-
         }
-
 
     }
 
@@ -420,7 +418,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
-                for (location in locationResult?.locations) {
+                for (location in locationResult?.locations!!) {
                     Log.d("TAG", "onLocationResult: ${location.longitude} ${location.latitude}")
                 }
             }
@@ -464,7 +462,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             }
 
         }
-
         getCurrentLocation()
 
     }

@@ -132,8 +132,6 @@ class DoctorAppointmentNotes : Fragment() {
 
     private fun saveNotesIntoFirebase(doctorNotesList: ArrayList<DoctorNoteModel>) {
 
-
-
         lifecycleScope.launchWhenStarted {
 
             requestAppointmentViewModel.saveDoctorNotes(
@@ -149,18 +147,12 @@ class DoctorAppointmentNotes : Fragment() {
                     }
                     is State.Succes -> {
                         loadingDialog.stopLoading()
-                        // TODO: 11/12/21 here we can make a toast
-
-                        // TODO: 16/12/21 Here we will perform a scroll snackbar listener so that when it finishses go to the activity in cuestions
                         Snackbar.make(
                             mBinding.root,
                             it.data.toString(),
                             Snackbar.LENGTH_LONG
                         ).show()
 
-
-//                        val action = DoctorAppointmentNotesDirections.actionDoctorAppointmentNotesToHiltDoctorActivity(true)
-//                        findNavController().navigate(action)
                         val intent = Intent(requireActivity().baseContext, DoctorActivity::class.java)
                         intent.putExtra(FROM_SAVE_DOCTOR_NOTES, true)
                         startActivity(intent)

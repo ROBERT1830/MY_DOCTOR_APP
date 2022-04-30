@@ -34,9 +34,7 @@ class PatientToCallViewModel @Inject constructor(
     }
 
     private suspend fun getDataSafeCall(notification: PushNotificationModel) {
-
         // TODO: 21/12/21 check for internet coneection
-
         try {
             val response = repository.remote.sendNotificationToPatient(notification)
             if (response.isSuccessful){

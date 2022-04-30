@@ -32,20 +32,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--            android:id="@+id/new_detection_fab"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:src="@drawable/ic_add_photo"-->
-<!--            android:clickable="true"-->
-<!--            android:focusable="true"-->
-<!--            android:layout_marginEnd="24dp"-->
-<!--            android:layout_marginBottom="24dp"-->
-<!--            android:visibility="invisible"-->
-<!--            app:layout_constraintEnd_toEndOf="@id/recycler_view_cancerData"-->
-<!--            app:layout_constraintBottom_toBottomOf="@id/recycler_view_cancerData"-->
-<!--            />-->
-
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/new_detection_fab"

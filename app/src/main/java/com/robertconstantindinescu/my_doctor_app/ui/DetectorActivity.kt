@@ -232,21 +232,22 @@ class DetectorActivity : AppCompatActivity() {
 
 
     fun scaleImage(bitmap: Bitmap?): Bitmap {
-        //obtenemos la anchura del bitmap original qeu nos llega a de la cámara.
+        //obtenemos la anchura del bitmap original que nos llega a de la cámara.
         val orignalWidth = bitmap!!.width
         //obtenemos tambien la altura.
         val originalHeight = bitmap!!.height
-        //reeescalamos la imagen  dividientdo 224.0 entre el woth original ---> podemos meter un puto de rutpura pra ver que size tiene.
+        //reeescalamos la imagen  dividientdo 224.0 entre el ancho original --->
+        // puto de rutpura pra ver que size tiene.
         val scaleWidth = mInputSize.toFloat() / orignalWidth
         val scaleHeight = mInputSize.toFloat() / originalHeight
         //Nos creamos una matriz.
         val matrix = Matrix()
-        //escalamos la matriz de acuerdo a la altura y anchira en pixeles.
+        //escalamos la matriz de acuerdo a la altura y anchura en pixeles.
         matrix.postScale(scaleWidth, scaleHeight)
         //devolvemos un bitmap tranformado y escalado según la estrucutra de la matriz que hemos defido
-        //le pasamos el botmap original de la camapara, le decimos que el primer pixel de la posicion x
+        //le pasamos el bitmap original de la camamara, le decimos que el primer pixel de la posicion x
         /*es el cero al igual que el pixel del eje y. Leugo definimos la altura y anchura en pixeles
-        * que sera 224 ¡, la matriz y el filtro. */
+        * que sera 224, la matriz y el filtro. */
         return Bitmap.createBitmap(bitmap, 0, 0, orignalWidth, originalHeight, matrix, true)
     }
 

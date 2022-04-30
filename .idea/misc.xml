@@ -10,6 +10,8 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable-xhdpi/edittext_background.xml" value="0.37962962962962965" />
         <entry key="app/src/main/res/drawable-xhdpi/ic_launcher_foreground.xml" value="0.12962962962962962" />
+        <entry key="app/src/main/res/drawable-xhdpi/map_background.xml" value="0.4485" />
+        <entry key="app/src/main/res/drawable-xxxhdpi/ic_add.xml" value="0.1555" />
         <entry key="app/src/main/res/drawable/gradient_overlay.xml" value="0.2462962962962963" />
         <entry key="app/src/main/res/drawable/ic_acept_appointment.xml" value="0.4388888888888889" />
         <entry key="app/src/main/res/drawable/ic_checkmark.xml" value="0.2462962962962963" />
@@ -52,8 +54,8 @@
         <entry key="app/src/main/res/layout/fragment_appointments_requests_row.xml" value="0.18652849740932642" />
         <entry key="app/src/main/res/layout/fragment_available_doctors.xml" value="0.32971014492753625" />
         <entry key="app/src/main/res/layout/fragment_available_doctors_item.xml" value="0.2803738317757009" />
-        <entry key="app/src/main/res/layout/fragment_cancer_records.xml" value="0.2803951367781155" />
-        <entry key="app/src/main/res/layout/fragment_cancer_records_row.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_cancer_records.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_cancer_records_row.xml" value="0.22962962962962963" />
         <entry key="app/src/main/res/layout/fragment_contact_to_patient.xml" value="0.2874873353596758" />
         <entry key="app/src/main/res/layout/fragment_contact_to_patient_row.xml" value="0.5049342105263158" />
         <entry key="app/src/main/res/layout/fragment_doctor_appointment_notes.xml" value="0.25462962962962965" />
@@ -72,7 +74,7 @@
         <entry key="app/src/main/res/layout/fragment_patient_appointment_details.xml" value="0.3567708333333333" />
         <entry key="app/src/main/res/layout/fragment_patient_appointment_detatails_cancerdata_row.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_pending_patient_appointment.xml" value="0.314" />
-        <entry key="app/src/main/res/layout/fragment_pending_patient_appointments_row.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_pending_patient_appointments_row.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_radiation.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_recipe_over_view.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_recipes.xml" value="0.1" />
@@ -93,7 +95,7 @@
         <entry key="app/src/main/res/layout/toolbar_layout.xml" value="0.3999094202898551" />
         <entry key="app/src/main/res/layout/username_dialog_layout.xml" value="0.33559782608695654" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.43425925925925923" />
-        <entry key="app/src/main/res/menu/cancer_records_contextual_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/cancer_records_contextual_menu.xml" value="0.375" />
         <entry key="app/src/main/res/menu/cancer_records_menu.xml" value="0.45723684210526316" />
         <entry key="app/src/main/res/menu/doctor_bottom_nav_menu.xml" value="0.5911458333333334" />
         <entry key="app/src/main/res/menu/doctor_navigation_drawer_menu.xml" value="0.5820512820512821" />

@@ -95,7 +95,8 @@
         <activity
             android:name=".ui.loginSignUp.LoginActivity"
             android:exported="true"
-            android:theme="@style/ActionBarTheme">
+            android:theme="@style/ActionBarTheme"
+            android:label="Login">
 
         </activity>
         <activity

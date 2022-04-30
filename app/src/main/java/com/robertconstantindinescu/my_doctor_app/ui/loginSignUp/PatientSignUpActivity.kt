@@ -104,14 +104,18 @@ class PatientSignUpActivity : AppCompatActivity() {
 
                                     var token = ""
                                     FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-                                        if (!task.isSuccessful){
-                                            Log.w(ContentValues.TAG, "Fetching FCM registration token failed", task.exception)
+                                        if (!task.isSuccessful) {
+                                            Log.w(
+                                                ContentValues.TAG,
+                                                "Fetching FCM registration token failed",
+                                                task.exception
+                                            )
                                             return@addOnCompleteListener
                                         }
                                         token = task.result
 
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            saveTokenApp(token!!)
+                                            saveTokenApp(token)
                                         }
 
                                         Log.d("token", token.toString())
@@ -249,7 +253,7 @@ class PatientSignUpActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        finish()
+        //finish()
 
     }
 }

@@ -30,7 +30,7 @@
 
 
     <color name="primaryColor">#12A058</color>
-    <color name="primaryDarkColor">#12A058</color>
+    <color name="primaryDarkColor">#43a047</color>
     <color name="accentColor">#12A058</color>
     <color name="textColor">#FFFFFF</color>
     <color name="itemTextColor">#707070</color>

@@ -60,7 +60,7 @@
     <string name="location_permission_message">My Doctor requires location permission
         to acces your location</string>
     <string name="location_update">Location update started</string>
-    <string name="titleLogin">my Doctor App</string>
+    <string name="titleLogin">Klover</string>
     <string name="doctor_registration">Doctor Registration</string>
     <string name="option_login">Kindly Choose One</string>
     <string name="doctor">Doctor</string>
@@ -163,4 +163,5 @@
     <string name="pick_other">Pick other</string>
     <string name="take_other">Take other</string>
     <string name="records">Records</string>
+    <string name="long_press">Long press to start selection</string>
 </resources>

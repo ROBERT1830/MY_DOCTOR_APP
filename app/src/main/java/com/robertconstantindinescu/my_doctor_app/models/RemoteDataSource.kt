@@ -133,7 +133,6 @@ class RemoteDataSource @Inject constructor(
             }
             emit(State.succes("Email verification sent"))
 
-
         }
     }.catch {
         emit(State.failed(it.message!!))
@@ -276,20 +275,23 @@ class RemoteDataSource @Inject constructor(
     }
 
     /** -- REMOVE PLACE -- */
-    fun removePlace(userSavedLocationId: ArrayList<String>, googlePlaceId:String) = flow<State<Any>> {
-        emit(State.loading(true))
-        val auth = Firebase.auth
-        val database =
-            Firebase.database.getReference("Users").child(auth.uid!!).child("savedLocations")
-        //set the database with the remaining data not been removed.
-        database.setValue(userSavedLocationId).await()
+    fun removePlace(userSavedLocationId: ArrayList<String>, googlePlaceId: String) =
+        flow<State<Any>> {
+            emit(State.loading(true))
+            val auth = Firebase.auth
+            val database =
+                Firebase.database.getReference("Users").child(auth.uid!!).child("savedLocations")
+            //set the database with the remaining data not been removed.
+            database.setValue(userSavedLocationId).await()
 
-        val placesDatabase = Firebase.database.getReference("Places").child(auth.uid!!).child(googlePlaceId).removeValue()
-        emit(State.succes("Remove Successfully"))
+            val placesDatabase =
+                Firebase.database.getReference("Places").child(auth.uid!!).child(googlePlaceId)
+                    .removeValue()
+            emit(State.succes("Remove Successfully"))
 
-    }.catch {
-        emit(State.failed(it.message!!))
-    }.flowOn(Dispatchers.IO)
+        }.catch {
+            emit(State.failed(it.message!!))
+        }.flowOn(Dispatchers.IO)
 
     fun addUserPlace(
         googlePlaceModel: GooglePlaceModel,
@@ -364,9 +366,6 @@ class RemoteDataSource @Inject constructor(
 
     suspend fun getAvailableDoctors(): ArrayList<DoctorModel> {
         val availableDoctList = ArrayList<DoctorModel>()
-        //var flag: Boolean? = null
-        //var mError: String? = null
-        //emit(State.loading(true))
 
         val database = Firebase.database.reference.child("Doctors")
         val data = database.get().await()
@@ -468,8 +467,6 @@ class RemoteDataSource @Inject constructor(
                         val cancerDataMap: MutableMap<String, Any> =
                             HashMap()
                         val generalBranchMap: MutableMap<String, Any> = HashMap()
-                        //cancerDataMap["cancerDataList"] = ArrayList<CancerDataFirebaseModel>()
-
 
                         for (c in cancerDataFirebaseModelList) {
                             cancerL.add(c)
@@ -771,7 +768,7 @@ class RemoteDataSource @Inject constructor(
                                             )
                                         ) {
                                             val cancerDataMap: MutableMap<String, Any> = HashMap()
-                                            if (pendingAppointmentDoctorModel.cancerDataList != null){
+                                            if (pendingAppointmentDoctorModel.cancerDataList != null) {
                                                 cancerDataMap["cancerDataList"] =
                                                     pendingAppointmentDoctorModel.cancerDataList!!
                                             }
@@ -1187,9 +1184,9 @@ class RemoteDataSource @Inject constructor(
         val auth = Firebase.auth
         val database = Firebase.database.reference.child("DoctorAppointmentKeys").child(auth.uid!!)
         val data = database.get().await()
-        if (data.exists()){
-            for (d in data.children){
-                if (d.key == position.toString()){
+        if (data.exists()) {
+            for (d in data.children) {
+                if (d.key == position.toString()) {
                     requiredDoctorAppointmentKey = d.getValue(String::class.java)
                 }
                 generalDoctorAppointmentKey = d.getValue(String::class.java)
@@ -1200,18 +1197,19 @@ class RemoteDataSource @Inject constructor(
             .child(requiredDoctorAppointmentKey!!).removeValue().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     doctorAppointmentKeysList.removeAt(position)
-                    for ((index, value) in doctorAppointmentKeysList.withIndex()){
+                    for ((index, value) in doctorAppointmentKeysList.withIndex()) {
                         map[index.toString()] = value
                     }
-                    Firebase.database.reference.child("DoctorAppointmentKeys").child(auth.uid!!).setValue(map).addOnCompleteListener {
+                    Firebase.database.reference.child("DoctorAppointmentKeys").child(auth.uid!!)
+                        .setValue(map).addOnCompleteListener {
                         Firebase.database.reference.child("CancelledConfirmedDoctorAppointments")
-                                .child(auth.uid!!)
-                                .child(requiredDoctorAppointmentKey)
-                                .removeValue()
-                                .addOnSuccessListener {
+                            .child(auth.uid!!)
+                            .child(requiredDoctorAppointmentKey)
+                            .removeValue()
+                            .addOnSuccessListener {
 
-                                }.addOnFailureListener { }
-                    }.addOnFailureListener {  }
+                            }.addOnFailureListener { }
+                    }.addOnFailureListener { }
                 }
             }
         emit(State.succes("The call has been deleted"))

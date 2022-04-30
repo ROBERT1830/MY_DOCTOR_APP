@@ -89,9 +89,6 @@ class CancerRecordsAdapter(
                     return MyViewHolder(binding)
                 }
             }
-
-
-
         }
 
     private fun applySelection(
