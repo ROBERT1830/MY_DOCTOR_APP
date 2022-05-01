@@ -1,5 +1,7 @@
 package com.robertconstantindinescu.my_doctor_app.ui.fragments.patientFragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -11,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.robertconstantindinescu.my_doctor_app.R
 import com.robertconstantindinescu.my_doctor_app.adapters.CancerRecordsAdapter
 import com.robertconstantindinescu.my_doctor_app.databinding.FragmentCancerRecordsBinding
+import com.robertconstantindinescu.my_doctor_app.models.offlineData.database.entities.CancerDataEntity
 import com.robertconstantindinescu.my_doctor_app.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -79,7 +82,13 @@ class CancerRecordsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if(item.itemId == R.id.delete_all_cancer_records){
-            mainViewModel.deleteAllCancerRecords()
+
+            val alertDialog = AlertDialog.Builder(requireActivity()).setTitle("Information")
+            alertDialog.setMessage(resources.getString(R.string.ask_for_delete_all_records))
+            alertDialog.setPositiveButton("YES", DialogInterface.OnClickListener { _, _ ->
+                mainViewModel.deleteAllCancerRecords()
+            }).setNegativeButton("NO", null)
+                .setCancelable(false).show()
             showSnackbar()
         }
 

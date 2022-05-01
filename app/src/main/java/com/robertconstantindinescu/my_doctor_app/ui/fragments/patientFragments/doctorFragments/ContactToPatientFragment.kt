@@ -258,7 +258,6 @@ class ContactToPatientFragment : Fragment(), ContactPatientInterface {
 
     private fun sendNotificationToPatient(notification: PushNotificationModel) {
 
-
         patientToCallViewModel.sendNotificationToPatient(notification)
         patientToCallViewModel.notificationData.observe(viewLifecycleOwner, Observer { response ->
             when (response) {

@@ -78,15 +78,7 @@ class AppointmentsRequestsFragment : Fragment(), PendingDoctorAppointmentRequest
         if (data != null) {
             fromSavedDoctorNote = data.getBoolean(FROM_SAVE_DOCTOR_NOTES)
         }
-
-
-
         setUpRecyclerView()
-
-
-
-
-
 
         return mBinding.root
     }

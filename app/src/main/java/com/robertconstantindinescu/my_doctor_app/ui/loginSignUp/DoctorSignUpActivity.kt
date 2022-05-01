@@ -70,12 +70,8 @@ class DoctorSignUpActivity : AppCompatActivity() {
             intent.putExtra("isDoctor", true)
             startActivity(intent)
         }
-        //
-        //
-        //
 
         mBinding.btnSignUp.setOnClickListener {
-
             if (areFieldsReady()) {
                 if (image != null) {
                     lifecycleScope.launchWhenStarted {
@@ -262,7 +258,7 @@ class DoctorSignUpActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        finish()
+        //finish()
 
     }
 }
