@@ -28,7 +28,7 @@
             android:id="@+id/card_view_pendingAppointment"
             android:onClick="@{()->listener.onDoctorPendingAppointmentRequestClick(doctorAppointmentModel)}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="5dp"
             android:orientation="vertical"
@@ -47,6 +47,8 @@
                     android:text="@{doctorAppointmentModel.appointmentStatus}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
@@ -66,118 +68,192 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
-                        android:orientation="vertical">
+                        android:orientation="horizontal"
+                        >
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/imgView_doctorPhoto"
                             loadImage="@{doctorAppointmentModel.patientModel.image}"
-                            android:layout_width="match_parent"
+                            android:layout_width="110dp"
                             android:layout_height="100dp"
                             android:scaleType="centerCrop"
+                            android:layout_marginEnd="15dp"
                             android:src="@color/black" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_weight="3"
-                            android:padding="10dp">
+                            android:orientation="vertical">
 
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1">
-
-                                <!--                    set text binded to the model -->
-                                <com.google.android.material.textview.MaterialTextView
-                                    android:id="@+id/txtView_patientName"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:maxLines="2"
-                                    android:text="@{doctorAppointmentModel.patientModel.patientName!=null?String.valueOf(doctorAppointmentModel.patientModel.patientName):`New`, default=`Robert Constantin`}"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/black"
-                                    android:textStyle="bold"
-                                    app:drawableStartCompat="@drawable/ic_person"
-                                    app:drawableTint="@color/primaryColor" />
-                            </RelativeLayout>
-
-
-
-                            <RelativeLayout
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/txtView_patientName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1">
+                                android:maxLines="2"
+                                android:text="@{doctorAppointmentModel.patientModel.patientName!=null?String.valueOf(doctorAppointmentModel.patientModel.patientName):`New`, default=`Robert Constantin`}"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                app:drawableStartCompat="@drawable/ic_person"
+                                app:drawableTint="@color/primaryColor" />
 
-                                <!--                    set text binded to the model -->
-                                <com.google.android.material.textview.MaterialTextView
-                                    android:id="@+id/txtView_patientEmail"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:maxLines="2"
-                                    android:text="@{doctorAppointmentModel.patientModel.email!=null?String.valueOf(doctorAppointmentModel.patientModel.email):`New`, default=`rober@gmail,com`}"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/black"
-                                    android:textStyle="bold"
-                                    app:drawableStartCompat="@drawable/ic_email"
-                                    app:drawableTint="@color/primaryColor" />
-                            </RelativeLayout>
-
-
-                            <RelativeLayout
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/txtView_patientEmail"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1">
+                                android:maxLines="2"
+                                android:text="@{doctorAppointmentModel.patientModel.email!=null?String.valueOf(doctorAppointmentModel.patientModel.email):`New`, default=`rober@gmail,com`}"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                app:drawableStartCompat="@drawable/ic_email"
+                                app:drawableTint="@color/primaryColor" />
 
-                                <!--                    set text binded to the model -->
-                                <com.google.android.material.textview.MaterialTextView
-                                    android:id="@+id/txtView_patientPhone"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:maxLines="2"
-                                    android:text="@{doctorAppointmentModel.patientModel.phoneNumber!=null?String.valueOf(doctorAppointmentModel.patientModel.phoneNumber):`New`, default=`648813349`}"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/black"
-                                    android:textStyle="bold"
-                                    app:drawableStartCompat="@drawable/ic_phone"
-                                    app:drawableTint="@color/primaryColor" />
-                            </RelativeLayout>
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/txtView_patientPhone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:maxLines="2"
+                                android:text="@{doctorAppointmentModel.patientModel.phoneNumber!=null?String.valueOf(doctorAppointmentModel.patientModel.phoneNumber):`New`, default=`648813349`}"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                app:drawableStartCompat="@drawable/ic_phone"
+                                app:drawableTint="@color/primaryColor" />
 
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/txtView_appointmentDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="3"
+                                android:text="@{doctorAppointmentModel.date!=null?String.valueOf(doctorAppointmentModel.date):`New`, default=`NoDate`}"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:layout_marginEnd="15dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/linear_layout_patientInfo"/>
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/txtView_appointmentHour"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="3"
+                                android:text="@{doctorAppointmentModel.time!=null?String.valueOf(doctorAppointmentModel.time):`New`, default=`NoTime`}"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:layout_marginEnd="15dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/txtView_appointmentDate" />
                         </LinearLayout>
+
+
+                        <!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            android:layout_weight="3"-->
+<!--                            android:padding="10dp">-->
+
+<!--                            <RelativeLayout-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:layout_weight="1">-->
+
+<!--                                &lt;!&ndash;                    set text binded to the model &ndash;&gt;-->
+<!--&lt;!&ndash;                                <com.google.android.material.textview.MaterialTextView&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:id="@+id/txtView_patientName"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:maxLines="2"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:text="@{doctorAppointmentModel.patientModel.patientName!=null?String.valueOf(doctorAppointmentModel.patientModel.patientName):`New`, default=`Robert Constantin`}"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textAlignment="center"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textColor="@color/black"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textStyle="bold"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    app:drawableStartCompat="@drawable/ic_person"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    app:drawableTint="@color/primaryColor" />&ndash;&gt;-->
+<!--                            </RelativeLayout>-->
+
+
+
+<!--                            <RelativeLayout-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1">-->
+
+<!--                                &lt;!&ndash;                    set text binded to the model &ndash;&gt;-->
+<!--&lt;!&ndash;                                <com.google.android.material.textview.MaterialTextView&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:id="@+id/txtView_patientEmail"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:maxLines="2"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:text="@{doctorAppointmentModel.patientModel.email!=null?String.valueOf(doctorAppointmentModel.patientModel.email):`New`, default=`rober@gmail,com`}"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textAlignment="center"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textColor="@color/black"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textStyle="bold"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    app:drawableStartCompat="@drawable/ic_email"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    app:drawableTint="@color/primaryColor" />&ndash;&gt;-->
+<!--                            </RelativeLayout>-->
+
+
+<!--                            <RelativeLayout-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1">-->
+
+<!--                                &lt;!&ndash;                    set text binded to the model &ndash;&gt;-->
+<!--&lt;!&ndash;                                <com.google.android.material.textview.MaterialTextView&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:id="@+id/txtView_patientPhone"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:maxLines="2"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:text="@{doctorAppointmentModel.patientModel.phoneNumber!=null?String.valueOf(doctorAppointmentModel.patientModel.phoneNumber):`New`, default=`648813349`}"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textAlignment="center"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textColor="@color/black"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textStyle="bold"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    app:drawableStartCompat="@drawable/ic_phone"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    app:drawableTint="@color/primaryColor" />&ndash;&gt;-->
+<!--                            </RelativeLayout>-->
+
+<!--                        </LinearLayout>-->
                     </LinearLayout>
 
                 </LinearLayout>
 
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/txtView_appointmentDate"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    android:text="@{doctorAppointmentModel.date!=null?String.valueOf(doctorAppointmentModel.date):`New`, default=`NoDate`}"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/linear_layout_patientInfo"/>
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/txtView_appointmentDate"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:ellipsize="end"-->
+<!--                    android:maxLines="3"-->
+<!--                    android:text="@{doctorAppointmentModel.date!=null?String.valueOf(doctorAppointmentModel.date):`New`, default=`NoDate`}"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textStyle="bold"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/linear_layout_patientInfo"/>-->
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/txtView_appointmentHour"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    android:text="@{doctorAppointmentModel.time!=null?String.valueOf(doctorAppointmentModel.time):`New`, default=`NoTime`}"
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/txtView_appointmentHour"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:ellipsize="end"-->
+<!--                    android:maxLines="3"-->
+<!--                    android:text="@{doctorAppointmentModel.time!=null?String.valueOf(doctorAppointmentModel.time):`New`, default=`NoTime`}"-->
 
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/txtView_appointmentDate" />
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textStyle="bold"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/txtView_appointmentDate" />-->
 
                 <Button
                     android:id="@+id/button_acceptAppointment"
@@ -187,9 +263,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="15dp"
                     android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
                     android:backgroundTint="@color/primaryColor"
-                    app:layout_constraintTop_toBottomOf="@id/txtView_appointmentHour"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
 
                 <Button
@@ -202,8 +277,8 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
                     android:backgroundTint="@color/primaryColor"
-                    app:layout_constraintTop_toBottomOf="@id/txtView_appointmentHour"
-                    app:layout_constraintStart_toEndOf="@id/button_acceptAppointment"/>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

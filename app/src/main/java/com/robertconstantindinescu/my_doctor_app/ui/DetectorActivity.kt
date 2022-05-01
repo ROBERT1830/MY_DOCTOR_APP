@@ -100,7 +100,7 @@ class DetectorActivity : AppCompatActivity() {
                     }else mBinding.mResultTextView.setTextColor(resources.getColor(R.color.green))
                     mBinding.mResultTextView.visibility = View.VISIBLE
                     mBinding.saveButton.visibility = View.VISIBLE
-                    mBinding.imgIcInfo.visibility = View.VISIBLE
+                    //mBinding.imgIcInfo.visibility = View.VISIBLE
                 }else{
                     Toast.makeText(this,
                         resources.getString(R.string.invalid_img),
@@ -177,7 +177,7 @@ class DetectorActivity : AppCompatActivity() {
 
             if(resultCode == Activity.RESULT_OK && data != null) {
                 mBinding.mDetectButton.visibility = View.VISIBLE
-                mBinding.mCameraButton.text = resources.getString(R.string.pick_other)
+                //mBinding.mCameraButton.text = resources.getString(R.string.pick_other)
                 realPicture = true
                 /*Entonces a nuestro Bitmap vamos a asociarle esa foto que viene de la camara
                 * o mejor dicho ese bitmap porque lo casteamos. Y ademas cuando obtenemos ese bitmap
@@ -201,7 +201,7 @@ class DetectorActivity : AppCompatActivity() {
             //si los datos no son nulos
             if (data != null) {
                 mBinding.mDetectButton.visibility = View.VISIBLE
-                mBinding.mGalleryButton.text = resources.getString(R.string.take_other)
+                //mBinding.mGalleryButton.text = resources.getString(R.string.take_other)
                 //Ahora vamos a alamcenarnos la dirección de la imagen de la galeria. Es decir la uri
                 //con el data hacemos como un get y obtenemos esa uri de la iamgen de al galeria.
                 //devuelve //The URI of the data this intent is targeting

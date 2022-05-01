@@ -15,10 +15,10 @@
 
     <ImageView
         android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="?actionBarSize"
+        android:layout_marginTop="60dp"
         android:src="@drawable/ic_back"
         app:tint="@color/white" />
 
@@ -40,9 +40,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/doctor_registration"
+                android:text="@string/patient_registration"
                 android:textColor="@color/white"
-                android:textSize="40dp"
+                android:textSize="30dp"
                 android:textStyle="bold" />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -71,7 +71,7 @@
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/white"
                 android:fontFamily="@font/playfair_display"
-                android:hint="Doctorname"
+                android:hint="Patient Name"
                 android:inputType="text"
                 android:maxLines="1"
                 android:textColor="@color/white" />
@@ -130,6 +130,8 @@
                 android:layout_marginHorizontal="30dp"
                 android:layout_marginTop="10dp"
                 android:padding="15dp"
+                android:backgroundTint="@color/lightGray"
+                android:textColor="@color/black"
                 android:text="SignUp"
                 android:textStyle="bold"
                 app:cornerRadius="20dp"

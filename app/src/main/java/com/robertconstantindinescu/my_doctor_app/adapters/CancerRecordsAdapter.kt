@@ -1,5 +1,7 @@
 package com.robertconstantindinescu.my_doctor_app.adapters
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -154,7 +156,6 @@ class CancerRecordsAdapter(
 
     override fun onActionItemClicked(actionMode: ActionMode?, menu: MenuItem?): Boolean {
         if(menu?.itemId == R.id.delete_cancer_record_menu){
-            //vamos eliminando uno por uno usando el delete especifico del dao. deleteall será por si queremos añadir la funcionalidad de eliminar todos de una.
             selectedCancerRecord.forEach {
                 mainViewModel.deleteCancerRecord(it)
             }
